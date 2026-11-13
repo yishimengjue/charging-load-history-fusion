@@ -34,12 +34,15 @@ test('matched summary results reproduce the headline percentage gains',()=>{
   assert.equal(data.scopes.find(s=>s.id==='op_July').supported,false);
   const lcl=data.scopes.find(s=>s.id==='lcl');assert(lcl.neural<lcl.average);
 });
-test('method inventory and data exclusion remain explicit',()=>{
+test('method inventory and release data scope remain explicit',()=>{
   const publication=JSON.parse(readFileSync(resolve(root,'publication.json'),'utf8'));
   assert.equal(publication.sources.length,56);
   assert.equal(publication.overviewRows,74);
   assert.equal(publication.archivedComparisons,117);
-  assert.equal(publication.rawDataIncluded,false);
+  assert.equal(publication.rawDataIncluded,true);
+  const manifest=JSON.parse(readFileSync(resolve(root,'reproduction-manifest.json'),'utf8'));
+  assert.equal(manifest.packages.length,3);
+  assert(manifest.files.length>=813);
   assert(html.includes('id="method-search"'));
   assert(html.includes('id="status-filter"'));
 });

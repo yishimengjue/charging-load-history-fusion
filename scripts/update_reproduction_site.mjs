@@ -1,0 +1,13 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+const path=new URL('../src/index.html',import.meta.url);
+let html=readFileSync(path,'utf8');
+const section=`<section id="reproduction" class="chapter"><div class="section-heading"><span class="section-no">REPRODUCIBLE RESEARCH</span><h2>下载数据与复现实验</h2><p>当前OP、AMS、LCL主线提供原始记录或字段投影、训练输入、标签、逐点预测、模型权重和固定版本代码。</p></div><div class="publication-files"><a href="REPRODUCE.md">复现步骤与命令</a><a href="https://github.com/yishimengjue/charging-load-history-fusion/releases/tag/repro-v0.1">下载数据与模型包</a><a href="DATA_LICENSES.md">数据许可与署名</a><a href="reproduction-manifest.json">文件清单与SHA256</a></div><div class="table-wrap"><table><caption>当前论文主线复现范围</caption><thead><tr><th>层级</th><th>内容</th><th>验收方式</th></tr></thead><tbody><tr><th>结果复算</th><td>真值、逐点预测、误差指标与区间</td><td>四个合并范围与公开结果逐项比较</td></tr><tr><th>模型回放</th><td>有摘要与无摘要模型及局部输出头</td><td>10个月份×3种子×2条件，共60组</td></tr><tr><th>输入重建</th><td>原始记录、冻结样本划分、历史统计代码</td><td>重建近期历史、标签和27维摘要并核对</td></tr><tr><th>完整轮数重训</th><td>固定环境与训练入口</td><td>80轮编码器＋20轮输出适配</td></tr></tbody></table></div><p class="result-note">三个Release包共约225 MiB，下载时校验SHA256。LCL仅发布使用的48条计量序列及两个字段；数据按CC BY 4.0保留来源署名。早期会话分解、价格及其他预训练模型支线尚未形成同等可运行包，不计入本轮复现完成范围。</p></section>`;
+if(!html.includes('id="reproduction"'))html=html.replace('<section id="downloads" class="chapter">',section+'<section id="downloads" class="chapter">');
+html=html.replace('<a href="#downloads">研究文件</a></nav>','<a href="#downloads">研究文件</a><a href="#reproduction">数据与复现</a></nav>');
+html=html.replace('公开包不含原始充电记录、模型权重、个人联系信息或授权材料。原始数据按发布方规则获取。本页展示已保存研究结果，不等于可直接重新训练的完整实验仓库。','当前主线数据与模型通过Releases下载，研究文件保留在仓库中。个人联系信息、身份映射和授权材料不发布；历史支线的复现完整度与当前主线分开记录。');
+writeFileSync(path,html);
+const manifestPath=new URL('../publication.json',import.meta.url);
+const manifest=JSON.parse(readFileSync(manifestPath,'utf8'));
+manifest.rawDataIncluded=true;
+manifest.rawDataDelivery='Core OP/AMS originals and bounded LCL projection via GitHub Releases repro-v0.1';
+writeFileSync(manifestPath,JSON.stringify(manifest,null,2)+'\n');

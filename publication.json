@@ -2,7 +2,7 @@
   "version": "2026-11-13",
   "overviewRows": 74,
   "archivedComparisons": 117,
-  "rawDataIncluded": false,
+  "rawDataIncluded": true,
   "example": {
     "neural": 8,
     "average": 10,
@@ -404,5 +404,6 @@
     "source": "manuscript/history_fusion_v5_sections/充电负荷历史摘要融合_方法与结果_v0.5.docx",
     "publicFile": "research/METHODS_AND_RESULTS_v0.5.docx",
     "unchanged": true
-  }
+  },
+  "rawDataDelivery": "Core OP/AMS originals and bounded LCL projection via GitHub Releases repro-v0.1"
 }

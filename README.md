@@ -1,6 +1,6 @@
 # 充电负荷预测研究图解
 
-[在线阅读](https://yishimengjue.github.io/charging-load-history-fusion/) · [方法与结果正文](research/METHODS_AND_RESULTS_v0.5.md) · [Word](research/METHODS_AND_RESULTS_v0.5.docx)
+[在线阅读](https://yishimengjue.github.io/charging-load-history-fusion/) · [复现实验](REPRODUCE.md) · [数据与模型下载](https://github.com/yishimengjue/charging-load-history-fusion/releases/tag/repro-v0.1) · [方法与结果正文](research/METHODS_AND_RESULTS_v0.5.md) · [Word](research/METHODS_AND_RESULTS_v0.5.docx)
 
 ## 研究内容
 
@@ -30,7 +30,18 @@ OP七月差值区间跨零；当前匹配消融为回顾性对照。OP与AMS的�
 
 ## 公开范围
 
-不含原始充电数据、逐点用户记录、模型权重、授权文件或凭据。报告中的本地绝对路径替换为研究路径标记；未打包的代码和数据引用只是文本。此仓库用于阅读研究内容，不是完整训练复现包。数据与文献版权归原发布方；本仓库未另行授予第三方材料的使用许可。
+当前OP、AMS、LCL主线的数据、模型和逐点预测已整理为三个Release包，共约225 MiB；仓库包含固定版本实现、依赖和下载/校验/复算/回放/输入重建/重训入口，见[复现指南](REPRODUCE.md)。历史方法表中的会话分解、价格及其他预训练模型支线尚未整理为同等可运行包。
+
+OP和AMS提供原CSV；LCL提供已用48条计量序列的两个字段及使用时期投影。问卷、身份映射、授权文件及凭据不发布。数据按原发布方CC BY 4.0署名与许可再分发，变换见[数据许可说明](DATA_LICENSES.md)。不将数据许可扩展为所有第三方代码和文献的许可。
+
+```bash
+python scripts/fetch_reproduction.py all
+python scripts/reproduce.py scores
+python scripts/reproduce.py replay
+python scripts/rebuild_inputs.py
+```
+
+运行前使用Python 3.12安装requirements-reproduction.txt。快速复算只需data包；完整操作顺序见复现指南。
 
 ## 网页更新
 
