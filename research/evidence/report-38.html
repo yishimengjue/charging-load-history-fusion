@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DIRECT_SUMMARY_ABLATION_RESULTS_2026-11-13.md</title><style>body{max-width:1000px;margin:40px auto;padding:0 20px;background:#0c1523;color:#e1e8f2;font:16px/1.8 sans-serif}a{color:#9bd0f1}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.9 monospace}header{border-bottom:1px solid #3b4d64;padding-bottom:16px}h1{font-size:22px}</style><header><a href="../../index.html#methods">返回论文图解与方法表</a><h1>DIRECT_SUMMARY_ABLATION_RESULTS_2026-11-13.md</h1><p>版本记录，含当时采用的任务与配置；当前路线以首页及v0.5章节为准。本地路径已替换为研究路径标记。报告中的未打包文件引用保留为文本。</p><a href="report-38.md" download>下载文本</a></header><pre># 当前直接拼接网络的历史摘要消融
+
+2026-11-13。固定输入、预算与种子，新增30组无摘要训练；已有有摘要模型逐值重放。
+以下均为已使用时期上的匹配组件比较，不新增数据或选模。
+
+| 范围 | 单位 | 有摘要神经 | 无摘要神经 | 有摘要融合 | 无摘要融合 | 摘要对神经MAE降幅 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| op_Jan_Mar | kW | 4.660014 | 4.938161 | 4.528269 | 4.629994 | +5.63% |
+| op_July | kW | 3.555579 | 3.597243 | 3.443720 | 3.456581 | +1.16% |
+| ams | kWh | 3.183752 | 3.239926 | 3.117280 | 3.142198 | +1.73% |
+| lcl | source_raw | 0.152106 | 0.154418 | 0.155519 | 0.156824 | +1.50% |
+
+正降幅表示有摘要误差较低；融合始终为同一统计树和相应神经分支各50%。
+神经结果为三个种子误差的均值，不是种子预测集成。区间、每月及负荷分组见results.json。
+核验：56项独立标量MAE复算通过，361个冻结文件未改变。
+</pre></html>

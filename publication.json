@@ -1,0 +1,408 @@
+{
+  "version": "2026-11-13",
+  "overviewRows": 74,
+  "archivedComparisons": 117,
+  "rawDataIncluded": false,
+  "example": {
+    "neural": 8,
+    "average": 10,
+    "neuralMAE": 2,
+    "averageMAE": 3,
+    "synthetic": true
+  },
+  "sources": [
+    {
+      "source": "RESEARCH_ROUTE_DECISION_2026-10-20.html",
+      "publicFile": "research/evidence/report-01.html",
+      "textFile": "research/evidence/report-01.md",
+      "sha256": "dea1fbebf6ff136c067a9a86c0b31056ea71137bb877b2fc8584ac9fa7159ea6"
+    },
+    {
+      "source": "STRUCTURE_RESULTS_2026-09-18.md",
+      "publicFile": "research/evidence/report-02.html",
+      "textFile": "research/evidence/report-02.md",
+      "sha256": "53b0a86d77eb94e3d8015f85a98f7f8455a074fbc73b121b31a2f040ca897b5c"
+    },
+    {
+      "source": "CROSS_MODEL_LABEL_RESULTS_2026-10-20.md",
+      "publicFile": "research/evidence/report-03.html",
+      "textFile": "research/evidence/report-03.md",
+      "sha256": "4bdfd3315e12fd2c058d3e129e61263e3eb694151049fffacd48ab339ce30361"
+    },
+    {
+      "source": "SESSION_CONVERSION_RESULTS_2026-10-21.md",
+      "publicFile": "research/evidence/report-04.html",
+      "textFile": "research/evidence/report-04.md",
+      "sha256": "b60b05bcc873ac27ea6da0b9d1d0a7dc55b1fb05aa376afa58255165f37015a0"
+    },
+    {
+      "source": "SESSION_FOUR_HEAD_RESULTS_2026-10-21.md",
+      "publicFile": "research/evidence/report-05.html",
+      "textFile": "research/evidence/report-05.md",
+      "sha256": "3d93434b838ae4403a546b6dc505057dd43f6538a768ddc9c3e57b3e3271d808"
+    },
+    {
+      "source": "MULTISCALE_FORECAST_METHOD_2026-10-20.md",
+      "publicFile": "research/evidence/report-06.html",
+      "textFile": "research/evidence/report-06.md",
+      "sha256": "e62fd5056f3ea88d646214e7ad7b82f6da4fb8247c24a82d183c065a698ffe08"
+    },
+    {
+      "source": "ROLLING_HISTORY_RESULTS_2026-10-23.md",
+      "publicFile": "research/evidence/report-07.html",
+      "textFile": "research/evidence/report-07.md",
+      "sha256": "d170f6a41e06d24fd38dbd33951d4dcfeddab4a1ade034166d7121395b100cfd"
+    },
+    {
+      "source": "HISTORY_AUGMENTATION_RESULTS_2026-10-15.md",
+      "publicFile": "research/evidence/report-08.html",
+      "textFile": "research/evidence/report-08.md",
+      "sha256": "48ae8e5ac03e9b4c8b7141fd4b68673d0759ca2e47a066b73147461a8a1f934b"
+    },
+    {
+      "source": "SHARING_DECISION_RESULTS_2026-10-22.md",
+      "publicFile": "research/evidence/report-09.html",
+      "textFile": "research/evidence/report-09.md",
+      "sha256": "d7bd4772cad0e44c56c6fc36bb8d7f569a0f708e083781d7f5e907b101a2de6a"
+    },
+    {
+      "source": "GLOBAL_LOCAL_FORECAST_RESULTS_2026-10-20.md",
+      "publicFile": "research/evidence/report-10.html",
+      "textFile": "research/evidence/report-10.md",
+      "sha256": "a5a7f7d50971b5c86288ca4a67137220284fb0cfce388d96c861a9e5f00336d4"
+    },
+    {
+      "source": "SELECTIVE_WEIGHTING_RESULTS_2026-10-20.md",
+      "publicFile": "research/evidence/report-11.html",
+      "textFile": "research/evidence/report-11.md",
+      "sha256": "771573e95790b60bb6c8523157481adad2344fef13271d2832633121bce6ef3d"
+    },
+    {
+      "source": "TIREX2_RESULTS_2026-10-26.md",
+      "publicFile": "research/evidence/report-12.html",
+      "textFile": "research/evidence/report-12.md",
+      "sha256": "80aab0d5a69b68f7e4d705bb91cdb5f4b1d6f1d6a0ed17aaa4b1bb8c665e224f"
+    },
+    {
+      "source": "CHRONOS_TIMEXER_RESULTS_2026-10-26.md",
+      "publicFile": "research/evidence/report-13.html",
+      "textFile": "research/evidence/report-13.md",
+      "sha256": "e0425c958b295ab1f4ea90119324764ef93960d21c7dc994e0f31c8febcc6fd8"
+    },
+    {
+      "source": "TIMEXER_FEATURE_FUSION_RESULTS_2026-10-27.md",
+      "publicFile": "research/evidence/report-14.html",
+      "textFile": "research/evidence/report-14.md",
+      "sha256": "197bdc92ab5d71bd2ae4a3b706dd2a448cfaf1f702de0f2dfb9ee9480a826ecb"
+    },
+    {
+      "source": "TIMEXER_LOCAL_HEAD_RESULTS_2026-10-27.md",
+      "publicFile": "research/evidence/report-15.html",
+      "textFile": "research/evidence/report-15.md",
+      "sha256": "c171072ff34330beb1ce9a21ed8c18c0d4b6e0c53398450814972edd28d3a88b"
+    },
+    {
+      "source": "MEMORY_AUXILIARY_RESULTS_2026-11-04.md",
+      "publicFile": "research/evidence/report-16.html",
+      "textFile": "research/evidence/report-16.md",
+      "sha256": "b1d2b9ad521aab18423db26b86dbc1018247cd42f9d92dbedec55533bee076db"
+    },
+    {
+      "source": "S_CURVE_RESIDUAL_RESULTS_2026-10-27.md",
+      "publicFile": "research/evidence/report-17.html",
+      "textFile": "research/evidence/report-17.md",
+      "sha256": "f56e3cf8a3b3b79d277d36cb2c022660d1aab0fffdbb7c8a9d53843b77975234"
+    },
+    {
+      "source": "DYNAMIC_WEIGHT_RESULTS_2026-11-05.md",
+      "publicFile": "research/evidence/report-18.html",
+      "textFile": "research/evidence/report-18.md",
+      "sha256": "864daa8bfa5e53ce42ecee7b92c14a192a1017d5fde0c5ce58a71e82e1333ee4"
+    },
+    {
+      "source": "AMS_HISTORY_FUSION_RESULTS_2026-11-05.md",
+      "publicFile": "research/evidence/report-19.html",
+      "textFile": "research/evidence/report-19.md",
+      "sha256": "23ac2b7e3609ead77155db602966bd88dbf3c2724fc3b6e711d94f18128b5075"
+    },
+    {
+      "source": "AMS_FINAL_RESULTS_2026-09-11.md",
+      "publicFile": "research/evidence/report-20.html",
+      "textFile": "research/evidence/report-20.md",
+      "sha256": "5782297f23633faab95283bbd9b7b9331f918832a72f3448fdd5dd6d9489863d"
+    },
+    {
+      "source": "AMS_BENCHMARK_2026-09-11.md",
+      "publicFile": "research/evidence/report-21.html",
+      "textFile": "research/evidence/report-21.md",
+      "sha256": "aee66cbbd4791e09ccc0f8d37ce0e647aa3fb40d0a81dd9e9a8fa8688821f8b7"
+    },
+    {
+      "source": "URBAN_PRICE_FEBRUARY_RESULTS_2026-10-12.md",
+      "publicFile": "research/evidence/report-22.html",
+      "textFile": "research/evidence/report-22.md",
+      "sha256": "c79c577053446c686c019c7b9f2beb78ee3947bd3401425c5eb70e63798bc9a9"
+    },
+    {
+      "source": "PRICE_PV_CHAIN_EXECUTION_2026-10-12.md",
+      "publicFile": "research/evidence/report-23.html",
+      "textFile": "research/evidence/report-23.md",
+      "sha256": "4adae6ee1a87ce55e9ec6592766ab3a93e1c61c358575e92cc09ba64ae4b2bfd"
+    },
+    {
+      "source": "manuscript/history_fusion_v5_sections/SECTIONS.md",
+      "publicFile": "research/evidence/report-24.html",
+      "textFile": "research/evidence/report-24.md",
+      "sha256": "f48d4cef605b2e3020cfe417b5c78d3e3e1de13d0041fcf5038d11f6518e6efd"
+    },
+    {
+      "source": "MEMORY_EVIDENCE_RESULTS_2026-10-26.md",
+      "publicFile": "research/evidence/report-25.html",
+      "textFile": "research/evidence/report-25.md",
+      "sha256": "65f7244df325e6999a92858581c89993163fbeead4da56826ff0b0ad9f714dfd"
+    },
+    {
+      "source": "HISTORY_READOUT_RESULTS_2026-11-04.md",
+      "publicFile": "research/evidence/report-26.html",
+      "textFile": "research/evidence/report-26.md",
+      "sha256": "21f89fa218925900e305168e907b82b49bf88c4205eb3cf675b21ed51e9dabef"
+    },
+    {
+      "source": "MEMORY_DUAL_VIEW_RESULTS_2026-11-04.md",
+      "publicFile": "research/evidence/report-27.html",
+      "textFile": "research/evidence/report-27.md",
+      "sha256": "9f5bbaaf6a9aa41f321ec80991da5888f40b0c067bcefaf20b988b9a91acd920"
+    },
+    {
+      "source": "FIXED_ROUTE_ABLATION_RESULTS_2026-11-04.md",
+      "publicFile": "research/evidence/report-28.html",
+      "textFile": "research/evidence/report-28.md",
+      "sha256": "32623fb7cc1f03772685aae0d83554d1af64b8663a114390ec231bbb05aabb58"
+    },
+    {
+      "source": "AMS_ANCHOR_SUPERVISION_RESULTS_2026-11-05.md",
+      "publicFile": "research/evidence/report-29.html",
+      "textFile": "research/evidence/report-29.md",
+      "sha256": "b80598fc71cfb3ba4978047f8f108c68cf1b718846402380107dcb55291d8fbb"
+    },
+    {
+      "source": "AMS_CORRECTION_GATE_RESULTS_2026-11-06.md",
+      "publicFile": "research/evidence/report-30.html",
+      "textFile": "research/evidence/report-30.md",
+      "sha256": "7d567e1c775f9a7cb8a8e1c8e280b064e4e4aea539d5ffb392fd665419cce7bc"
+    },
+    {
+      "source": "RESIDUAL_DIRECTION_RESULTS_2026-11-06.md",
+      "publicFile": "research/evidence/report-31.html",
+      "textFile": "research/evidence/report-31.md",
+      "sha256": "83188653577339f190db502a59e98166cbbf423099b82845e78ea1781343057d"
+    },
+    {
+      "source": "MATCHED_FUSION_ROUTE_RESULTS_2026-11-09.md",
+      "publicFile": "research/evidence/report-32.html",
+      "textFile": "research/evidence/report-32.md",
+      "sha256": "a53cc069d874981efd037c7d812df99f867d1935704e31df04bd7720ef42d76b"
+    },
+    {
+      "source": "CONDITIONAL_GAIN_ROUTER_RESULTS_2026-11-12.md",
+      "publicFile": "research/evidence/report-33.html",
+      "textFile": "research/evidence/report-33.md",
+      "sha256": "dc201f037a52bbd31d384abaeaf4b903105e45b98b220900cfc5985c7eeb3ff9"
+    },
+    {
+      "source": "LCL_THREE_MONTH_RESULTS_2026-11-11.md",
+      "publicFile": "research/evidence/report-34.html",
+      "textFile": "research/evidence/report-34.md",
+      "sha256": "6a97517ab69ea2678521b16b4068d123558c39cc4217c5af6f961eeb8797f38f"
+    },
+    {
+      "source": "LCL_ZERO_DISTRIBUTION_RESULTS_2026-11-12.md",
+      "publicFile": "research/evidence/report-35.html",
+      "textFile": "research/evidence/report-35.md",
+      "sha256": "33b45c9bb0db09dc60cb6d009a0f0a551204bc1ecdac6d1415931172c9aa7ed8"
+    },
+    {
+      "source": "OP_ZERO_DISTRIBUTION_RESULTS_2026-11-12.md",
+      "publicFile": "research/evidence/report-36.html",
+      "textFile": "research/evidence/report-36.md",
+      "sha256": "1af40180a75d7dfcbcccd81184edf06a66470fcc34547508a730a8ef2b2c028c"
+    },
+    {
+      "source": "FROZEN_FUSION_HEADS_RESULTS_2026-11-12.md",
+      "publicFile": "research/evidence/report-37.html",
+      "textFile": "research/evidence/report-37.md",
+      "sha256": "a7cb71d38b8c05c40638ddabcd39c21a2fcb0387a814bbbac5d5996841c29b50"
+    },
+    {
+      "source": "DIRECT_SUMMARY_ABLATION_RESULTS_2026-11-13.md",
+      "publicFile": "research/evidence/report-38.html",
+      "textFile": "research/evidence/report-38.md",
+      "sha256": "4b9d4d308846f3e80fca0f45918e0476fd264340383aea594f88f97e79fbfa80"
+    },
+    {
+      "source": "TIREX2_FEATURE_CONTROL_RESULTS_2026-10-26.md",
+      "publicFile": "research/evidence/report-39.html",
+      "textFile": "research/evidence/report-39.md",
+      "sha256": "4115cac84a47aab8011239db1bfacc232003895dbdc00674b1ac82f6fb637712"
+    },
+    {
+      "source": "JULY_CONFIRMATION_RESULTS_2026-09-30.md",
+      "publicFile": "research/evidence/report-40.html",
+      "textFile": "research/evidence/report-40.md",
+      "sha256": "7cf85252bc0a62f8acdce9f818c04efc9562efe3342b940d1d5240b4dd9ca1bf"
+    },
+    {
+      "source": "PRACTICAL_CONTRIBUTION_TRIAGE_2026-10-22.md",
+      "publicFile": "research/evidence/report-41.html",
+      "textFile": "research/evidence/report-41.md",
+      "sha256": "86239d7004b53f72d2625ffe25f5b2413ce2dcbacc1295e68fe64d072a1db231"
+    },
+    {
+      "source": "FORECAST_ATTRIBUTION_RESULTS_2026-10-23.md",
+      "publicFile": "research/evidence/report-42.html",
+      "textFile": "research/evidence/report-42.md",
+      "sha256": "64f8afc5a72e72d646ff3dad7279e86affd260e244d33fcc6dd3549be2080c50"
+    },
+    {
+      "source": "CHRONOS_RESULTS_2026-09-18.md",
+      "publicFile": "research/evidence/report-43.html",
+      "textFile": "research/evidence/report-43.md",
+      "sha256": "f0551b8c3bbbb82f6db2e6d98e82cbe45a4b4ec8489c77980d9b213b3d47fbcb"
+    },
+    {
+      "source": "OPTIMISE_FINAL_RESULTS_2026-09-20.md",
+      "publicFile": "research/evidence/report-44.html",
+      "textFile": "research/evidence/report-44.md",
+      "sha256": "17a9f409e8ecf8ae3eb5e98cc6557262a4f30c3b0528a0cfa5f71c043e02f084"
+    },
+    {
+      "source": "QUALITY_OOF_RESULTS_2026-09-20.md",
+      "publicFile": "research/evidence/report-45.html",
+      "textFile": "research/evidence/report-45.md",
+      "sha256": "0651573135afc283b246645361e1b7498073f262f96134f63b5826315f2759bd"
+    },
+    {
+      "source": "PREDICTION_DIAGNOSTICS_2026-09-08.md",
+      "publicFile": "research/evidence/report-46.html",
+      "textFile": "research/evidence/report-46.md",
+      "sha256": "d2666c3f8ae61b1d50f87cce60a3bb8ed768cd1b92a480a43253e1c178cd5a91"
+    },
+    {
+      "source": "FORECAST_OPTIMIZATION_2026-09-09.md",
+      "publicFile": "research/evidence/report-47.html",
+      "textFile": "research/evidence/report-47.md",
+      "sha256": "fa18087fcf2d736e4288c1550f45772d240fd227974c0ab8a1055b00af0c0449"
+    },
+    {
+      "source": "SESSION_BOTTLENECK_RESULTS_2026-10-20.md",
+      "publicFile": "research/evidence/report-48.html",
+      "textFile": "research/evidence/report-48.md",
+      "sha256": "2b9e42b216ef774e689e66fa3601ee1720a81a51f3d7a9e8f18eda3bcd145878"
+    },
+    {
+      "source": "ARRIVAL_HIERARCHY_RESULTS_2026-10-20.md",
+      "publicFile": "research/evidence/report-49.html",
+      "textFile": "research/evidence/report-49.md",
+      "sha256": "9769897b65020ccdb93f535fac2cba48e1e392a09fb2943f5cc4b034486b2ad0"
+    },
+    {
+      "source": "SESSION_CROSS_PREDICTOR_RESULTS_2026-10-21.md",
+      "publicFile": "research/evidence/report-50.html",
+      "textFile": "research/evidence/report-50.md",
+      "sha256": "14b0ca4e1569d569417e320abf2b4b7ea1469f7b729333707639b152edda1531"
+    },
+    {
+      "source": "SESSION_TEMPORAL_RESULTS_2026-10-21.md",
+      "publicFile": "research/evidence/report-51.html",
+      "textFile": "research/evidence/report-51.md",
+      "sha256": "853e3ed09b61e667c98e442d7e33067768b5faa0aad3b046b0d312063c381f45"
+    },
+    {
+      "source": "HISTORY_STRESS_RESULTS_2026-10-15.md",
+      "publicFile": "research/evidence/report-52.html",
+      "textFile": "research/evidence/report-52.md",
+      "sha256": "5a9b286f9321a3cc5d1988e8bdec3ae4c85e0f28ed2a43bb405c663d6addd809"
+    },
+    {
+      "source": "CONTROLLED_LABEL_RESULTS_2026-10-15.md",
+      "publicFile": "research/evidence/report-53.html",
+      "textFile": "research/evidence/report-53.md",
+      "sha256": "e8c6e2349627c27e59c1b291c6036ae8ac6984b367eac947e60620ac09feb71d"
+    },
+    {
+      "source": "PRICE_POINT_INTERVAL_RESULTS_2026-10-09.md",
+      "publicFile": "research/evidence/report-54.html",
+      "textFile": "research/evidence/report-54.md",
+      "sha256": "095cdbda3de43183d1f6afcabcf715a6c83f0ee095081b43ab4cf167dc821e15"
+    },
+    {
+      "source": "PRICE_INFORMATION_CLOSEOUT_2026-10-12.md",
+      "publicFile": "research/evidence/report-55.html",
+      "textFile": "research/evidence/report-55.md",
+      "sha256": "08c78bd4e96582b31588e6c938444568004d1cce72908c7484e843e303e515d4"
+    },
+    {
+      "source": "PRICE_RESPONSE_BRANCHES_RESULTS_2026-10-12.md",
+      "publicFile": "research/evidence/report-56.html",
+      "textFile": "research/evidence/report-56.md",
+      "sha256": "bbbc087ed173e0261d4e4391a118df698d676a0afac0e84cb761f45747f67805"
+    }
+  ],
+  "redactedDocuments": [
+    "CROSS_MODEL_LABEL_RESULTS_2026-10-20.md",
+    "SESSION_FOUR_HEAD_RESULTS_2026-10-21.md",
+    "MULTISCALE_FORECAST_METHOD_2026-10-20.md",
+    "HISTORY_AUGMENTATION_RESULTS_2026-10-15.md",
+    "SHARING_DECISION_RESULTS_2026-10-22.md",
+    "GLOBAL_LOCAL_FORECAST_RESULTS_2026-10-20.md",
+    "S_CURVE_RESIDUAL_RESULTS_2026-10-27.md",
+    "AMS_FINAL_RESULTS_2026-09-11.md",
+    "AMS_BENCHMARK_2026-09-11.md",
+    "URBAN_PRICE_FEBRUARY_RESULTS_2026-10-12.md",
+    "PRICE_PV_CHAIN_EXECUTION_2026-10-12.md",
+    "HISTORY_READOUT_RESULTS_2026-11-04.md",
+    "CONDITIONAL_GAIN_ROUTER_RESULTS_2026-11-12.md",
+    "OP_ZERO_DISTRIBUTION_RESULTS_2026-11-12.md",
+    "FROZEN_FUSION_HEADS_RESULTS_2026-11-12.md",
+    "JULY_CONFIRMATION_RESULTS_2026-09-30.md",
+    "PREDICTION_DIAGNOSTICS_2026-09-08.md",
+    "FORECAST_OPTIMIZATION_2026-09-09.md",
+    "SESSION_CROSS_PREDICTOR_RESULTS_2026-10-21.md",
+    "SESSION_TEMPORAL_RESULTS_2026-10-21.md",
+    "HISTORY_STRESS_RESULTS_2026-10-15.md",
+    "CONTROLLED_LABEL_RESULTS_2026-10-15.md",
+    "PRICE_INFORMATION_CLOSEOUT_2026-10-12.md",
+    "manuscript/LITERATURE_REVIEW_v0.1.md"
+  ],
+  "curated": [
+    {
+      "source": "manuscript/history_fusion_v5_sections/SECTIONS.md",
+      "publicFile": "research/METHODS_AND_RESULTS_v0.5.md"
+    },
+    {
+      "source": "manuscript/history_fusion_v5_sections/APPENDIX_COMPARISONS.md",
+      "publicFile": "research/APPENDIX_COMPARISONS.md"
+    },
+    {
+      "source": "manuscript/history_fusion_v5_sections/ERRATA_2026-11-13.md",
+      "publicFile": "research/ERRATA.md"
+    },
+    {
+      "source": "manuscript/history_fusion_v5_sections/tables.json",
+      "publicFile": "research/tables.json"
+    },
+    {
+      "source": "artifacts/direct_summary_ablation_v1/results.json",
+      "publicFile": "research/summary-ablation-results.json"
+    },
+    {
+      "source": "manuscript/LITERATURE_REVIEW_v0.1.md",
+      "publicFile": "research/HISTORICAL_LITERATURE_REVIEW_2026-10-16.md"
+    }
+  ],
+  "word": {
+    "source": "manuscript/history_fusion_v5_sections/充电负荷历史摘要融合_方法与结果_v0.5.docx",
+    "publicFile": "research/METHODS_AND_RESULTS_v0.5.docx",
+    "unchanged": true
+  }
+}

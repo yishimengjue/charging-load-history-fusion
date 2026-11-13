@@ -1,0 +1,110 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CHRONOS_RESULTS_2026-09-18.md</title><style>body{max-width:1000px;margin:40px auto;padding:0 20px;background:#0c1523;color:#e1e8f2;font:16px/1.8 sans-serif}a{color:#9bd0f1}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.9 monospace}header{border-bottom:1px solid #3b4d64;padding-bottom:16px}h1{font-size:22px}</style><header><a href="../../index.html#methods">返回论文图解与方法表</a><h1>CHRONOS_RESULTS_2026-09-18.md</h1><p>版本记录，含当时采用的任务与配置；当前路线以首页及v0.5章节为准。本地路径已替换为研究路径标记。报告中的未打包文件引用保留为文本。</p><a href="report-43.md" download>下载文本</a></header><pre># Chronos尝试结果：整体有提升，不完整历史仍是短板
+
+2026-09-18。已实际下载、离线运行和复核Chronos-2-Small，不只是方法建议。
+本轮没有本地微调、调参或模型融合；没有开启封存最终期数值。
+
+## 1. 最重要的结论
+
+**Chronos相对当前历史对齐模型的P50，MAE降低4.19%，但不能全面替换原方法。**
+优势主要出现在完整历史；历史不完整时反而略差，整体收益也集中于一个高负荷编号。
+
+```mermaid
+flowchart LR
+    A[同一批过去7天历史&lt;br/&gt;保留缺失] --&gt; B[当前历史对齐模型&lt;br/&gt;本地训练]
+    A --&gt; C[Chronos-2-Small&lt;br/&gt;仅本地推理、不微调]
+    B --&gt; D[同一批18,469个观测点比较]
+    C --&gt; D
+    D --&gt; E[总体MAE改善4.19%&lt;br/&gt;完整历史更好&lt;br/&gt;不完整历史略差]
+```
+
+## 2. 同样本结果
+
+810个起报日期、18,469个有效目标完全相同，覆盖仍为810/990=81.8%。
+所有误差单位kW，越低越好。P50表示中位数预测，不是均值。
+
+| 模型 | MAE | RMSE | 平均偏差 |
+|---|---:|---:|---:|
+| 当前历史对齐模型 F-P50 | 5.2317 | 11.8434 | -1.4594 |
+| **Chronos-2-Small P50** | **5.0125** | **11.2925** | -1.4164 |
+| 当前历史对齐模型 F-均值（不同目标，仅作运营参照） | 5.1868 | 11.0639 | -0.3694 |
+
+主比较F-P50→Chronos：MAE降低**4.19%**，RMSE降低**4.65%**。
+与F-均值相比，Chronos的MAE低3.36%，但RMSE高2.07%，低估偏差也更大。
+不能称为所有预测目标同时提升，也不能将Chronos P50作为期望电量或均值使用。
+
+该库`predict_quantiles()`第二个返回值虽名为`mean`，源码和合成实测都确认它是P50。
+本轮直接按原生0.5分位读取，没有据接口名称误认均值。
+
+## 3. 提升的适用范围
+
+| 分组 | 共同观测点 | Chronos相对F-P50的MAE变化 |
+|---|---:|---:|
+| 完整168小时历史 | 6,972 | **降低9.31%** |
+| 不完整历史 | 11,497 | **增加2.10%** |
+| 1月 | 6,606 | 降低12.10% |
+| 2月 | 5,935 | 降低0.27% |
+| 3月 | 5,928 | 增加2.49% |
+
+9个可评价编号中，1/3/4/5/7/9改善，2/6/8退步；10/11仍无本期可用数据。
+从事先报告的逐编号结果分解，**约97%的净总绝对误差减少来自ID4**。
+这不是删除ID4后的主结果，而是提醒总体提升的集中性；不能把9个编号误说成普遍胜出。
+
+真实零功率时段，MAE从1.9278降到1.4530；正功率时段从6.8180到6.7216。
+这些按真实结果划分的组只用于诊断，不能在预测时提前告诉模型未来是否为零。
+完整／不完整历史也同时对应不同日期和编号构成，当前比较没有因果隔离“缺失本身”的影响。
+
+模型给出的P10-P90区间，理论名义水平为80%；实际观测覆盖率为**77.35%**，平均宽度14.75kW。
+13个原生分位输出存在613个相邻分位交叉，但P10/P90端点没有交叉；未事后排序或校准。
+因此只作为概率预测诊断，不声称区间已可靠校准。
+
+## 4. 下一步应当做的事
+
+**保留两个明确角色：F作为本地、缺失历史训练基线；Chronos作为零样本P50候选。**
+不按这次结果直接拼接“某编号用谁、某月份用谁”。
+
+下一项研究应围绕“数据质量与迁移适用性”，而不是再加五个模型：
+
+1. 在初始训练期内做滚动样本外预测，检查“历史有效点数、最新观测距离、历史零值比例”等
+   起报时可见因素是否稳定解释两个模型的误差差异，不用开发期真实误差训练选择器。
+2. 如有证据，再单独冻结质量感知选择／适配方案，保留固定单模型对照；不能直接把本轮完整度
+   分组的赢家规则当成已验证方案，也不能把两个P50简单平均当成混合分布中位数。
+3. 确定候选与评分目标后再冻结最终验证。本轮不自动开启最终期。
+
+这次证明了前沿模型值得比较，同时暴露了缺失历史和迁移边界；**仍未建立顶刊级新方法或价格效应**。
+基础模型的公开序列预训练重叠尚未排除，本地时间切分不能替代这个审查。
+
+## 5. 执行与验收
+
+模型revision固定为`ddec01313e50b6bc58ebaa92ede81bc24a3d9f9a`，27,934,624参数，
+权重SHA256与官方LFS记录一致。使用`chronos-forecasting==2.3.2`、
+`transformers==4.57.6`、`torch==2.8.0`，独立`.venv-chronos`，旧环境未改动。
+CPU/float32/eager、batch16、单变量独立分组，关闭cross_learning、网络下载和遥测。
+NaN保留位置，由模型的原生缺失掩码处理，没把NaN伪装成观测零。
+
+606项测试通过；810条日曲线在重新加载同一检查点后逐值一致；136行配对指标与3组区间统计
+由标量路径复算。18个固定起点的同批大小重跑及其他样本扰动检查均精确通过。
+
+**保留了验收失败：**首次单样本与batch16比较有数值超出rtol/atol各1e-5的严格容差。
+v2未改模型和预测，也未悄悄放宽容差，而是记录原容差超限情况并增加同形状隔离检查。
+18个单样本检查共有2个值超出原容差，全部单样本差异的最大绝对值为0.0003433kW。
+不能说跨任意批大小逐位相同；同一执行者的这些检查也不等于外部独立审稿。
+
+计时：模型已导入环境后，810个起点的一次批量推理约0.93秒，不含依赖导入和下载；
+不是部署SLA或与其他硬件的严格速度比较。整个进程记录的峰值RSS约711MB。
+
+- [冻结协议](experiments/chronos_zero_shot_protocol_v1.md)
+- [版本、输入、代码与环境冻结](artifacts/chronos_zero_shot_preflight_v1/freeze.json)
+- [完整结果](artifacts/chronos_zero_shot_v1/summary.json)
+- [分组误差](artifacts/chronos_zero_shot_v1/slices.csv)
+- [复核结果](artifacts/chronos_acceptance_v2/summary.json)
+- [首次验收失败记录](artifacts/chronos_acceptance_v1_failed/FAILURE.md)
+- [官方论文](https://arxiv.org/abs/2510.15821)与[固定模型版本](https://huggingface.co/autogluon/chronos-2-small/tree/ddec01313e50b6bc58ebaa92ede81bc24a3d9f9a)
+
+已发布研究数据、旧模型、协议、结果和最终期封存均未改动。旧交接ZIP未更新，迁移时须带上新文件。
+
+```bash
+# 复现时须使用新输出目录；不能覆盖已完成产物。
+bash run_chronos_python.sh -m src.run_chronos_zero_shot_v1 --mode freeze --output-dir artifacts/NEW_chronos_preflight
+bash run_chronos_python.sh -m src.run_chronos_zero_shot_v1 --mode run --freeze-dir artifacts/NEW_chronos_preflight --output-dir artifacts/NEW_chronos_run
+```
+</pre></html>
