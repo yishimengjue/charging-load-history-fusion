@@ -1,7 +1,11 @@
 (() => {
   'use strict';
   const data = window.PAPER_DATA;
-  const colors = { plain: '#687e9c', tree: '#f4ad69', without: '#687e9c', neural: '#79c5f2', average: '#80d7bd' };
+  const colors = { plain: '#a5a1af', tree: '#bd904f', without: '#a5a1af', neural: '#6c4ed9', average: '#33816c' };
+  const setHTML = (selector, html) => {
+    const element = document.querySelector(selector);
+    if (element) element.innerHTML = html;
+  };
   const fmt = n => n.toFixed(6);
   const gain = (base, candidate) => (base - candidate) / base * 100;
   const termCard = document.querySelector('#term-card');
@@ -69,7 +73,8 @@
       for (const [id, value] of [['term-title',entry.term],['term-kind',entry.kind],['term-definition',entry.definition],['term-use',entry.use]]) document.getElementById(id).textContent = value;
       const sourceLink = document.querySelector('#term-source-link');
       sourceLink.textContent = entry.source;
-      sourceLink.href = entry.url;
+      const destination = entry.url.startsWith('#') ? window.PAPER_SITE?.anchors[entry.url.slice(1)] : null;
+      sourceLink.href = destination && destination !== window.PAPER_SITE.page ? destination + entry.url : entry.url;
       if (entry.url.startsWith('https://')) { sourceLink.target = '_blank'; sourceLink.rel = 'noopener noreferrer'; }
       else { sourceLink.removeAttribute('target'); sourceLink.removeAttribute('rel'); }
       termCard.hidden = false;
@@ -84,26 +89,26 @@
   document.querySelector('#term-source-link').addEventListener('click', () => closeTerm(true));
   window.addEventListener('resize', positionTerm);
   window.addEventListener('scroll', positionTerm, {passive:true});
-  document.querySelector('#term-directory').append(...data.glossary.map(entry => termButton(entry.term)));
-  document.querySelector('#contribution-results').innerHTML = data.scopes.map(scope => `<tr><td>${scope.short}</td><td>${fmt(scope.without)}</td><td>${fmt(scope.neural)}</td><td class="${scope.supported?'text-green':'text-orange'}"><b>${gain(scope.without,scope.neural).toFixed(2)}%</b></td><td>${scope.unit}</td></tr>`).join('');
+  document.querySelector('#term-directory')?.append(...data.glossary.map(entry => termButton(entry.term)));
+  setHTML('#contribution-results', data.scopes.map(scope => `<tr><td>${scope.short}</td><td>${fmt(scope.without)}</td><td>${fmt(scope.neural)}</td><td class="${scope.supported?'text-green':'text-orange'}"><b>${gain(scope.without,scope.neural).toFixed(2)}%</b></td><td>${scope.unit}</td></tr>`).join(''));
   const example=data.windowExample;
   const exampleDate=age=>{
     const date=new Date(Date.parse(example.origin)-age*86400000);
     return `${date.getUTCMonth()+1}/${date.getUTCDate()}`;
   };
-  document.querySelector('#calendar-pools').innerHTML=example.pools.map(pool=>`<article class="calendar-pool"><div class="pool-heading"><b>${pool.days}<small>天范围</small></b><span>最多${pool.capacity}个参照日</span></div><p>${pool.rule}</p><div class="date-chips">${pool.ages.map(age=>`<span class="${age===7?'overlap':''}">${exampleDate(age)}</span>`).join('')}</div><small>每个日期均取18点；筛选后可能少于${pool.capacity}条。</small></article>`).join('');
-  document.querySelector('#sample-records').innerHTML=example.records.map(record=>`<div class="sample-record ${record.value===null?'missing':''}"><span>${exampleDate(record.age)} · 周二18点</span><strong>${record.value===null?'未知':`${record.value}<small> kW</small>`}</strong><small>${record.value===null?'不当作零，不进入均值':'观测已知，参与统计'}</small></div>`).join('');
+  setHTML('#calendar-pools',example.pools.map(pool=>`<article class="calendar-pool"><div class="pool-heading"><b>${pool.days}<small>天范围</small></b><span>最多${pool.capacity}个参照日</span></div><p>${pool.rule}</p><div class="date-chips">${pool.ages.map(age=>`<span class="${age===7?'overlap':''}">${exampleDate(age)}</span>`).join('')}</div><small>每个日期均取18点；筛选后可能少于${pool.capacity}条。</small></article>`).join(''));
+  setHTML('#sample-records',example.records.map(record=>`<div class="sample-record ${record.value===null?'missing':''}"><span>${exampleDate(record.age)} · 周二18点</span><strong>${record.value===null?'未知':`${record.value}<small> kW</small>`}</strong><small>${record.value===null?'不当作零，不进入均值':'观测已知，参与统计'}</small></div>`).join(''));
   const known=example.records.filter(r=>r.value!==null).map(r=>r.value);
   const mean=known.reduce((sum,n)=>sum+n,0)/known.length;
   const zeroCount=known.filter(n=>n===0).length;
   const sorted=known.toSorted((a,b)=>a-b);
   const median=sorted[Math.ceil(known.length*.5)-1];
-  document.querySelector('#sample-metrics').innerHTML=[
+  setHTML('#sample-metrics',[
     ['历史均值',`${mean} kW`,'(0＋6＋12) ÷ 3'],
     ['中位数',`${median} kW`,'排序后的中间值'],
     ['零负荷比例',`${(zeroCount/known.length*100).toFixed(1)}%`,'1个零值 ÷ 3条已知记录'],
     ['已观测比例',`${known.length/example.records.length*100}%`,'3条已知 ÷ 4个候选日']
-  ].map(([label,value,calculation])=>`<div><span>${label}</span><strong>${value}</strong><small>${calculation}</small></div>`).join('');
+  ].map(([label,value,calculation])=>`<div><span>${label}</span><strong>${value}</strong><small>${calculation}</small></div>`).join(''));
   function barGroup(scope, arms) {
     const max = Math.max(scope.plain,scope.tree,scope.without,scope.neural,scope.average) * 1.1;
     return `<div class="bars" role="img" aria-label="MAE对比，单位${scope.unit}，各图横轴从零开始。${arms.map(([key, label]) => `${label}${fmt(scope[key])}`).join('；')}">${arms.map(([key,label]) => `<div class="metric-row"><div class="metric-label"><span>${label}</span><b>${fmt(scope[key])}</b></div><div class="metric-track"><span class="metric-fill" style="--width:${scope[key]/max*100}%;--bar-color:${colors[key]}"></span></div></div>`).join('')}<div class="bar-axis"><span>0</span><span>${max.toFixed(scope.id === 'lcl' ? 3 : 2)} ${scope.unit}</span></div></div>`;
@@ -126,17 +131,17 @@
     ].join('');
   }
   for(const button of document.querySelectorAll('[data-scope]')) button.addEventListener('click',()=>{renderScope(button.dataset.scope);explainTerms(document.querySelector('#evidence'));});
-  document.querySelector('#gain-summary').innerHTML=data.scopes.map(s=>`<article class="gain-tile ${s.supported?'':'caution'}"><span>${s.short}</span><strong>${gain(s.without,s.neural).toFixed(2)}%</strong><p>神经MAE下降${s.supported?' · 四种区间支持':' · 区间跨零'}</p></article>`).join('');
-  document.querySelector('#architecture-rows').innerHTML=data.scopes.filter(s=>s.conditional!==null).map(s=>`<tr><td>${s.short} / ${s.unit}</td><td>${fmt(s.conditional)}</td><td>${fmt(s.average)}</td></tr>`).join('');
-  const groupColors=['#f4ad69','#80d7bd','#79c5f2'];
+  setHTML('#gain-summary',data.scopes.map(s=>`<article class="gain-tile ${s.supported?'':'caution'}"><span>${s.short}</span><strong>${gain(s.without,s.neural).toFixed(2)}%</strong><p>神经MAE下降${s.supported?' · 四种区间支持':' · 区间跨零'}</p></article>`).join(''));
+  setHTML('#architecture-rows',data.scopes.filter(s=>s.conditional!==null).map(s=>`<tr><td>${s.short} / ${s.unit}</td><td>${fmt(s.conditional)}</td><td>${fmt(s.average)}</td></tr>`).join(''));
+  const groupColors=['#bd904f','#33816c','#6c4ed9'];
   const total=data.lclGroups.reduce((sum,g)=>sum+g.count,0);
-  document.querySelector('#mix-bar').innerHTML=data.lclGroups.map((g,i)=>`<span style="width:${g.count/total*100}%;background:${groupColors[i]}"></span>`).join('');
-  document.querySelector('#mix-legend').innerHTML=data.lclGroups.map((g,i)=>`<div><i class="dot" style="background:${groupColors[i]}"></i><span>${g.label}</span><b>${(g.count/total*100).toFixed(2)}%</b></div>`).join('');
+  setHTML('#mix-bar',data.lclGroups.map((g,i)=>`<span style="width:${g.count/total*100}%;background:${groupColors[i]}"></span>`).join(''));
+  setHTML('#mix-legend',data.lclGroups.map((g,i)=>`<div><i class="dot" style="background:${groupColors[i]}"></i><span>${g.label}</span><b>${(g.count/total*100).toFixed(2)}%</b></div>`).join(''));
   const limit=.0045;
-  document.querySelector('#contribution-chart').innerHTML=data.lclGroups.map(g=>`<div class="contribution-row"><div class="contribution-label"><span>${g.label}</span><b class="${g.contribution>0?'text-red':'text-green'}">${g.contribution>0?'+':''}${fmt(g.contribution)}</b></div><div class="diverging-track" role="img" aria-label="${g.label}使总体MAE${g.contribution>0?'增加':'减少'}${fmt(Math.abs(g.contribution))}"><span class="diverging-fill ${g.contribution<0?'negative':''}" style="--width:${Math.abs(g.contribution)/limit*50}%"></span></div></div>`).join('');
-  renderScope(data.scopes[0].id);
+  setHTML('#contribution-chart',data.lclGroups.map(g=>`<div class="contribution-row"><div class="contribution-label"><span>${g.label}</span><b class="${g.contribution>0?'text-red':'text-green'}">${g.contribution>0?'+':''}${fmt(g.contribution)}</b></div><div class="diverging-track" role="img" aria-label="${g.label}使总体MAE${g.contribution>0?'增加':'减少'}${fmt(Math.abs(g.contribution))}"><span class="diverging-fill ${g.contribution<0?'negative':''}" style="--width:${Math.abs(g.contribution)/limit*50}%"></span></div></div>`).join(''));
+  if(document.querySelector('#evidence')) renderScope(data.scopes[0].id);
   explainTerms(document.querySelector('main'));
-  if('IntersectionObserver' in window){
+  if(!window.PAPER_SITE && 'IntersectionObserver' in window){
     const sections=[...document.querySelectorAll('.chapter')];
     const observer=new IntersectionObserver(entries=>{
       const active=entries.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];

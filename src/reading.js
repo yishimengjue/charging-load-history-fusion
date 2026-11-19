@@ -1,26 +1,57 @@
 (() => {
   'use strict';
-  // Keep the archived ledger searchable without making it the default reading path.
+  const site = window.PAPER_SITE;
   const methods = document.querySelector('#methods');
+  if(methods){
   const heading = methods.querySelector('.methods-hero');
-  const archive = document.createElement('details');
-  archive.className = 'reading-details';
-  const summary = document.createElement('summary');
-  summary.textContent = '展开完整方法表、搜索与早期实验';
-  archive.append(summary);
-  for (const node of [...methods.children]) if (node !== heading) archive.append(node);
-  methods.append(archive);
   heading.querySelector('h2').textContent = '完整方法与早期实验记录';
   heading.querySelector('.hero-lead').textContent = '从点预测、会话分解到历史融合，按研究方向查看方法、数据、效果与取舍。';
-  heading.querySelector('.result-note').textContent = '绿色表示保留在研究路线中的组件；新增扩展实验见上方“新增尝试”。';
-  const counts = heading.querySelector('.ledger-counts');
-  if (counts) archive.insertBefore(counts, summary.nextSibling);
+  heading.querySelector('.result-note').textContent = '绿色表示保留在研究路线中的组件；近期扩展实验见“新增尝试”页。';
+  }
+
+  const sectionIds = site?.sectionIds || [];
+  let activeSection=sectionIds[0];
+  const tabNavigation=document.querySelector('[data-section-switcher]');
+  if(tabNavigation){
+    const header=document.querySelector('.topbar');
+    const updateOffsets=()=>{
+      document.documentElement.style.setProperty('--header-height',`${header.getBoundingClientRect().height}px`);
+      document.documentElement.style.setProperty('--tabs-height',`${tabNavigation.getBoundingClientRect().height}px`);
+    };
+    updateOffsets();
+    if('ResizeObserver' in window){
+      const observer=new ResizeObserver(updateOffsets);
+      observer.observe(header);observer.observe(tabNavigation);
+    }
+  }
+  function selectSection(id){
+    activeSection=id;
+    for(const sectionId of sectionIds)document.getElementById(sectionId).hidden=sectionId!==id;
+    for(const link of document.querySelectorAll('[data-section-switcher] a')){
+      const selected=link.hash===`#${id}`;
+      link.classList.toggle('active',selected);
+      if(selected)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');
+    }
+  }
 
   function revealDestination(hash = location.hash) {
     let id;
     try { id = decodeURIComponent(hash.slice(1)); } catch { return; }
+    const destination=site?.anchors[id];
+    if(destination && destination!==site.page){
+      location.replace(destination+hash);
+      return;
+    }
     const target = document.getElementById(id);
+    const section=target?.closest('main > section');
+    if(sectionIds.length)selectSection(sectionIds.includes(section?.id)?section.id:activeSection);
     if (!target) return;
+    const group=target.closest('.method-group');
+    const groupFilter=document.querySelector('#group-filter');
+    if(group && groupFilter){
+      groupFilter.value=group.id;
+      groupFilter.dispatchEvent(new Event('change'));
+    }
     let opened = false;
     // Direct links to a section also open its first-level reading panel.
     const panel = ['methods', 'workflow'].includes(id)
@@ -29,7 +60,7 @@
     for (let parent = target.parentElement; parent; parent = parent.parentElement) {
       if (parent.tagName === 'DETAILS' && !parent.open) { parent.open = true; opened = true; }
     }
-    if (opened) requestAnimationFrame(() => target.scrollIntoView({block: 'start'}));
+    if (opened || sectionIds.length) requestAnimationFrame(() => target.scrollIntoView({block: 'start'}));
   }
   window.addEventListener('hashchange', () => revealDestination());
   document.addEventListener('click', event => {

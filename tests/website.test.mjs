@@ -1,21 +1,17 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,existsSync} from 'node:fs';
+import {readFileSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-const html=readFileSync(resolve(root,'index.html'),'utf8');
-test('single page has unique anchors and bundled internal links',()=>{
+const pages=['index.html','method.html','results.html','exploration.html','methods.html','resources.html'];
+const pageHtml=pages.map(file=>readFileSync(resolve(root,file),'utf8'));
+const html=pageHtml.map(page=>page.split('<main id="main">')[1].split('<nav class="page-turns"')[0]).join('\n');
+test('separated pages preserve unique research anchors and bundled scripts',()=>{
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(ids.length,new Set(ids).size);
-  assert.equal((html.match(/<main\b/g)||[]).length,1);
-  for(const match of html.matchAll(/(?:href|src)="([^"]+)"/g)){
-    const href=match[1];
-    if(href.startsWith('#'))assert(ids.includes(href.slice(1)),href);
-    else if(!/^https:/.test(href))assert(existsSync(resolve(root,decodeURIComponent(href))),href);
-  }
-  assert(html.indexOf('<script>window.PAPER_DATA')>html.indexOf('</main>'));
+  for(const page of pageHtml)assert(page.indexOf('<script>window.PAPER_DATA')>page.indexOf('</main>'));
 });
 test('example arithmetic is consistent with its table',()=>{
   const example=html.split('id="worked-prediction"')[1].split('<section id="task"')[0];
@@ -58,7 +54,7 @@ test('latest experiments keep scope, comparator and decision beside their result
   assert(html.includes('4.464749 → 4.647791'));
   assert(html.includes('4.660014 → 4.528610'));
   assert(html.includes('展开流程图与训练细节'));
-  assert(html.includes('revealDestination'));
+  assert(readFileSync(resolve(root,'src/reading.js'),'utf8').includes('revealDestination'));
 });
 test('method filtering distinguishes nested archive rows from the outer reading panel',()=>{
   const outerPanel={};

@@ -17,11 +17,16 @@ OP七月差值区间跨零；当前匹配消融为回顾性对照。OP与AMS的�
 
 ## 阅读顺序
 
-论文主线 → 三层泳道 → 贯穿示例 → 取数与融合 → 实验结果 → 方法尝试表 → 研究文件。方法表含74条总览和117条细项，细项可能展开总览，不相加为独立模型数量。绿色表示当前路线采用，不代表部署或全部数据最优。
+研究总览 → 方法与示例 → 实验结果 → 新增尝试 → 完整方法表 → 资料与复现。六个页面各有独立地址；方法页按任务、摘要、融合、训练和示例切换小节。方法表含74条总览和117条细项，按方向与关键词筛选，绿色表示保留在当前研究路线中的组件。
 
 ## 文件说明
 
-- index.html：自包含单页，支持目录、术语卡片、结果切换与方法筛选。
+- index.html：研究总览、核心贡献与研究链路。
+- method.html：预测任务、历史摘要、融合模型、训练验证与计算示例。
+- results.html：对照实验与分负荷状态的误差分析。
+- exploration.html：近期扩展实验与取舍。
+- methods.html：完整方法表，支持方向、状态与关键词筛选。
+- resources.html：论文文件、参考文献与数据复现入口。
 - src/：网页模板、样式和脚本；修改后运行 node build.mjs。
 - research/：v0.5第3—5章、Word、附录、指标和参考文献。旧前言未并入当前稿。
 - research/evidence/：56份结果报告的脱敏文本与阅读页；保留各自历史版本。
@@ -45,4 +50,6 @@ python scripts/rebuild_inputs.py
 
 ## 网页更新
 
-需要Node.js 22或更高版本，无第三方依赖。运行 node build.mjs 后提交 index.html，GitHub Pages从main分支根目录发布。
+需要Node.js 22或更高版本，无第三方依赖。运行 `node build.mjs` 生成六个HTML文件，再运行 `node --test tests/website.test.mjs tests/multipage.test.mjs`。提交源文件与六个生成页，GitHub Pages从main分支根目录发布。原单页锚点会跳转到对应子页面。
+
+`src/index.html`集中维护研究内容，`build.mjs`分配页面并重写跨页链接；`src/theme.css`定义暖灰背景、白色卡片和紫色导航的浅色主题。

@@ -1,7 +1,9 @@
 (() => {
   'use strict';
   const input=document.querySelector('#method-search');
+  if(!input) return;
   const select=document.querySelector('#status-filter');
+  const groupFilter=document.querySelector('#group-filter');
   const groupSections=[...document.querySelectorAll('.method-group')];
   const archiveState=new Map();
   let filtering=false;
@@ -14,7 +16,8 @@
     for(const section of groupSections){
       let count=0;
       for(const row of section.querySelectorAll('tbody tr')){
-        const visible=(status==='all'||row.dataset.status===status)&&row.dataset.search.toLocaleLowerCase().includes(query);
+        const groupMatches=!groupFilter||groupFilter.value==='all'||section.id===groupFilter.value;
+        const visible=groupMatches&&(status==='all'||row.dataset.status===status)&&row.dataset.search.toLocaleLowerCase().includes(query);
         row.hidden=!visible;
         if(visible){count++;if(section.contains(row.closest('details')))archived++;else overview++;}
       }
@@ -29,5 +32,6 @@
   }
   input.addEventListener('input',filter);
   select.addEventListener('change',filter);
+  groupFilter?.addEventListener('change',filter);
   filter();
 })();
