@@ -26,7 +26,7 @@
     const nodes = [];
     while (walker.nextNode()) {
       const node = walker.currentNode;
-      if (!node.parentElement.closest('a,button,svg,script,style,h1,noscript') && node.textContent.match(termPattern)) nodes.push(node);
+      if (!node.parentElement.closest('a,button,svg,script,style,h1,h2,h3,h4,summary,noscript') && node.textContent.match(termPattern)) nodes.push(node);
     }
     for (const node of nodes) {
       const fragment = document.createDocumentFragment();

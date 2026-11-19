@@ -46,3 +46,40 @@ test('method inventory and release data scope remain explicit',()=>{
   assert(html.includes('id="method-search"'));
   assert(html.includes('id="status-filter"'));
 });
+test('latest experiments keep scope, comparator and decision beside their results',()=>{
+  assert(html.includes('id="latest-research"'));
+  assert(html.includes('2026.11.19'));
+  for(const id of ['pooling-extension','state-extension','duration-extension','residual-extension']){
+    const row=html.match(new RegExp(`<tr id="${id}"[\\s\\S]*?</tr>`))?.[0];
+    assert(row,id);
+    assert(row.includes('OP'),id);
+    assert(row.includes('不采用')||row.includes('扩展比较'),id);
+  }
+  assert(html.includes('4.464749 → 4.647791'));
+  assert(html.includes('4.660014 → 4.528610'));
+  assert(html.includes('展开流程图与训练细节'));
+  assert(html.includes('revealDestination'));
+});
+test('method filtering distinguishes nested archive rows from the outer reading panel',()=>{
+  const outerPanel={};
+  const innerArchive={open:false,querySelector:()=>({})};
+  const input={value:'',addEventListener:(_,fn)=>{input.change=fn;}};
+  const select={value:'all',addEventListener:(_,fn)=>{select.change=fn;}};
+  const counter={},empty={};
+  const rows=[
+    {dataset:{status:'adopted',search:'TimeXer'},closest:()=>outerPanel},
+    {dataset:{status:'stopped',search:'old method'},closest:()=>innerArchive}
+  ];
+  const section={contains:node=>node===innerArchive,querySelector:()=>innerArchive,
+    querySelectorAll:selector=>selector==='tbody tr'?rows:[]};
+  const nodes={'#method-search':input,'#status-filter':select,'#filter-count':counter,'#method-empty':empty};
+  const document={querySelector:selector=>nodes[selector],querySelectorAll:()=>[section]};
+  vm.runInNewContext(readFileSync(resolve(root,'src/methods.js'),'utf8'),{document});
+  assert.equal(counter.textContent,'总览 1 条 · 早期细项 1 条');
+  input.value='TimeXer';input.change();
+  assert.equal(counter.textContent,'总览 1 条 · 早期细项 0 条（已展开匹配细项）');
+  input.value='';input.change();
+  assert.equal(counter.textContent,'总览 1 条 · 早期细项 1 条');
+  select.value='adopted';select.change();
+  assert.equal(counter.textContent,'总览 1 条 · 早期细项 0 条（已展开匹配细项）');
+});

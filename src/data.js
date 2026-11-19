@@ -1,5 +1,5 @@
 window.PAPER_DATA = {
-  updated: '2026-11-13',
+  updated: '2026-11-19',
   glossary: [
     {term:'TimeXer',kind:'借鉴模型 · 时间序列预测',definition:'一种Transformer预测架构：从连续历史中学习变化模式，并结合目标序列之外的辅助信息预测未来。',use:'本文借用其编码结构，将近期168小时负荷编码，再与另行构建的历史摘要拼接。这里的历史摘要与融合设计属于本文的研究内容。',source:'Wang等，2024 · TimeXer: Empowering Transformers for Time Series Forecasting with Exogenous Variables',url:'https://arxiv.org/abs/2402.19072v4'},
     {term:'OP',kind:'数据来源 · Optimise Prime',definition:'英国Optimise Prime项目的公开充电记录。OP是本页对这一数据来源的简称。',use:'构造小时边界前5分钟内最后一条功率记录，预测未来24步，误差单位为kW。一个发布方编号对应一条计量序列，物理站点映射待确认。',source:'UK Power Networks · UKPN Optimise Prime',url:'https://ukpowernetworks.opendatasoft.com/explore/dataset/ukpn-optimise-prime/information/'},

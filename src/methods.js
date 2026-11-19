@@ -16,7 +16,7 @@
       for(const row of section.querySelectorAll('tbody tr')){
         const visible=(status==='all'||row.dataset.status===status)&&row.dataset.search.toLocaleLowerCase().includes(query);
         row.hidden=!visible;
-        if(visible){count++;if(row.closest('details'))archived++;else overview++;}
+        if(visible){count++;if(section.contains(row.closest('details')))archived++;else overview++;}
       }
       for(const table of section.querySelectorAll('.method-table-scroll'))table.hidden=![...table.querySelectorAll('tbody tr')].some(row=>!row.hidden);
       const detail=section.querySelector('details');
