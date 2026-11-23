@@ -36,7 +36,7 @@
   --amber:#93692c; --green:#26705c; --red:#aa5368;
   --violet-bg:#efebfc; --amber-bg:#fff1d9; --green-bg:#edf7f1; --red-bg:#ffebef;
 }
-html {scroll-behavior:auto;scroll-padding-top:96px}
+html {scroll-behavior:auto;scroll-padding-top:calc(var(--header-height,84px) + 12px)}
 body {background:var(--bg);font-size:15px;line-height:1.8}
 body:before {display:none}
 strong,b {font-weight:700}
@@ -184,7 +184,7 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
   .method-controls {grid-template-columns:1fr 1fr}.group-select {grid-column:1/-1}
 }
 @media(max-width:760px){
-  html {scroll-padding-top:128px}main {padding:0 18px}
+  html {scroll-padding-top:calc(var(--header-height,181px) + 12px)}main {padding:0 18px}
   .topbar {padding:12px 18px}.topbar nav {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px!important;width:100%}
   .topbar nav a {padding:6px 7px;font-size:12px;text-align:center}.brand {font-size:14px}
   .page-heading {padding-top:25px}.page-heading h1 {font-size:29px}
@@ -206,7 +206,7 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
 }
 </style></head>
 <body data-page="resources.html"><a class="skip-link" href="#main">跳到正文</a>
-<header class="topbar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">↗</span>充电负荷预测<span class="brand-sub"> / 研究图解</span></a><nav aria-label="阅读导航"><a href="index.html">研究总览</a><a href="method.html">方法与示例</a><a href="results.html">实验结果</a><a href="exploration.html">新增尝试</a><a href="methods.html">完整方法表</a><a href="resources.html" class="active" aria-current="page">资料与复现</a></nav></header>
+<header class="topbar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">↗</span>充电负荷预测<span class="brand-sub"> / 研究图解</span></a><nav aria-label="阅读导航"><a href="index.html">研究总览</a><a href="method.html">方法与示例</a><a href="results.html">实验结果</a><a href="exploration.html">新增尝试</a><a href="methods.html">完整方法表</a><a href="resources.html" class="active" aria-current="page">资料与复现</a><a href="literature.html">文献综述</a></nav></header>
 <main id="main"><header class="page-heading"><span class="section-no">CHARGING LOAD / 06</span><h1>资料与复现</h1><p>论文文件、参考文献、数据包与复现实验入口。</p></header><section id="downloads" class="chapter"><div class="section-heading"><span class="section-no">RESEARCH FILES</span><h2>论文研究文件与参考文献</h2><p>当前正文为v0.5方法、实验设置与结果章节，不将旧前言拼作当前完整稿。网页解释研究逻辑，正文保留方法细节。</p></div><div class="publication-files"><a href="research/METHODS_AND_RESULTS_v0.5.docx">方法与结果 · Word</a><a href="research/METHODS_AND_RESULTS_v0.5.md">正文 · Markdown</a><a href="research/APPENDIX_COMPARISONS.md">附录比较</a><a href="research/tables.json">结果表 · JSON</a><a href="research/summary-ablation-results.json">逐月消融指标与区间</a><a href="research/REFERENCES.md">参考文献</a><a href="research/HISTORICAL_LITERATURE_REVIEW_2026-10-16.md">早期综述 · 2026年10月版本</a><a href="https://github.com/yishimengjue/charging-load-history-fusion">GitHub仓库</a></div><p class="result-note">当前主线数据与模型通过Releases下载，研究文件保留在仓库中。个人联系信息、身份映射和授权材料不发布；历史支线的复现完整度与当前主线分开记录。</p></section>
 <section id="reproduction" class="chapter"><div class="section-heading"><span class="section-no">REPRODUCIBLE RESEARCH</span><h2>下载数据与复现实验</h2><p>当前OP、AMS、LCL主线提供原始记录或字段投影、训练输入、标签、逐点预测、模型权重和固定版本代码。</p></div><div class="publication-files"><a href="REPRODUCE.md">复现步骤与命令</a><a href="https://github.com/yishimengjue/charging-load-history-fusion/releases/tag/repro-v0.1">下载数据与模型包</a><a href="DATA_LICENSES.md">数据许可与署名</a><a href="reproduction-manifest.json">文件清单与SHA256</a></div><div class="table-wrap"><table><caption>当前论文主线复现范围</caption><thead><tr><th>层级</th><th>内容</th><th>验收方式</th></tr></thead><tbody><tr><th>结果复算</th><td>真值、逐点预测、误差指标与区间</td><td>四个合并范围与公开结果逐项比较</td></tr><tr><th>模型回放</th><td>有摘要与无摘要模型及局部输出头</td><td>10个月份×3种子×2条件，共60组</td></tr><tr><th>输入重建</th><td>原始记录、冻结样本划分、历史统计代码</td><td>重建近期历史、标签和27维摘要并核对</td></tr><tr><th>完整轮数重训</th><td>固定环境与训练入口</td><td>80轮编码器＋20轮输出适配</td></tr></tbody></table></div><p class="result-note">三个Release包共约225 MiB，下载时校验SHA256。LCL仅发布使用的48条计量序列及两个字段；数据按CC BY 4.0保留来源署名。早期会话分解、价格及其他预训练模型支线尚未形成同等可运行包，不计入本轮复现完成范围。</p></section><nav class="page-turns" aria-label="页面顺序"><a href="methods.html"><small>上一页</small><b>← 完整方法表</b></a><a href="index.html"><small>返回</small><b>研究总览 →</b></a></nav><footer><span>历史摘要与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>研究更新 2026.11.19</small></footer></main><aside id="term-card" class="term-card" role="dialog" aria-modal="false" aria-labelledby="term-title" hidden>
   <button type="button" class="term-close" aria-label="关闭术语简介">×</button>
@@ -473,16 +473,17 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
   const sectionIds = site?.sectionIds || [];
   let activeSection=sectionIds[0];
   const tabNavigation=document.querySelector('[data-section-switcher]');
-  if(tabNavigation){
-    const header=document.querySelector('.topbar');
+  const header=document.querySelector('.topbar');
+  if(header){
     const updateOffsets=()=>{
       document.documentElement.style.setProperty('--header-height',`${header.getBoundingClientRect().height}px`);
-      document.documentElement.style.setProperty('--tabs-height',`${tabNavigation.getBoundingClientRect().height}px`);
+      if(tabNavigation)document.documentElement.style.setProperty('--tabs-height',`${tabNavigation.getBoundingClientRect().height}px`);
     };
     updateOffsets();
     if('ResizeObserver' in window){
       const observer=new ResizeObserver(updateOffsets);
-      observer.observe(header);observer.observe(tabNavigation);
+      observer.observe(header);
+      if(tabNavigation)observer.observe(tabNavigation);
     }
   }
   function selectSection(id){

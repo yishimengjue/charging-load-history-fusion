@@ -12,16 +12,17 @@
   const sectionIds = site?.sectionIds || [];
   let activeSection=sectionIds[0];
   const tabNavigation=document.querySelector('[data-section-switcher]');
-  if(tabNavigation){
-    const header=document.querySelector('.topbar');
+  const header=document.querySelector('.topbar');
+  if(header){
     const updateOffsets=()=>{
       document.documentElement.style.setProperty('--header-height',`${header.getBoundingClientRect().height}px`);
-      document.documentElement.style.setProperty('--tabs-height',`${tabNavigation.getBoundingClientRect().height}px`);
+      if(tabNavigation)document.documentElement.style.setProperty('--tabs-height',`${tabNavigation.getBoundingClientRect().height}px`);
     };
     updateOffsets();
     if('ResizeObserver' in window){
       const observer=new ResizeObserver(updateOffsets);
-      observer.observe(header);observer.observe(tabNavigation);
+      observer.observe(header);
+      if(tabNavigation)observer.observe(tabNavigation);
     }
   }
   function selectSection(id){

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="description" content="充电负荷预测文献综述：近期序列、目标时段历史、信息融合与预测组合。13篇核心文献及本文研究定位。"><title>文献综述 · 充电负荷预测</title><style>/*LITERATURE_STYLE*/</style></head>
+<body>
+<a class="skip-link" href="#main">跳到内容</a>
+<header class="topbar"><a class="brand" href="index.html"><span aria-hidden="true">↗</span>充电负荷预测</a><nav class="site-nav" aria-label="阅读导航"><!--SITE_NAV--></nav></header>
+<main id="main">
+  <header class="hero">
+    <div><p class="eyebrow">文献综述 / 2026.11</p><h1>充电负荷预测的<br><span>历史表示与融合</span></h1><p class="hero-lead">已有方法与本文研究位置的对照。</p></div>
+    <aside class="focus-note" aria-label="本文聚焦"><span>本文聚焦</span><p><strong>近期序列</strong>保留变化顺序<br><strong>目标时段历史</strong>补充同类时段经验</p><small>比较历史的接入、表示与组合收益。</small></aside>
+  </header>
+  <nav class="section-nav" aria-label="本页目录"><a href="#flow"><span>01</span>综述主线</a><a href="#studies"><span>02</span>已有研究</a><a href="#position"><span>03</span>本文切入点</a><a href="#references"><span>04</span>参考文献</a></nav>
+
+  <section class="chapter" id="flow">
+    <div class="section-heading"><h2>从预测对象到信息使用</h2><p>四个环节串联研究逻辑</p></div>
+    <ol class="flow">
+      <li><span class="number">01</span><b>明确预测对象</b><p>功率、电量与占用率<br>对应不同任务</p></li>
+      <li><span class="number">02</span><b>组织历史记录</b><p>连续序列与同类时段<br>保留不同信息</p></li>
+      <li><span class="number">03</span><b>融合输入表示</b><p>近期编码与历史参照<br>共同进入预测器</p></li>
+      <li><span class="number">04</span><b>比较输出组合</b><p>单模型与预测平均<br>分别评价误差</p></li>
+    </ol>
+  </section>
+
+  <section class="chapter" id="studies">
+    <div class="section-heading"><h2>已有研究解决了什么</h2><p>按信息处理方式归纳，而非罗列模型</p></div>
+    <div class="study-grid">
+      <article class="study-card amber"><span class="category">预测对象</span><h3>直接预测负荷，或先预测会话</h3><p>Amara-Ouali等比较<strong>直接概率预测</strong>与<strong>会话分解</strong>。UrbanEV已评估TimeXer，其外部特征评估以<strong>区域占用率</strong>为目标。</p><div class="paper-chips"><a href="#ref-1">会话与负荷 [1]</a><a href="#ref-2">UrbanEV [2]</a></div></article>
+      <article class="study-card violet"><span class="category">历史组织</span><h3>近期顺序与周期参照共同使用</h3><p>LSTNet联合近期与周期模式；PatchTST编码连续片段；TimeMixer混合不同采样分辨率。充电研究还采用<strong>相似日</strong>与<strong>同星期时段分位数</strong>。</p><div class="paper-chips"><a href="#ref-4">LSTNet [4]</a><a href="#ref-5">PatchTST [5]</a><a href="#ref-6">TimeMixer [6]</a><a href="#ref-3">相似日 [3]</a></div></article>
+      <article class="study-card violet"><span class="category">网络内融合</span><h3>先选择信息，再形成联合表示</h3><p>TFT与TimeXer连接不同输入。GNA检索已有后续结果的历史窗口；XMatch依据相似性与样本支持匹配原型。<strong>后两项为预印本。</strong></p><div class="paper-chips"><a href="#ref-7">TFT [7]</a><a href="#ref-8">TimeXer [8]</a><a href="#ref-9">GNA [9]</a><a href="#ref-10">XMatch [10]</a></div></article>
+      <article class="study-card green"><span class="category">网络外组合</span><h3>输入融合与输出平均分开评价</h3><p>预测组合已有简单规则、时变权重与非线性方法。充电研究也已有GRU与核支持向量回归组合。<strong>输入的收益</strong>与<strong>平均的收益</strong>各用自己的对照。</p><div class="paper-chips"><a href="#ref-11">充电预测组合 [11]</a><a href="#ref-12">组合综述 [12]</a></div></article>
+    </div>
+    <p class="compact-note"><strong>历史可用性：</strong>掩码、计数与年龄说明哪些历史可用。GRU-D已使用掩码与时间间隔，本文将这部分归入输入设计。<a href="#ref-13" aria-label="参考文献13">[13]</a></p>
+    <div class="comparison"><h3>最近邻方法对照</h3><div class="table-scroll" role="region" aria-label="方法对照表，可横向滚动" tabindex="0"><table>
+      <caption>比较处理的信息与接入方式，不跨数据集排列论文误差。</caption>
+      <thead><tr><th scope="col">代表工作</th><th scope="col">已有做法</th><th scope="col">本文对应的区别</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><a href="#ref-1">历史分位数 [1]</a></th><td>同星期、同时刻的经验分位数直接作参照</td><td>将历史统计作为<strong>近期序列网络的输入</strong></td></tr>
+        <tr><th scope="row"><a href="#ref-3">相似日 [3]</a></th><td>按区域、日历和天气选日，再加权日曲线</td><td>按<strong>目标时段</strong>组织历史记录</td></tr>
+        <tr><th scope="row"><a href="#ref-4">LSTNet [4]</a></th><td>学习近期与周期隐藏状态</td><td>显式接入<strong>原始历史或分布统计</strong></td></tr>
+        <tr><th scope="row"><a href="#ref-6">TimeMixer [6]</a></th><td>改变输入序列的采样分辨率</td><td>7／28／84天改变的是<strong>参照范围</strong></td></tr>
+        <tr><th scope="row"><a href="#ref-9">GNA</a> / <a href="#ref-10">XMatch</a></th><td>学习历史检索、原型匹配与权重</td><td>固定参照规则下，比较<strong>历史表示</strong></td></tr>
+        <tr><th scope="row"><a href="#ref-12">预测组合 [12]</a></th><td>组合多个模型的预测输出</td><td>与网络内的<strong>信息融合</strong>分别检验</td></tr>
+      </tbody></table></div></div>
+  </section>
+
+  <section class="chapter" id="position">
+    <div class="section-heading"><h2>本文研究哪一段</h2><p>目标时段历史与近期序列的互补关系</p></div>
+    <div class="position-board">
+      <div><span class="category">当前方法</span><h3>两种历史表示<br>进入同一预测器</h3><p>历史摘要由过去同类时段的负荷值计算，保留分位数、零值比例和样本支持信息。</p><div class="input-lines"><div class="input-line"><b>近期168小时</b><span>序列编码</span></div><div class="input-line"><b>7／28／84天参照</b><span>原值或摘要</span></div><div class="output-line">联合预测未来24个小时位置的负荷</div></div></div>
+      <div class="comparison-list" aria-label="四项比较">
+        <div class="comparison-row"><b>历史接入</b><div><p>近期序列 ↔ 加入目标时段历史</p><small>衡量较早历史提供的预测增量</small></div></div>
+        <div class="comparison-row"><b>历史表示</b><div><p>原始候选 ↔ 均值 ↔ 分布摘要</p><small>比较不同表示的误差变化</small></div></div>
+        <div class="comparison-row"><b>历史范围</b><div><p>连续长窗口 ↔ 目标时段接入</p><small>共同报告精度与计算成本</small></div></div>
+        <div class="comparison-row"><b>输出组合</b><div><p>神经单分支 ↔ 树—神经平均</p><small>定位组合增加或减少的误差</small></div></div>
+      </div>
+    </div>
+    <p class="position-footer">本文的MAE与实验结果另列，不混入文献结论。<a href="method.html">查看当前方法 →</a></p>
+  </section>
+
+  <section class="chapter" id="references">
+    <div class="section-heading"><h2>13篇核心文献</h2><p>点击条目查看题录与原文</p></div>
+    <div class="reference-list">
+      <details class="reference" id="ref-1" data-publication="published"><summary><span class="ref-no">01</span><span class="ref-heading"><span>Amara-Ouali等 · 2025 <span class="badge">期刊</span></span><span class="ref-brief">直接预测、会话分解与历史分位数</span></span></summary><div class="reference-body"><cite>Quantifying the Uncertainty of Electric Vehicle Charging with Probabilistic Load Forecasting.</cite><p>Amara-Ouali Y, Hamrouche B, Principato G, Goude Y. World Electric Vehicle Journal, 16(2): 88.</p><p>会话恒功率重构的15分钟概率负荷；已核读方法段落。</p><a href="https://doi.org/10.3390/wevj16020088">论文原文 ↗</a></div></details>
+      <details class="reference" id="ref-2" data-publication="published"><summary><span class="ref-no">02</span><span class="ref-heading"><span>UrbanEV · 2025 <span class="badge">期刊</span></span><span class="ref-brief">充电需求基准已评估TimeXer</span></span></summary><div class="reference-body"><cite>UrbanEV: An Open Benchmark Dataset for Urban Electric Vehicle Charging Demand Prediction.</cite><p>Li H, Qu H, Tan X, You L, Zhu R, Fan W. Scientific Data, 12: 523.</p><p>外部特征评估以区域占用率为目标；电量由时长与额定功率估算。已核读数据与验证部分。</p><a href="https://doi.org/10.1038/s41597-025-04874-4">论文原文 ↗</a></div></details>
+      <details class="reference" id="ref-3" data-publication="published"><summary><span class="ref-no">03</span><span class="ref-heading"><span>Li等 · 2026 <span class="badge">期刊</span></span><span class="ref-brief">相似日选择与日负荷曲线加权</span></span></summary><div class="reference-body"><cite>Regional EV Charging Load Forecasting Based on SCLD and FCW.</cite><p>Li T, Zhang H, Liu J, Li B, Tang X, Zha W. World Electric Vehicle Journal, 17(6): 288.</p><p>使用区域、日历与天气信息；XGBoost用于特征权重。已核读方法段落。</p><a href="https://doi.org/10.3390/wevj17060288">论文原文 ↗</a></div></details>
+      <details class="reference" id="ref-4" data-publication="published"><summary><span class="ref-no">04</span><span class="ref-heading"><span>LSTNet · 2018 <span class="badge">会议</span></span><span class="ref-brief">联合近期变化与周期模式</span></span></summary><div class="reference-body"><cite>Modeling Long- and Short-Term Temporal Patterns with Deep Neural Networks.</cite><p>Lai G, Chang W C, Yang Y, Liu H. SIGIR 2018.</p><p>循环与跳跃循环结构联合建模；第3.4节讨论历史同一时刻记录。已核读3.3—3.5节。</p><a href="https://arxiv.org/abs/1703.07015">作者论文 ↗</a></div></details>
+      <details class="reference" id="ref-5" data-publication="published"><summary><span class="ref-no">05</span><span class="ref-heading"><span>PatchTST · 2023 <span class="badge">会议</span></span><span class="ref-brief">将连续时间序列分片编码</span></span></summary><div class="reference-body"><cite>A Time Series is Worth 64 Words: Long-term Forecasting with Transformers.</cite><p>Nie Y, Nguyen N H, Sinthong P, Kalagnanam J. ICLR 2023.</p><p>分片作为Transformer输入单元，为更长历史提供编码路径。本轮核读摘要。</p><a href="https://arxiv.org/abs/2211.14730">作者论文 ↗</a></div></details>
+      <details class="reference" id="ref-6" data-publication="published"><summary><span class="ref-no">06</span><span class="ref-heading"><span>TimeMixer · 2024 <span class="badge">会议</span></span><span class="ref-brief">多分辨率季节与趋势混合</span></span></summary><div class="reference-body"><cite>TimeMixer: Decomposable Multiscale Mixing for Time Series Forecasting.</cite><p>Wang S, Wu H, Shi X, et al. ICLR 2024.</p><p>下采样形成不同分辨率，再混合季节与趋势。已核读3.1—3.3节。</p><a href="https://arxiv.org/abs/2405.14616">作者论文 ↗</a></div></details>
+      <details class="reference" id="ref-7" data-publication="published"><summary><span class="ref-no">07</span><span class="ref-heading"><span>TFT · 2021 <span class="badge">期刊</span></span><span class="ref-brief">区分输入类型并联合预测多个未来步</span></span></summary><div class="reference-body"><cite>Temporal Fusion Transformers for interpretable multi-horizon time series forecasting.</cite><p>Lim B, Arik S O, Loeff N, Pfister T. International Journal of Forecasting, 37(4): 1748–1764.</p><p>处理静态、未来已知和历史观测变量。本轮核读作者稿摘要。</p><a href="https://doi.org/10.1016/j.ijforecast.2021.03.012">期刊页面 ↗</a> · <a href="https://arxiv.org/abs/1912.09363">作者稿</a></div></details>
+      <details class="reference" id="ref-8" data-publication="published"><summary><span class="ref-no">08</span><span class="ref-heading"><span>TimeXer · 2024 <span class="badge">会议</span></span><span class="ref-brief">连接目标序列与外生变量表示</span></span></summary><div class="reference-body"><cite>TimeXer: Empowering Transformers for Time Series Forecasting with Exogenous Variables.</cite><p>Wang Y, Wu H, Dong J, Qin G, Zhang H, Liu Y, Qiu Y, Wang J, Long M. NeurIPS 2024.</p><p>片段编码目标序列，通过全局表示连接外生信息。已核读第3节。</p><a href="https://arxiv.org/abs/2402.19072">作者论文 ↗</a></div></details>
+      <details class="reference" id="ref-9" data-publication="preprint"><summary><span class="ref-no">09</span><span class="ref-heading"><span>GNA · 2026 <span class="badge preprint">预印本</span></span><span class="ref-brief">检索历史延续，按步长和变量融合</span></span></summary><div class="reference-body"><cite>GNA: Granular Neighbor Assembly for Retrieval-Augmented Multivariate Time-Series Forecasting.</cite><p>Uhse V. arXiv:2609.36281.</p><p>使用后续结果已完整观测的历史窗口，并约束上下文不重叠。已核读3.1—3.5节；未核实同行评审发表。</p><a href="https://arxiv.org/abs/2609.36281">预印本原文 ↗</a></div></details>
+      <details class="reference" id="ref-10" data-publication="preprint"><summary><span class="ref-no">10</span><span class="ref-heading"><span>XMatch · 2026 <span class="badge preprint">预印本</span></span><span class="ref-brief">相似性与历史支持共同决定匹配权重</span></span></summary><div class="reference-body"><cite>XMatch: Enhancing Covariate-Aware Time Series Forecasting through Tree-Structured Exogenous Matching.</cite><p>Zhang Z, Cheng H, Qiu X, Shu Y, Yang B, Guo C. arXiv:2609.34939.</p><p>以外生模式查询训练集原型树。已核读3.1—3.3节；未核实同行评审发表。</p><a href="https://arxiv.org/abs/2609.34939">预印本原文 ↗</a></div></details>
+      <details class="reference" id="ref-11" data-publication="published"><summary><span class="ref-no">11</span><span class="ref-heading"><span>Shang与Ma · 2024 <span class="badge">期刊</span></span><span class="ref-brief">GRU、核支持向量回归与区域加权</span></span></summary><div class="reference-body"><cite>Electric Vehicle Charging Load Forecasting Based on K-Means++-GRU-KSVR.</cite><p>Shang R, Ma Y. World Electric Vehicle Journal, 15(12): 582.</p><p>区域划分与异质预测器结合，预测作加权汇总。已核读第3—4页。</p><a href="https://doi.org/10.3390/wevj15120582">论文原文 ↗</a></div></details>
+      <details class="reference" id="ref-12" data-publication="published"><summary><span class="ref-no">12</span><span class="ref-heading"><span>Wang等 · 2023 <span class="badge">综述</span></span><span class="ref-brief">从简单组合到学习式预测组合</span></span></summary><div class="reference-body"><cite>Forecast combinations: An over 50-year review.</cite><p>Wang X, Hyndman R J, Li F, Kang Y. International Journal of Forecasting, 39(4): 1518–1547.</p><p>覆盖无需估参的规则、时变权重、非线性组合等。本轮核读作者页面摘要。</p><a href="https://robjhyndman.com/publications/combinations/">作者页面 ↗</a> · <a href="https://doi.org/10.1016/j.ijforecast.2022.11.005">期刊页面</a></div></details>
+      <details class="reference" id="ref-13" data-publication="published"><summary><span class="ref-no">13</span><span class="ref-heading"><span>GRU-D · 2018 <span class="badge">期刊</span></span><span class="ref-brief">以掩码和时间间隔表示缺失模式</span></span></summary><div class="reference-body"><cite>Recurrent Neural Networks for Multivariate Time Series with Missing Values.</cite><p>Che Z, Purushotham S, Cho K, Sontag D, Liu Y. Scientific Reports, 8: 6085.</p><p>缺失表示的方法来源；原实验为临床分类。本轮核读摘要。</p><a href="https://doi.org/10.1038/s41598-018-24271-9">期刊页面 ↗</a> · <a href="https://arxiv.org/abs/1606.01865">作者稿</a></div></details>
+    </div>
+    <details class="pending-block"><summary>待补读的两篇直接近邻 <span class="badge pending">已核题录，未核全文</span></summary><div class="pending-content">
+      <article data-publication="metadata-only"><h3>GBDT与TCN · Applied Energy · 2023</h3><p>A hybrid electric vehicle load classification and forecasting approach based on GBDT algorithm and temporal convolutional network.</p><p><strong>补读重点：</strong>树模型与序列网络各自承担什么角色。</p><a href="https://doi.org/10.1016/j.apenergy.2023.121768">期刊入口 ↗</a></article>
+      <article data-publication="metadata-only"><h3>相似日与异质特征 · Applied Energy · 2026</h3><p>A similar day selection framework with heterogeneous feature integration for electric vehicle charging load forecasting.</p><p><strong>补读重点：</strong>历史选择、特征融合位置与评价协议。</p><a href="https://doi.org/10.1016/j.apenergy.2026.127731">期刊入口 ↗</a></article>
+    </div></details>
+  </section>
+  <footer><span>主题式文献综述 · 核查日期 2026.11.23</span><a href="index.html">返回研究总览 →</a></footer>
+</main>
+<script>
+function revealCitation(){
+  const target=document.getElementById(location.hash.slice(1));
+  if(target?.matches('details.reference')){
+    target.open=true;
+    requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
+  }
+}
+window.addEventListener('hashchange',revealCitation);
+document.addEventListener('click',event=>{
+  const link=event.target.closest('a[href^="#ref-"]');
+  if(link&&link.hash===location.hash)revealCitation();
+});
+revealCitation();
+</script>
+</body></html>

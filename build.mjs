@@ -23,6 +23,8 @@ const pages=[
   {file:'methods.html',label:'完整方法表',ids:['methods'],intro:'按研究方向检索已经尝试的方法、数据与结果。'},
   {file:'resources.html',label:'资料与复现',ids:['downloads','reproduction'],intro:'论文文件、参考文献、数据包与复现实验入口。'}
 ];
+const navigationPages=[...pages,{file:'literature.html',label:'文献综述'}];
+const navigationFor=file=>navigationPages.map(p=>`<a href="${p.file}"${p.file===file?' class="active" aria-current="page"':''}>${p.label}</a>`).join('');
 const anchors={};
 for(const page of pages)for(const section of page.ids){
   if(!sections.has(section))throw new Error(`Missing section ${section}`);
@@ -33,7 +35,7 @@ const scripts=['data.js','app.js','methods.js','reading.js'];
 const script=code=>`<script>${code.replaceAll('</script','<\\/script')}</script>`;
 const css=read('style.css')+'\n'+read('theme.css');
 for(const [index,page] of pages.entries()){
-  const navigation=pages.map(p=>`<a href="${p.file}"${p.file===page.file?' class="active" aria-current="page"':''}>${p.label}</a>`).join('');
+  const navigation=navigationFor(page.file);
   const intro=page.intro?`<header class="page-heading"><span class="section-no">CHARGING LOAD / ${String(index+1).padStart(2,'0')}</span><h1>${page.label}</h1><p>${page.intro}</p></header>`:'';
   const tabs=page.tabs?`<nav class="local-tabs" aria-label="方法小节" data-section-switcher>${page.ids.map((id,i)=>`<a href="#${id}">${String(i+1).padStart(2,'0')} ${page.tabs[i]}</a>`).join('')}</nav>`:'';
   const previous=pages[index-1],next=pages[index+1];
@@ -55,4 +57,7 @@ ${scripts.map(name=>script(read(name))).join('\n')}
     anchors[anchor]&&anchors[anchor]!==page.file?`href="${anchors[anchor]}#${anchor}"`:original);
   writeFileSync(new URL(page.file,import.meta.url),html);
 }
-console.log(`Built ${pages.length} linked research pages`);
+writeFileSync(new URL('literature.html',import.meta.url),read('literature.html')
+  .replace('<!--SITE_NAV-->',navigationFor('literature.html'))
+  .replace('/*LITERATURE_STYLE*/',read('literature.css')));
+console.log(`Built ${pages.length} research pages and the literature onepage`);

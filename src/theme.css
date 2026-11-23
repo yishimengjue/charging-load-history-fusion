@@ -5,7 +5,7 @@
   --amber:#93692c; --green:#26705c; --red:#aa5368;
   --violet-bg:#efebfc; --amber-bg:#fff1d9; --green-bg:#edf7f1; --red-bg:#ffebef;
 }
-html {scroll-behavior:auto;scroll-padding-top:96px}
+html {scroll-behavior:auto;scroll-padding-top:calc(var(--header-height,84px) + 12px)}
 body {background:var(--bg);font-size:15px;line-height:1.8}
 body:before {display:none}
 strong,b {font-weight:700}
@@ -153,7 +153,7 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
   .method-controls {grid-template-columns:1fr 1fr}.group-select {grid-column:1/-1}
 }
 @media(max-width:760px){
-  html {scroll-padding-top:128px}main {padding:0 18px}
+  html {scroll-padding-top:calc(var(--header-height,181px) + 12px)}main {padding:0 18px}
   .topbar {padding:12px 18px}.topbar nav {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px!important;width:100%}
   .topbar nav a {padding:6px 7px;font-size:12px;text-align:center}.brand {font-size:14px}
   .page-heading {padding-top:25px}.page-heading h1 {font-size:29px}
