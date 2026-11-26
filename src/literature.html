@@ -6,8 +6,8 @@
 <header class="topbar"><a class="brand" href="index.html"><span aria-hidden="true">↗</span>充电负荷预测</a><nav class="site-nav" aria-label="阅读导航"><!--SITE_NAV--></nav></header>
 <main id="main">
   <header class="hero">
-    <div><p class="eyebrow">文献综述 / 2026.11</p><h1>充电负荷预测中的<br><span>历史表示与信息融合</span></h1><p class="hero-lead">预测对象、历史信息组织、信息融合与预测组合。</p></div>
-    <aside class="focus-note" aria-label="本文聚焦"><span>本文聚焦</span><p><strong>近期序列</strong>保留变化顺序<br><strong>目标时段历史</strong>补充同类时段经验</p><small>比较历史的接入、表示与组合收益。</small></aside>
+    <div><p class="eyebrow">文献综述 / 2026.11.26</p><h1>充电负荷预测中的<br><span>历史表示与信息融合</span></h1><p class="hero-lead">从周期参照与序列建模，定位目标时段历史的输入作用。</p></div>
+    <aside class="focus-note" aria-label="本文聚焦"><span>当前研究主线</span><p><strong>近期序列</strong>：连续168小时<br><strong>目标时段历史</strong>：18个同小时槽位</p><small>逐条记录与近期表示融合，预测未来24步。</small><p class="focus-link"><a href="method.html#history">查看取数示例与输入定义 →</a></p></aside>
   </header>
   <nav class="section-nav" aria-label="本页目录"><a href="#flow"><span>01</span>预测与历史</a><a href="#studies"><span>02</span>选择与融合</a><a href="#position"><span>03</span>组合与定位</a><a href="#references"><span>04</span>参考文献</a></nav>
 
@@ -17,16 +17,16 @@
       <p class="review-paragraph">充电负荷既可作为整体直接预测，也可先预测会话数量、到达时间、持续时间和电量，再重构聚合曲线。Amara-Ouali等比较了直接概率预测与会话分解方法，其负荷曲线由会话记录在恒功率假设下重构<a class="citation" href="#ref-1" aria-label="参考文献1">[1]</a>。UrbanEV提供充电需求预测基准，并评估了TimeXer；其外部特征实验以区域占用率为目标，充电量由时长与额定功率估算<a class="citation" href="#ref-2" aria-label="参考文献2">[2]</a>。会话重构、占用率与计量负荷对应不同的观测标签。</p>
       <p class="review-paragraph">历史参照可按周期或相似性组织。Amara-Ouali等以过去九个同星期、同时刻的观测计算经验分位数<a class="citation" href="#ref-1" aria-label="参考文献1">[1]</a>。Li等利用区域、日历和天气特征选择相似日，并对日负荷曲线加权预测<a class="citation" href="#ref-3" aria-label="参考文献3">[3]</a>。前者围绕固定时段形成经验分布，后者根据样本特征选择参照日，两者均将历史样本的组织方式纳入预测过程。</p>
       <p class="review-paragraph">序列模型通过学习表示利用近期与周期信息。LSTNet结合循环与跳跃循环结构，并以近期记录和历史同一时刻记录的联合使用为建模动机<a class="citation" href="#ref-4" aria-label="参考文献4">[4]</a>。PatchTST将连续序列划分为片段，作为Transformer的输入单元<a class="citation" href="#ref-5" aria-label="参考文献5">[5]</a>。TimeMixer对历史序列下采样，再混合不同分辨率的季节与趋势成分<a class="citation" href="#ref-6" aria-label="参考文献6">[6]</a>。这些方法改变连续历史的编码方式，相似日和时段参照方法则改变被选取的历史样本。</p>
-      <p class="review-paragraph">扩大连续窗口、选择目标时段参照和构造统计摘要，分别改变<strong>历史范围、样本组成和输入表示</strong>。这三个维度为比较历史信息的使用方式提供了依据。</p>
+      <p class="review-paragraph">扩大连续窗口会增加输入的时间范围，按目标时段提取记录会改变信息的组织方式，统计摘要则将多条记录压缩为分布描述。<strong>已有信息的重组与更早观测的加入</strong>对应不同的预测增量，需通过分开的输入对照判断其作用。</p>
     </div>
   </section>
 
   <section class="chapter review-section" id="studies">
     <div class="section-heading"><h2>2. 历史选择与信息融合</h2></div>
     <div class="review-prose">
-      <p class="review-paragraph">多步预测模型已形成多类输入的联合建模结构。TFT区分静态变量、未来已知变量与历史观测变量，通过循环层和注意力层处理不同时间范围的信息<a class="citation" href="#ref-7" aria-label="参考文献7">[7]</a>。TimeXer分别编码目标序列片段与外生变量，并利用目标序列的全局表示聚合外生信息<a class="citation" href="#ref-8" aria-label="参考文献8">[8]</a>。由目标序列自身计算的历史统计属于历史表示，其设计涉及信息的组织与接入位置。</p>
+      <p class="review-paragraph">多步预测模型已形成多类输入的联合建模结构。TFT区分静态变量、未来已知变量与历史观测变量，通过循环层和注意力层处理不同时间范围的信息<a class="citation" href="#ref-7" aria-label="参考文献7">[7]</a>。TimeXer分别编码目标序列片段与外生变量，并利用目标序列的全局表示聚合外生信息<a class="citation" href="#ref-8" aria-label="参考文献8">[8]</a>。从目标序列自身提取的同小时记录属于历史输入，而非天气、价格等外生变量；其建模问题是如何将历史参照接入近期表示。</p>
       <p class="review-paragraph">历史检索将样本选择与预测结合。GNA检索后续结果已完整观测的历史窗口，并按预测步和变量调节历史延续的使用<a class="citation" href="#ref-9" aria-label="参考文献9">[9]</a>。XMatch以外生模式查询训练集原型树，根据相似性和历史样本支持分配匹配权重<a class="citation" href="#ref-10" aria-label="参考文献10">[10]</a>。两项工作均为2026年预印本。它们通过学习机制选择历史信息；固定日历参照则预先规定样本范围，再将选中记录交给预测器。</p>
-      <p class="review-paragraph">在同一候选集合下，原始值保留各次观测，统计摘要提供预设的分布描述。均值描述负荷水平，分位数与零值比例补充分布特征；计数、年龄与可用性标记分别描述参照数量、时效和观测可得性。这一区分将<strong>历史样本的选取与选取后的表示</strong>分开，使原始候选、均值及支持信息、分布摘要成为可比较的输入方式。</p>
+      <p class="review-paragraph">逐条历史值保留各次观测，统计摘要则用均值、分位数或零值比例表达预设的分布特征。两者向预测器提供的信息粒度不同。观测标记用于区分真实零负荷与记录缺失，启用标记用于区分输入配置；这些标记描述<strong>记录的可用状态</strong>，与记录的负荷数值共同构成历史输入。</p>
     </div>
   </section>
 
@@ -34,8 +34,10 @@
     <div class="section-heading"><h2>3. 预测组合与研究定位</h2></div>
     <div class="review-prose">
       <p class="review-paragraph">信息融合在模型内部联合不同表示，预测组合则汇总多个预测输出。充电研究中，Shang和Ma结合GRU与核支持向量回归，并加权汇总不同区域的预测<a class="citation" href="#ref-11" aria-label="参考文献11">[11]</a>。针对同一目标的多模型预测，Wang等归纳了无需估参的简单组合、时变权重、非线性组合与跨模型学习<a class="citation" href="#ref-12" aria-label="参考文献12">[12]</a>。区域负荷汇总与同一负荷目标的预测平均对应不同的组合任务。</p>
-      <p class="review-paragraph">本文以近期168小时序列为基础，考察目标时段对齐历史的预测增量，并与扩展连续历史窗口比较；在相同历史候选下，对照原始记录、均值及样本支持信息和分布摘要。统计树与神经预测的输出平均另行评价，以区分<strong>历史表示的输入收益和多个预测器的组合收益</strong>。</p>
+      <p class="review-paragraph">上述研究已采用周期参照、长短期联合建模与多输入融合。本文围绕<strong>目标时段历史的显式接入</strong>构建预测器：近期168小时由TimeXer编码；每个未来步提取前1—7天及前14、21、…、84天的同小时记录。18个槽位各包含负荷值、启用标记和观测标记，构成54维历史输入，与64维近期表示拼接，再经各计量序列的输出头形成历史融合修正，与近期基础预测相加。</p>
+      <p class="review-paragraph">前1—7天同小时记录已包含在近期168小时序列内，该组比较检验<strong>已有信息重组</strong>的作用；加入第2—12周记录的组间比较检验<strong>更早历史</strong>的增量。候选中位数与同信息共享树用于比较历史值的利用方式，原摘要输入流程及其与统计树的输出平均作为既有方案参照。OP、LCL与SOFIE分别评价，并将MAE变化分解至零负荷、普通正负荷与高负荷位置，以连接输入改动、预测收益及负荷状态差异。</p>
     </div>
+    <div class="review-reading-links" aria-label="研究定位对应的页面"><a href="method.html#workflow">输入对照与验证链路 →</a><a href="results.html#evidence">预测结果与原方案比较 →</a><a href="results.html#tradeoff">按负荷状态分解误差 →</a></div>
   </section>
 
   <section class="chapter" id="references">
@@ -55,7 +57,7 @@
       <details class="reference" id="ref-12" data-publication="published"><summary><span class="ref-no">12</span><span class="ref-heading"><span>Wang等 · 2023 <span class="badge">综述</span></span><span class="ref-brief">从简单组合到学习式预测组合</span></span></summary><div class="reference-body"><cite>Forecast combinations: An over 50-year review.</cite><p>Wang X, Hyndman R J, Li F, Kang Y. International Journal of Forecasting, 39(4): 1518–1547.</p><p>覆盖无需估参的规则、时变权重、非线性组合等。本轮核读作者页面摘要。</p><a href="https://robjhyndman.com/publications/combinations/">作者页面 ↗</a> · <a href="https://doi.org/10.1016/j.ijforecast.2022.11.005">期刊页面</a></div></details>
     </div>
   </section>
-  <footer><span>文献核查 2026.11.23 · 正文更新 2026.11.24</span><a href="index.html">返回研究总览 →</a></footer>
+  <footer><span>文献核查 2026.11.23 · 正文更新 2026.11.26</span><a href="index.html">返回研究总览 →</a></footer>
 </main>
 <script>
 function revealCitation(){

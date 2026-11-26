@@ -17,12 +17,21 @@ test('page exposes the three journal sections and references',()=>{
   const html=page();
   for(const id of ['flow','studies','position','references'])assert(html.includes(`id="${id}"`),id);
   assert.equal((html.match(/class="review-prose"/g)||[]).length,3);
-  assert.equal((html.match(/<p class="review-paragraph">/g)||[]).length,9);
+  assert.equal((html.match(/<p class="review-paragraph">/g)||[]).length,10);
   for(const heading of ['预测对象与历史信息组织','历史选择与信息融合','预测组合与研究定位'])assert(html.includes(heading));
   assert(!html.includes('文本消融'));
   assert(!html.includes('GRU-D'));
   assert(html.includes('<strong>近期序列</strong>'));
   assert(html.includes('<strong>目标时段历史</strong>'));
+});
+test('literature describes the implemented raw-history route and separates old comparisons',()=>{
+  const html=page().split('<script>')[0];
+  for(const term of ['前1—7天','前14、21、…、84天','18个槽位','54维','64维','已包含在近期168小时序列内','原摘要输入流程','候选中位数','SOFIE'])assert(html.includes(term),term);
+  assert(!html.includes('并与扩展连续历史窗口比较'));
+  assert(!html.includes('在相同历史候选下，对照原始记录、均值'));
+  assert(html.includes('正文更新 2026.11.26'));
+  for(const href of ['method.html#history','method.html#workflow','results.html#evidence','results.html#tradeoff'])assert(html.includes(`href="${href}"`),href);
+  assert(!read('resources.html').includes('文献正文保留综述版本'));
 });
 test('twelve core citations retain evidence status',()=>{
   const html=page();

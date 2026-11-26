@@ -41,8 +41,14 @@ const fs=require('node:fs');
         await page.locator('#method-search').fill('TimeXer');
         assert(!/总览 0 条 · 早期细项 0 条/.test(await page.locator('#filter-count').innerText()));
       }
+      if(file==='literature.html'){
+        await page.locator('a.citation[href="#ref-4"]').click();
+        assert(await page.locator('#ref-4').evaluate(el=>el.open));
+        await page.locator('#ref-4 summary').click();
+        assert(!(await page.locator('#ref-4').evaluate(el=>el.open)));
+      }
       await page.evaluate(()=>window.scrollTo(0,0));
-      await page.screenshot({path:`/private/tmp/current-site-qa/${width}-${file}.png`,fullPage:true});
+      await page.screenshot({path:`/private/tmp/current-site-qa/${width}-${file}.png`,fullPage:true,animations:'disabled'});
       report.push({width,file,overflow:false});
     }
     await page.close();
