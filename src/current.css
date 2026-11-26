@@ -1,0 +1,84 @@
+/* Current research pages: short sections, quiet cards and explicit result colors. */
+.current-chapter {padding-top:30px}
+.current-chapter p {max-width:78ch}
+.current-chapter h3 {font-size:19px;line-height:1.5}
+.current-hero {display:grid;grid-template-columns:1.6fr 1fr;gap:40px;align-items:center;padding:18px 0 10px}
+.current-hero h1 {font-size:clamp(30px,3.6vw,46px);line-height:1.25}
+.current-hero .eyebrow {display:block;margin-bottom:18px}
+.current-actions {display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.current-link {display:inline-block;background:var(--violet-bg);padding:8px 13px;border-radius:6px;margin:6px 9px 6px 0;font-size:14px;font-weight:650;text-decoration:none}
+.current-link:hover {background:#e1d9f8;text-decoration:none}
+.current-highlight {background:var(--green-bg);border:1px solid #b5d9c7;border-radius:16px;padding:28px;display:grid;gap:6px}
+.current-highlight>strong {font-size:72px;color:var(--green);line-height:1.2;letter-spacing:-.04em}
+.current-highlight>strong span {font-size:32px}
+.current-highlight small {color:var(--muted);font-size:12px}
+.current-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0}
+.current-cards article {background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px}
+.current-cards h3 {margin:0 0 9px}
+.current-cards p {font-size:15px;margin:0}
+.current-note {background:var(--violet-bg);border-left:3px solid var(--blue);padding:12px 17px;margin:18px 0;max-width:none!important;border-radius:0 6px 6px 0;font-size:14px}
+.current-chapter .table-wrap {overflow-x:auto;margin:20px 0}
+.current-table {min-width:650px;width:100%;font-size:14px;border-collapse:collapse}
+.current-table th,.current-table td {padding:13px 16px;text-align:left;line-height:1.65;vertical-align:top}
+.current-table tbody th {background:#fbfafc;font-weight:600}
+.current-table td {font-variant-numeric:tabular-nums}
+.current-table caption {text-align:left;color:var(--muted)}
+.current-table tr:nth-child(even) {background:#fbfafc}
+.current-summary {display:grid;gap:12px;border-left:3px solid var(--blue);padding-left:20px}
+.current-summary p {margin:0}
+.current-route {list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:0}
+.current-route li {display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);padding:17px;border-radius:10px}
+.current-route li>span {font-size:24px;color:var(--muted);font-weight:700}
+.current-route li.selected {background:var(--violet-bg);border-color:#b8a7e9}
+.current-route p {font-size:14px;margin:7px 0 0}
+.current-subhead {margin-top:34px}
+.current-duo {display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.history-example {border:1px solid var(--line);background:#fff;padding:18px 22px;border-radius:10px}
+.history-example>span {display:block;font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px}
+.history-example p {font-size:15px;margin-top:8px}
+.current-timeline {display:grid;gap:12px;max-width:780px;counter-reset:step}
+.current-timeline .history-example {position:relative;margin-left:30px;border-left:3px solid var(--blue)}
+.current-timeline .history-example:before {counter-increment:step;content:counter(step);position:absolute;left:-34px;top:18px;background:var(--blue);color:white;border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;font-size:12px}
+.current-figure {margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:460px;width:100%}
+.current-figure img {display:block;width:100%;height:auto}
+.current-figure figcaption {border-top:1px solid var(--line);padding:12px 18px;font-size:13px;color:var(--muted);line-height:1.6}
+.current-figure figcaption a {display:inline-block;margin-left:6px;font-weight:600}
+.current-method-layout,.current-result-layout {display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:30px;align-items:start}
+.current-method-layout .current-cards {grid-template-columns:1fr;margin-top:0}
+.current-result-copy {padding:16px 0}
+.current-result-copy p {margin:14px 0}
+.current-result-copy .current-result-number {font-size:32px;font-weight:700;margin:22px 0 0}
+.current-scope-controls {display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}
+.current-scope-controls button {border:1px solid var(--line);border-radius:7px;background:#fff;padding:10px 14px;color:var(--muted);font:inherit;font-size:14px;cursor:pointer}
+.current-scope-controls button[aria-pressed=true] {background:var(--blue);color:#fff;border-color:var(--blue);font-weight:700}
+.current-scope-controls[hidden],.current-scope-panel[hidden] {display:none}
+.current-scope-panel {margin-bottom:22px}
+.current-chapter .reading-details {margin:18px 0}
+.current-chapter .reading-details .detail-body {padding:18px 20px}
+.current-chapter .detail-body p {font-size:14px;margin:0 0 12px}
+.current-chapter .detail-body .current-figure {margin:auto}
+.current-lanes {display:grid;gap:12px}
+.current-lanes article {display:grid;grid-template-columns:100px 180px 1fr 1fr;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:9px;padding:18px}
+.current-lanes article>span {background:var(--violet-bg);color:var(--blue);font-weight:700;padding:8px;border-radius:6px;text-align:center}
+.current-lanes p {font-size:14px;margin:0}
+.current-lanes strong {color:var(--green);font-size:14px}
+@media(max-width:800px){
+  .current-hero {grid-template-columns:1fr;gap:22px}
+  .current-highlight {padding:22px}
+  .current-highlight>strong {font-size:56px}
+  .current-cards {grid-template-columns:1fr}
+  .current-route {grid-template-columns:1fr 1fr}
+  .current-method-layout,.current-result-layout {grid-template-columns:1fr;gap:16px}
+  .current-figure {margin:auto}
+  .current-result-copy {padding:0}
+  .current-duo {grid-template-columns:1fr}
+  .current-lanes article {grid-template-columns:1fr;gap:8px}
+  .current-lanes article>span {width:max-content;padding:3px 10px}
+}
+@media(max-width:480px){
+  .current-route {grid-template-columns:1fr}
+  .current-route li {flex-direction:row;gap:14px}
+  .current-scope-controls {display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .current-scope-controls button {font-size:12px;padding:9px 6px}
+  .current-chapter .detail-body {padding:12px!important}
+}

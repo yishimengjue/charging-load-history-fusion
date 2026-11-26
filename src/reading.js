@@ -6,7 +6,7 @@
   const heading = methods.querySelector('.methods-hero');
   heading.querySelector('h2').textContent = '完整方法与早期实验记录';
   heading.querySelector('.hero-lead').textContent = '从点预测、会话分解到历史融合，按研究方向查看方法、数据、效果与取舍。';
-  heading.querySelector('.result-note').textContent = '绿色表示保留在研究路线中的组件；近期扩展实验见“新增尝试”页。';
+  heading.querySelector('.result-note').textContent = '此表为历次实验档案，绿色表示当时保留的组件。当前选择与新增验证见“近期尝试”页。';
   }
 
   const sectionIds = site?.sectionIds || [];

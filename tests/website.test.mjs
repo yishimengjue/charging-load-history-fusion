@@ -13,15 +13,16 @@ test('separated pages preserve unique research anchors and bundled scripts',()=>
   assert.equal(ids.length,new Set(ids).size);
   for(const page of pageHtml)assert(page.indexOf('<script>window.PAPER_DATA')>page.indexOf('</main>'));
 });
-test('example arithmetic is consistent with its table',()=>{
-  const example=html.split('id="worked-prediction"')[1].split('<section id="task"')[0];
-  const rows=[...example.matchAll(/<tr><th>(18|19)点<\/th>((?:<td[^>]*>.*?<\/td>)+)<\/tr>/g)]
-    .map(m=>[...m[2].matchAll(/<td[^>]*>([\d.]+)<\/td>/g)].map(c=>Number(c[1])));
-  assert.equal(rows.length,2);
-  for(const[n,s,f,y,en,ef]of rows){assert.equal(f,(n+s)/2);assert.equal(en,Math.abs(n-y));assert.equal(ef,Math.abs(f-y));}
-  assert.equal(rows.reduce((a,r)=>a+r[4],0)/rows.length,2);
-  assert.equal(rows.reduce((a,r)=>a+r[5],0)/rows.length,3);
-  assert(example.includes('虚构讲解数据'));
+test('timeline example explains which records are available before prediction',()=>{
+  const example=html.split('id="worked-prediction"')[1].split('</section>')[0];
+  for(const text of ['2022年3月22日','3月15日至21日','3月8日','7＋11 = 18','不是实测预测曲线'])assert(example.includes(text),text);
+  const origin=Date.parse('2022-03-22T00:00:00Z');
+  assert.equal(new Date(origin).getUTCDay(),2);
+  for(const age of [1,2,3,4,5,6,7,14,21,28,35,42,49,56,63,70,77,84]){
+    const candidate=origin+18*3600000-age*86400000;
+    assert(candidate<=origin);
+    if(age>=14)assert.equal(new Date(candidate).getUTCDay(),2);
+  }
 });
 test('matched summary results reproduce the headline percentage gains',()=>{
   const context={window:{}};vm.runInNewContext(readFileSync(resolve(root,'src/data.js'),'utf8'),context);
@@ -44,16 +45,9 @@ test('method inventory and release data scope remain explicit',()=>{
 });
 test('latest experiments keep scope, comparator and decision beside their results',()=>{
   assert(html.includes('id="latest-research"'));
-  assert(html.includes('2026.11.19'));
-  for(const id of ['pooling-extension','state-extension','duration-extension','residual-extension']){
-    const row=html.match(new RegExp(`<tr id="${id}"[\\s\\S]*?</tr>`))?.[0];
-    assert(row,id);
-    assert(row.includes('OP'),id);
-    assert(row.includes('不采用')||row.includes('扩展比较'),id);
-  }
-  assert(html.includes('4.464749 → 4.647791'));
-  assert(html.includes('4.660014 → 4.528610'));
-  assert(html.includes('展开流程图与训练细节'));
+  assert(html.includes('2026.11.26'));
+  for(const text of ['同候选中位数','同信息共享树','充电状态探针','SparseTSF','当前版本停止','尚未运行'])assert(html.includes(text),text);
+  assert(html.includes('0.241377'));
   assert(readFileSync(resolve(root,'src/reading.js'),'utf8').includes('revealDestination'));
 });
 test('method filtering distinguishes nested archive rows from the outer reading panel',()=>{

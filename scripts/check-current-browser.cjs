@@ -1,0 +1,55 @@
+const assert=require('node:assert/strict');
+const {chromium}=require('playwright');
+const fs=require('node:fs');
+(async()=>{
+  const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
+  const errors=[],report=[];
+  const base=process.env.SITE_URL||'http://127.0.0.1:55986/';
+  fs.mkdirSync('/private/tmp/current-site-qa',{recursive:true});
+  for(const width of [1440,390]){
+    const page=await browser.newPage({viewport:{width,height:1000}});
+    page.on('pageerror',e=>errors.push(e.message));
+    for(const file of ['index.html','method.html','results.html','exploration.html','methods.html','resources.html','literature.html']){
+      await page.goto(base+file);await page.waitForLoadState('networkidle');
+      assert(await page.locator('h1,h2').count()>0,file);
+      const size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
+      assert(size.scroll<=size.client+1,`${file} at ${width} overflows: ${JSON.stringify(size)}`);
+      // Hidden details contain lazy images; request decoding before checking their assets.
+      for(const img of await page.locator('img').all())assert(await img.evaluate(async el=>{el.loading='eager';await el.decode();return el.complete&&el.naturalWidth>0;}),`${file} image`);
+      if(file==='method.html'){
+        for(const id of ['task','history','model','workflow','worked-prediction']){
+          await page.locator(`[data-section-switcher] a[href="#${id}"]`).click();
+          assert(await page.locator('#'+id).isVisible(),id);
+          assert.equal(await page.locator('main>section:visible').count(),1);
+        }
+        await page.locator('[data-section-switcher] a[href="#model"]').click();
+        await page.locator('[data-term="TimeXer"]').first().click();
+        assert(await page.locator('#term-card').isVisible());
+        const box=await page.locator('#term-card').boundingBox();assert(box.x>=0&&box.x+box.width<=width+1);
+        await page.keyboard.press('Escape');assert(!(await page.locator('#term-card').isVisible()));
+        assert.equal(await page.evaluate(()=>document.activeElement.dataset.term),'TimeXer');
+      }
+      if(file==='results.html'){
+        for(const id of ['op-winter','op-july','lcl','sofie']){
+          await page.locator(`[data-current-scope="${id}"]`).click();
+          assert.equal(await page.locator('[data-current-panel]:visible').count(),2);
+          assert.equal(await page.locator(`[data-current-panel="${id}"]:visible`).count(),2);
+        }
+      }
+      if(file==='methods.html'){
+        await page.locator('#group-filter').selectOption('all');
+        await page.locator('#method-search').fill('TimeXer');
+        assert(!/总览 0 条 · 早期细项 0 条/.test(await page.locator('#filter-count').innerText()));
+      }
+      await page.evaluate(()=>window.scrollTo(0,0));
+      await page.screenshot({path:`/private/tmp/current-site-qa/${width}-${file}.png`,fullPage:true});
+      report.push({width,file,overflow:false});
+    }
+    await page.close();
+  }
+  const nojs=await browser.newPage({javaScriptEnabled:false,viewport:{width:390,height:900}});
+  await nojs.goto(base+'results.html');assert.equal(await nojs.locator('[data-current-panel]:visible').count(),8);
+  await nojs.close();await browser.close();
+  assert.deepEqual(errors,[]);
+  console.log(JSON.stringify({passed:true,pages:report,checks:'images, overflow, method tabs, glossary focus, scope controls, method search, no-JS fallback'},null,2));
+})().catch(e=>{console.error(e);process.exit(1)});

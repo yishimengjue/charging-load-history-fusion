@@ -204,94 +204,117 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
   .local-tabs~section[hidden] {display:block!important}
   body {background:#fff}.chapter {padding-top:24px}
 }
+
+/* Current research pages: short sections, quiet cards and explicit result colors. */
+.current-chapter {padding-top:30px}
+.current-chapter p {max-width:78ch}
+.current-chapter h3 {font-size:19px;line-height:1.5}
+.current-hero {display:grid;grid-template-columns:1.6fr 1fr;gap:40px;align-items:center;padding:18px 0 10px}
+.current-hero h1 {font-size:clamp(30px,3.6vw,46px);line-height:1.25}
+.current-hero .eyebrow {display:block;margin-bottom:18px}
+.current-actions {display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.current-link {display:inline-block;background:var(--violet-bg);padding:8px 13px;border-radius:6px;margin:6px 9px 6px 0;font-size:14px;font-weight:650;text-decoration:none}
+.current-link:hover {background:#e1d9f8;text-decoration:none}
+.current-highlight {background:var(--green-bg);border:1px solid #b5d9c7;border-radius:16px;padding:28px;display:grid;gap:6px}
+.current-highlight>strong {font-size:72px;color:var(--green);line-height:1.2;letter-spacing:-.04em}
+.current-highlight>strong span {font-size:32px}
+.current-highlight small {color:var(--muted);font-size:12px}
+.current-cards {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0}
+.current-cards article {background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px}
+.current-cards h3 {margin:0 0 9px}
+.current-cards p {font-size:15px;margin:0}
+.current-note {background:var(--violet-bg);border-left:3px solid var(--blue);padding:12px 17px;margin:18px 0;max-width:none!important;border-radius:0 6px 6px 0;font-size:14px}
+.current-chapter .table-wrap {overflow-x:auto;margin:20px 0}
+.current-table {min-width:650px;width:100%;font-size:14px;border-collapse:collapse}
+.current-table th,.current-table td {padding:13px 16px;text-align:left;line-height:1.65;vertical-align:top}
+.current-table tbody th {background:#fbfafc;font-weight:600}
+.current-table td {font-variant-numeric:tabular-nums}
+.current-table caption {text-align:left;color:var(--muted)}
+.current-table tr:nth-child(even) {background:#fbfafc}
+.current-summary {display:grid;gap:12px;border-left:3px solid var(--blue);padding-left:20px}
+.current-summary p {margin:0}
+.current-route {list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:0}
+.current-route li {display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);padding:17px;border-radius:10px}
+.current-route li>span {font-size:24px;color:var(--muted);font-weight:700}
+.current-route li.selected {background:var(--violet-bg);border-color:#b8a7e9}
+.current-route p {font-size:14px;margin:7px 0 0}
+.current-subhead {margin-top:34px}
+.current-duo {display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.history-example {border:1px solid var(--line);background:#fff;padding:18px 22px;border-radius:10px}
+.history-example>span {display:block;font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px}
+.history-example p {font-size:15px;margin-top:8px}
+.current-timeline {display:grid;gap:12px;max-width:780px;counter-reset:step}
+.current-timeline .history-example {position:relative;margin-left:30px;border-left:3px solid var(--blue)}
+.current-timeline .history-example:before {counter-increment:step;content:counter(step);position:absolute;left:-34px;top:18px;background:var(--blue);color:white;border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;font-size:12px}
+.current-figure {margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:460px;width:100%}
+.current-figure img {display:block;width:100%;height:auto}
+.current-figure figcaption {border-top:1px solid var(--line);padding:12px 18px;font-size:13px;color:var(--muted);line-height:1.6}
+.current-figure figcaption a {display:inline-block;margin-left:6px;font-weight:600}
+.current-method-layout,.current-result-layout {display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:30px;align-items:start}
+.current-method-layout .current-cards {grid-template-columns:1fr;margin-top:0}
+.current-result-copy {padding:16px 0}
+.current-result-copy p {margin:14px 0}
+.current-result-copy .current-result-number {font-size:32px;font-weight:700;margin:22px 0 0}
+.current-scope-controls {display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}
+.current-scope-controls button {border:1px solid var(--line);border-radius:7px;background:#fff;padding:10px 14px;color:var(--muted);font:inherit;font-size:14px;cursor:pointer}
+.current-scope-controls button[aria-pressed=true] {background:var(--blue);color:#fff;border-color:var(--blue);font-weight:700}
+.current-scope-controls[hidden],.current-scope-panel[hidden] {display:none}
+.current-scope-panel {margin-bottom:22px}
+.current-chapter .reading-details {margin:18px 0}
+.current-chapter .reading-details .detail-body {padding:18px 20px}
+.current-chapter .detail-body p {font-size:14px;margin:0 0 12px}
+.current-chapter .detail-body .current-figure {margin:auto}
+.current-lanes {display:grid;gap:12px}
+.current-lanes article {display:grid;grid-template-columns:100px 180px 1fr 1fr;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:9px;padding:18px}
+.current-lanes article>span {background:var(--violet-bg);color:var(--blue);font-weight:700;padding:8px;border-radius:6px;text-align:center}
+.current-lanes p {font-size:14px;margin:0}
+.current-lanes strong {color:var(--green);font-size:14px}
+@media(max-width:800px){
+  .current-hero {grid-template-columns:1fr;gap:22px}
+  .current-highlight {padding:22px}
+  .current-highlight>strong {font-size:56px}
+  .current-cards {grid-template-columns:1fr}
+  .current-route {grid-template-columns:1fr 1fr}
+  .current-method-layout,.current-result-layout {grid-template-columns:1fr;gap:16px}
+  .current-figure {margin:auto}
+  .current-result-copy {padding:0}
+  .current-duo {grid-template-columns:1fr}
+  .current-lanes article {grid-template-columns:1fr;gap:8px}
+  .current-lanes article>span {width:max-content;padding:3px 10px}
+}
+@media(max-width:480px){
+  .current-route {grid-template-columns:1fr}
+  .current-route li {flex-direction:row;gap:14px}
+  .current-scope-controls {display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .current-scope-controls button {font-size:12px;padding:9px 6px}
+  .current-chapter .detail-body {padding:12px!important}
+}
 </style></head>
 <body data-page="index.html"><a class="skip-link" href="#main">跳到正文</a>
-<header class="topbar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">↗</span>充电负荷预测<span class="brand-sub"> / 研究图解</span></a><nav aria-label="阅读导航"><a href="index.html" class="active" aria-current="page">研究总览</a><a href="method.html">方法与示例</a><a href="results.html">实验结果</a><a href="exploration.html">新增尝试</a><a href="methods.html">完整方法表</a><a href="resources.html">资料与复现</a><a href="literature.html">文献综述</a></nav></header>
-<main id="main"><section class="hero" id="top" aria-labelledby="hero-title">
-    <div class="eyebrow">RESEARCH EXPLAINED <span>2026.11.19 / 主线结果＋扩展实验</span></div>
-    <div class="hero-grid">
-      <div>
-        <h1 id="hero-title">融合历史统计与序列<br><span class="text-blue">改进充电负荷预测</span></h1>
-        <p class="hero-lead">把<strong class="text-blue">最近一周的负荷变化</strong>与<strong class="text-orange">过去同类时段的负荷分布</strong>交给同一个模型，预测未来24小时。</p>
-        <div class="hero-tags"><span>近期曲线</span><b aria-hidden="true">＋</b><span class="orange-tag">历史统计</span><b aria-hidden="true">→</b><span>负荷预测</span></div>
-        <a class="start-link" href="#route">查看优化路线 <span aria-hidden="true">↓</span></a>
-      </div>
-      <div class="hero-map" aria-label="当前方法、输入信息与预测收益">
-        <div class="map-label">研究概览</div>
-        <div class="map-line"><span class="map-num">01</span><div><strong>当前方法</strong><p>TimeXer编码近期序列，拼接历史摘要，<br>再按计量编号适配预测输出。</p></div></div>
-        <div class="map-line"><span class="map-num">02</span><div><strong>输入信息</strong><p>最近168小时负荷与日历，<br>以及7／28／84天内同类时段的历史统计。</p></div></div>
-        <div class="map-line"><span class="map-num">03</span><div><strong>预测收益</strong><p>相对同预算无摘要网络，三个合并范围MAE<br>下降 <b class="text-green">5.63% / 1.73% / 1.50%</b>。</p></div></div>
-        <p class="map-bottom">三个范围依次为OP一至三月、AMS、LCL。<br>OP七月下降1.16%，收益区间仍跨零。</p>
-      </div>
-    </div>
-    <div class="thesis-strip"><span>一句话结论</span><p><strong>近期曲线提供变化顺序，历史摘要补充同类时段的负荷水平，两者融合后降低预测误差。</strong>MAE表示平均绝对误差，数值越低越好。</p></div>
-  </section>
-<section id="contributions" class="chapter">
-    <div class="section-heading"><span class="section-no">METHOD &amp; CONTRIBUTIONS</span><h2>核心贡献：把两种历史信息用于同一次预测</h2><p>模型既读取“最近怎样变化”，也读取“过去同类时段通常是什么水平”。</p></div>
-    <div id="innovation-position" class="innovation-position">
-      <span class="pill blue-pill">方法设计</span><h3>按预测时段组织历史，在网络内融合</h3>
-      <p>预测周二18点时，模型一边读取<strong>最近168小时的连续曲线</strong>，一边读取<strong>历史18点记录的统计摘要</strong>。TimeXer将曲线转成数值表示，再与摘要拼接，学习未来负荷。</p>
-      <div class="innovation-contrast"><div><span>01 / 组织历史</span><b>为每个未来小时准备一份摘要</b><p>从7／28／84天内取同类时段，统计均值、分位数、零负荷比例及记录是否齐全。</p></div><div><span>02 / 融合信息</span><b>近期表示＋历史摘要共同进入网络</b><p>两组信息并排输入，由网络学习预测调整量，再用各计量序列的历史适配输出。</p></div><div><span>03 / 验证贡献</span><b>同一网络，有摘要与无摘要分别训练</b><p>保持数据、训练轮数和随机种子配对，比较同一批目标的误差。</p></div></div>
-      <a href="method.html#model">查看当前融合结构 →</a>
-    </div>
-    <div class="subheading"><h3>预测收益与模型选择</h3><span>输入融合和输出平均分别比较</span></div>
-    <div class="contribution-cards evidence-cards">
-      <article class="contribution-card"><span class="pill orange-pill">输入贡献</span><h3>加入摘要，平均误差下降5.63%</h3><p>OP一至三月，相对相同训练预算的无摘要网络。</p><div class="contribution-highlight"><b>5.63%</b><span>平均误差减少0.278 kW<br>4.938161 → 4.660014 kW</span></div><strong>AMS与LCL的三个评价月分别下降1.73%和1.50%。</strong><a href="#contribution-results">查看全部摘要对照 →</a></article>
-      <article class="contribution-card"><span class="pill blue-pill">完整路线</span><h3>与统计树平均，较普通树下降9.22%</h3><p>OP一至三月，神经网络与历史统计树各给一个预测，再取平均。</p><div class="contribution-highlight"><b>9.22%</b><span>平均误差减少0.460 kW<br>4.988239 → 4.528269 kW</span></div><strong>OP与AMS的平均预测误差更低；LCL由神经网络单独预测更低。</strong><a href="results.html#tradeoff">查看不同负荷状态的原因 →</a></article>
-    </div>
-    <p class="contribution-scope"><strong>5.63%比较有无摘要，9.22%比较完整路线与普通树。</strong>两个降幅对应不同对照。</p>
-    <div class="table-wrap"><table><caption>历史摘要带来的MAE变化 · 同预算网络对照</caption><thead><tr><th>数据与时期</th><th>无摘要</th><th>有摘要</th><th>MAE降幅</th><th>单位</th></tr></thead><tbody id="contribution-results"></tbody></table></div>
-    <p class="result-note">表中为三次随机训练的指标均值。OP七月降幅1.16%，统计区间跨零，尚不能确认该期收益。预测可为充电安排提供负荷预估，当前量化收益是误差下降。</p>
-    <div class="latest-takeaway"><b>新增证据 / 摘要中哪些信息有用</b><p>OP一至三月，保留均值、记录数量等信息后，再加入<strong class="text-orange">分位数和零负荷比例</strong>，MAE从4.744899降至4.660014 kW，<strong class="text-green">下降1.79%</strong>。摘要提供的不只是一个历史均值。</p><details><summary>展开均值、分布摘要与原始历史的比较</summary><div class="detail-body"><p>同一批候选历史、同预算、三个随机种子：均值与支持信息4.744899，完整摘要4.660014，原始值与标记4.640660 kW。完整摘要优于均值对照；原始值的点误差比摘要低0.42%，两者差值区间跨零。这组对照使用18个离散历史位置，连续延长输入窗口仍属于另一项比较。</p><a href="research/HISTORY_REPRESENTATION_FINDINGS_2026-11-16.md">历史表示对照记录 →</a></div></details></div>
-    <div class="term-guide"><b>术语简介</b><span>点击正文中带虚线下划线的词，查看含义、来源与本文用途。</span><div id="term-directory" aria-label="术语快捷入口"></div></div>
-  </section>
-<section id="route" class="chapter route-chapter">
-    <div class="section-heading"><span class="section-no">00 / RESEARCH ROUTE</span><h2>研究链路与预测优化路线</h2><p>从预测问题出发，构建历史表示、设计融合方法，再用对照实验与误差分析检验结果。</p></div>
-    <div class="table-wrap research-chain-wrap"><table class="research-chain-table"><caption>研究链路：研究环节、已完成内容与对应结论</caption><thead><tr><th scope="col">研究环节</th><th scope="col">已完成的内容</th><th scope="col">对应结论</th></tr></thead><tbody id="research-chain">
-      <tr><th scope="row">01 · 明确问题</th><td>预测未来24个小时位置的充电负荷。</td><td>研究目标是降低预测误差。</td></tr>
-      <tr><th scope="row">02 · 构建历史表示</th><td>近期168小时序列＋7／28／84天同类时段统计。</td><td>连续序列描述变化顺序，历史摘要描述同类时段分布。</td></tr>
-      <tr><th scope="row">03 · 设计融合方法</th><td>TimeXer编码、摘要拼接、按计量序列适配输出。</td><td>将两种历史表示放入同一预测器。</td></tr>
-      <tr><th scope="row">04 · 验证输入贡献</th><td>同结构、同预算的有摘要与无摘要对照。</td><td>OP一至三月、AMS、LCL合并范围的MAE分别下降<strong class="text-green">5.63%、1.73%、1.50%</strong>。OP七月下降1.16%，差值区间跨零。</td></tr>
-      <tr><th scope="row">04b · 分解摘要信息</th><td>比较均值与支持信息、完整分布摘要、同候选历史原始值。</td><td>OP一至三月，分布摘要比均值对照的MAE低<strong class="text-green">1.79%</strong>；原始值点误差低于摘要0.42%，差值区间跨零。</td></tr>
-      <tr><th scope="row">05 · 比较预测组合</th><td>统计树、神经网络及等权平均。</td><td>OP两个合并范围与AMS的组合误差低于两个分支；LCL的神经单分支低于组合。</td></tr>
-      <tr><th scope="row">06 · 解释结果差异</th><td>按零负荷、普通正负荷、高负荷分解误差。</td><td>LCL中，平均预测在零负荷位置增加的误差抵消了正负荷的合计收益。</td></tr>
-    </tbody></table></div>
-    <details class="reading-details"><summary>展开路线演进与方法取舍</summary><div class="detail-body">
-    <div class="subheading"><h3>预测优化路线</h3><span>特征增强 → 序列融合 → 输出组合</span></div>
-    <ol class="decision-chain">
-      <li><span class="decision-number">1</span><div><span class="micro-label">预测基线</span><h3>直接负荷预测基线</h3><p>把已知历史值和日历交给LightGBM，学习未来负荷。</p><strong>得到统一比较起点，不先把总负荷拆成多个目标。</strong></div><span class="decision-next">保留直接预测任务</span></li>
-      <li><span class="decision-number">2</span><div><span class="micro-label">特征增强</span><h3>时段统计特征增强</h3><p>加入7／28／84天内同类时段的统计。OP一至三月MAE下降4.25%；LCL后续期增加1.03%。</p><strong>同一组统计特征在不同数据上效果不同。</strong></div><span class="decision-next">比较网络内融合</span></li>
-      <li><span class="decision-number">3</span><div><span class="micro-label">信息融合</span><h3>历史摘要与序列表示融合</h3><p>同一网络从训练开始使用或移除摘要。OP一至三月、AMS、LCL的神经MAE分别下降5.63%、1.73%、1.50%。</p><strong>历史摘要对当前序列网络的增量得到直接对照支持。</strong></div><span class="decision-next">保留为论文核心</span></li>
-      <li><span class="decision-number">4</span><div><span class="micro-label">预测组合</span><h3>树与神经预测的等权组合</h3><p>OP两个合并范围与AMS的平均误差低于两分支；LCL神经单分支比平均低2.19%。</p><strong>按数据来源报告单模型与组合结果。</strong></div><span class="decision-next">解释误差分配</span></li>
-    </ol>
-    <div class="route-tail"><div><b>直接拼接保留为当前结构</b><p>它把两组特征并排交给网络；既有“条件读取”结构另学摘要读取权重，在OP与AMS合并比较中没有超过直接拼接。数值见实验部分。</p></div><div><b>早期会话分解保留为探索背景</b><p>会话辅助特征与四段分别预测已单独试验。当前模型不依赖逐会话的到达时刻、持续时长与单次电量；旧会话任务与本页任务的MAE不混排。</p></div></div>
-    </div></details>
-  </section>
-<section id="conclusion" class="chapter conclusion">
-    <div class="section-heading"><span class="section-no">06 / CONCLUSION</span><h2>研究方法、预测收益与用途</h2><p>通过历史统计与近期序列融合，改进未来负荷预测；以匹配对照量化输入信息的贡献。</p></div>
-    <div class="conclusion-grid"><article><span>01</span><h3>两种历史表示融合</h3><p>时段对齐的多尺度摘要<br>＋ 近期序列编码<br>＋ 局部输出适配</p><strong>把两种历史表示放入同一预测器。</strong></article><article><span>02</span><h3>预测误差下降</h3><p>OP一至三月 <b>5.63%</b><br>AMS三个月 <b>1.73%</b><br>LCL三个月 <b>1.50%</b></p><strong>相对同预算无摘要网络的MAE降幅。</strong></article><article><span>03</span><h3>提供未来负荷预估</h3><p>输出未来24步负荷<br>提供负荷预估输入<br>按来源评价预测组合</p><strong>当前收益是预测误差下降。</strong></article></div>
-    <div class="scope-note"><p><strong>论文主线已固定：</strong>历史表示 → 网络融合 → 匹配对照 → 误差解释。</p><p><strong>结果组织：</strong>正文报告摘要与组合收益，扩展实验说明结构与误差权衡。</p></div>
-    <div class="paper-order"><h3>论文结构</h3><ol><li><span>引言</span><b>定义任务</b></li><li><span>相关研究</span><b>定位差异</b></li><li><span>方法</span><b>组织与融合</b></li><li><span>实验</span><b>设置对照</b></li><li><span>结果</span><b>量化与解释</b></li><li><span>结论</span><b>归纳贡献</b></li></ol></div>
-    <details><summary>查看证据入口与版本说明</summary><div class="detail-body"><p>本页读取v0.5章节的核验结果，数值保留六位小数。示意曲线与计算例子均单独标记，不充当实验结果。</p><ul class="source-links"><li><a href="research/METHODS_AND_RESULTS_v0.5.docx">方法与结果章节 · Word v0.5</a></li><li><a href="research/METHODS_AND_RESULTS_v0.5.md">核验后的正文源</a></li><li><a href="research/evidence/report-38.html">当前网络摘要消融结果</a></li><li><a href="research/summary-ablation-results.json">逐月指标与区间记录</a></li></ul><p>图解不替代完整方法说明。LCL物理单位换算和OP编号对应的计量层级仍待确认；相应结果按当前任务定义使用。</p></div></details>
-  </section><nav class="page-turns" aria-label="页面顺序"><span></span><a href="method.html"><small>下一页</small><b>方法与示例 →</b></a></nav><footer><span>历史摘要与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>研究更新 2026.11.19</small></footer></main><aside id="term-card" class="term-card" role="dialog" aria-modal="false" aria-labelledby="term-title" hidden>
+<header class="topbar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">↗</span>充电负荷预测<span class="brand-sub"> / 研究图解</span></a><nav aria-label="阅读导航"><a href="index.html" class="active" aria-current="page">研究总览</a><a href="method.html">方法与示例</a><a href="results.html">实验结果</a><a href="exploration.html">近期尝试</a><a href="methods.html">完整方法表</a><a href="resources.html">资料与复现</a><a href="literature.html">文献综述</a></nav></header>
+<main id="main"><section id="top" class="chapter current-chapter"><div class="current-hero"><div><span class="eyebrow">研究图解 / 2026.11.26</span><h1>把历史同小时记录<br>接入充电负荷预测</h1><p class="hero-lead">连续序列描述<b>最近一周如何变化</b>，同小时记录提供<b>过去对应时段的负荷参照</b>。两路信息在同一个神经网络中融合，预测未来24个小时位置。</p><div class="current-actions"><a class="current-link" href="method.html">方法与示例 →</a><a class="current-link" href="results.html">数据与结果 →</a></div></div><aside class="current-highlight"><span>OP · 2022年1—3月</span><strong>7.55<span>%</span></strong><b>相对仅近期输入，MAE下降</b><p>4.938161 → 4.565178 kW</p><small>同结构、同训练预算的三种子平均误差</small></aside></div></section>
+<section id="contributions" class="chapter current-chapter"><header class="section-heading"><span class="section-no">01 / 研究贡献</span><h2>从历史记录的组织方式入手降低误差</h2></header><div class="current-cards"><article><h3>方法：按预测时刻组织历史</h3><p>每个未来小时接收<b>18个同小时历史槽位</b>，与近期序列表示拼接。历史值、是否启用、是否观测分别表达。</p></article><article><h3>证据：拆开两种信息作用</h3><p>近7天组重组已有168小时信息；近远期组再加入第2—12周记录。用同结构对照区分<b>信息重组</b>与<b>更早历史</b>的作用。</p></article><article><h3>结果：定位误差来自哪里</h3><p>按零负荷、普通正负荷和高负荷拆分收益。四个范围均出现<b>正负荷误差减少、零负荷误差增加</b>，净效果因数据而异。</p></article></div><p class="current-note">方法贡献落在<b>目标时段历史的输入组织与验证</b>。TimeXer是借用的编码架构；预测组合另作完整方案比较。</p><div class="table-wrap"><table class="current-table"><caption>当前输入改动的结果；每行在同一数据范围内比较。</caption><thead><tr><th scope="col">评价范围</th><th scope="col">仅近期 MAE</th><th scope="col">近远期 MAE</th><th scope="col">误差变化</th><th scope="col">单位</th></tr></thead><tbody><tr><th scope="row">OP · 2022年1—3月</th><td>4.938161</td><td>4.565178</td><td><b class="text-green">下降 7.55%</b></td><td>kW</td></tr><tr><th scope="row">OP · 2022年7月1—25日</th><td>3.597243</td><td>3.525426</td><td><b class="text-green">下降 2.00%</b></td><td>kW</td></tr><tr><th scope="row">LCL · 2014年2—4月</th><td>0.146403</td><td>0.144900</td><td><b class="text-green">下降 1.03%</b></td><td>来源原始单位</td></tr><tr><th scope="row">SOFIE · 2026年4—6月</th><td>0.312088</td><td>0.318600</td><td><b class="text-red">增加 2.09%</b></td><td>kW</td></tr></tbody></table></div><p class="current-note">OP七月点估计下降2.00%，差值区间跨零；LCL仅增加近7天记录的误差更低。详见实验结果。</p></section>
+<section id="route" class="chapter current-chapter"><header class="section-heading"><span class="section-no">02 / 路线演进</span><h2>从直接预测走向目标时段历史融合</h2></header><ol class="current-route"><li><span>01</span><div><b>直接预测与会话分解</b><p>建立点预测；尝试分解会话后重建负荷。</p></div></li><li><span>02</span><div><b>历史统计与序列模型</b><p>加入同类时段摘要，比较树、TimeXer及输出平均。</p></div></li><li class="selected"><span>03</span><div><b>逐条历史与目标时刻对齐</b><p>当前主线：保留历史值，区分近7天与更早记录。</p></div></li><li><span>04</span><div><b>跨数据验证与误差分解</b><p>用LCL、SOFIE和朴素预测检验输入收益。</p></div></li></ol><details class="reading-details"><summary>展开完整路线图</summary><div class="detail-body"><figure class="current-figure"><img src="figures/route.svg" alt="五阶段路线：直接预测、历史统计、序列组合、逐条历史、跨数据比较。" loading="lazy"><figcaption>不同阶段不是可叠加的收益。 <a href="figures/route.svg" download>下载 SVG</a></figcaption></figure></div></details><a class="current-link" href="exploration.html">近期尝试与取舍 →</a><a class="current-link" href="methods.html">历年方法与结果表 →</a></section>
+<section id="conclusion" class="chapter current-chapter"><header class="section-heading"><span class="section-no">03 / 当前结论</span><h2>保留历史融合，按数据选择输入与输出</h2></header><div class="current-summary"><p><b>OP：</b>近远期网络优于同候选中位数；已有树与摘要神经组合仍有更低MAE。</p><p><b>LCL：</b>近7天重组已带来收益，继续增加远期记录没有降低误差。</p><p><b>SOFIE：</b>零负荷占87.31%，空闲时段增加的误差超过充电时段收益。</p></div></section><nav class="page-turns" aria-label="页面顺序"><span></span><a href="method.html"><small>下一页</small><b>方法与示例 →</b></a></nav><footer><span>目标时段历史与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>研究更新 2026.11.26</small></footer></main><aside id="term-card" class="term-card" role="dialog" aria-modal="false" aria-labelledby="term-title" hidden>
   <button type="button" class="term-close" aria-label="关闭术语简介">×</button>
   <span id="term-kind" class="micro-label"></span><h2 id="term-title"></h2>
   <p id="term-definition"></p><h3>本文用途</h3><p id="term-use"></p>
   <div class="term-source"><span>来源</span><a id="term-source-link"></a></div>
 </aside>
-<script>window.PAPER_SITE={"page":"index.html","anchors":{"top":"index.html","hero-title":"index.html","contributions":"index.html","innovation-position":"index.html","contribution-results":"index.html","term-directory":"index.html","route":"index.html","research-chain":"index.html","conclusion":"index.html","task":"method.html","forecast-title":"method.html","forecast-desc":"method.html","history-fill":"method.html","history":"method.html","window-example":"method.html","calendar-pools":"method.html","sample-summary":"method.html","sample-records":"method.html","sample-metrics":"method.html","model":"method.html","prediction-reading":"method.html","workflow":"method.html","flow-fusion":"method.html","flow-training":"method.html","flow-validation":"method.html","worked-prediction":"method.html","evidence":"results.html","scope-heading":"results.html","comparison-panels":"results.html","gain-summary":"results.html","architecture-rows":"results.html","tradeoff":"results.html","mix-bar":"results.html","mix-legend":"results.html","contribution-chart":"results.html","latest-research":"exploration.html","pooling-extension":"exploration.html","state-extension":"exploration.html","duration-extension":"exploration.html","residual-extension":"exploration.html","methods":"methods.html","method-search":"methods.html","status-filter":"methods.html","filter-count":"methods.html","method-empty":"methods.html","direct":"methods.html","sessions":"methods.html","sharing":"methods.html","sequence":"methods.html","fusion":"methods.html","weights":"methods.html","outputs":"methods.html","validation":"methods.html","price":"methods.html","downloads":"resources.html","reproduction":"resources.html"},"sectionIds":[]};</script>
+<script>window.PAPER_SITE={"page":"index.html","anchors":{"top":"index.html","contributions":"index.html","route":"index.html","conclusion":"index.html","task":"method.html","history":"method.html","model":"method.html","workflow":"method.html","worked-prediction":"method.html","evidence":"results.html","tradeoff":"results.html","latest-research":"exploration.html","methods":"methods.html","method-search":"methods.html","status-filter":"methods.html","filter-count":"methods.html","method-empty":"methods.html","direct":"methods.html","sessions":"methods.html","sharing":"methods.html","sequence":"methods.html","fusion":"methods.html","weights":"methods.html","outputs":"methods.html","validation":"methods.html","price":"methods.html","extensions-2026-11-19":"methods.html","pooling-extension":"methods.html","state-extension":"methods.html","duration-extension":"methods.html","residual-extension":"methods.html","downloads":"resources.html","reproduction":"resources.html"},"sectionIds":[]};</script>
 <script>window.PAPER_DATA = {
   updated: '2026-11-19',
   glossary: [
-    {term:'TimeXer',kind:'借鉴模型 · 时间序列预测',definition:'一种Transformer预测架构：从连续历史中学习变化模式，并结合目标序列之外的辅助信息预测未来。',use:'本文借用其编码结构，将近期168小时负荷编码，再与另行构建的历史摘要拼接。这里的历史摘要与融合设计属于本文的研究内容。',source:'Wang等，2024 · TimeXer: Empowering Transformers for Time Series Forecasting with Exogenous Variables',url:'https://arxiv.org/abs/2402.19072v4'},
+    {term:'TimeXer',kind:'借鉴模型 · 时间序列预测',definition:'一种Transformer预测架构：从连续历史中学习变化模式，并结合目标序列之外的辅助信息预测未来。',use:'本文借用其编码结构处理近期168小时。当前逐步表示与同小时历史记录拼接；早期版本拼接统计摘要。',source:'Wang等，2024 · TimeXer: Empowering Transformers for Time Series Forecasting with Exogenous Variables',url:'https://arxiv.org/abs/2402.19072v4'},
     {term:'OP',kind:'数据来源 · Optimise Prime',definition:'英国Optimise Prime项目的公开充电记录。OP是本页对这一数据来源的简称。',use:'构造小时边界前5分钟内最后一条功率记录，预测未来24步，误差单位为kW。一个发布方编号对应一条计量序列，物理站点映射待确认。',source:'UK Power Networks · UKPN Optimise Prime',url:'https://ukpowernetworks.opendatasoft.com/explore/dataset/ukpn-optimise-prime/information/'},
     {term:'AMS',kind:'数据简称 · 挪威住宅车库',definition:'本研究对挪威住宅车库小时充电电量任务的简称，不是预测模型。数据来自公寓建筑电动汽车充电数据集。',use:'使用单车库计量序列，检验方法在另一来源的小时电量任务中的表现，误差单位为kWh。',source:'Sorensen，2021 · Residential electric vehicle charging datasets from apartment buildings，V1',url:'https://doi.org/10.17632/jbks2rcwyj.1'},
-    {term:'LCL',kind:'数据来源 · Low Carbon London',definition:'伦敦Low Carbon London项目的居民电动汽车充电试验数据。本页使用充电记录，不是家庭总用电记录。',use:'固定48个对象，评价2013年11月至2014年1月的预测误差。目标为来源整点平均功率记录；物理单位换算待确认，保留原始单位。',source:'本页数据说明 · Low Carbon London居民充电试验',url:'#task'},
+    {term:'LCL',kind:'数据来源 · Low Carbon London',definition:'伦敦Low Carbon London项目的居民电动汽车充电试验数据。本页使用充电记录，不是家庭总用电记录。',use:'原48个试验对象，当前评价2014年2—4月，早期摘要实验评价2013年11月至2014年1月。目标为来源整点平均功率记录；误差保留来源原始单位。',source:'本页数据说明 · Low Carbon London居民充电试验',url:'#task'},
+    {term:'SOFIE',kind:'数据来源 · 充电设备运行记录',definition:'本研究使用的含光伏、储能和控制条件的充电运行数据，目标是实际交付功率。',use:'当前评价2026年4—6月8台充电设备。两个精确整点累计电量之差换算为该小时平均功率，单位kW。',source:'本页数据与计量说明',url:'#task'},
     {term:'LightGBM',kind:'借鉴模型 · 决策树预测器',definition:'通过逐轮增加决策树来修正预测误差。输入是一行特征，例如历史负荷、星期和统计量。',use:'作为普通树基线和增加历史统计的树模型；其预测也用于与神经网络做等权组合。',source:'Ke等，2017 · LightGBM: A Highly Efficient Gradient Boosting Decision Tree；链接为官方项目及论文入口',url:'https://github.com/microsoft/LightGBM'},
     {term:'MAE',kind:'评价指标 · 平均绝对误差',definition:'逐点计算预测值与真实值之差的绝对值，再取平均。数值越小，预测的平均偏差幅度越小。',use:'例如预测8 kW、实际10 kW，该点绝对误差为2 kW。不同数据的单位分别保留，不能直接比较其MAE大小。',source:'本页评价指标与计算示例',url:'#evidence'},
-    {term:'历史摘要',kind:'本文输入 · 历史统计特征',definition:'从过去同类时段提取均值、分位数、零值比例及可用记录数量等数值，压缩表达历史负荷分布；不是文字摘要。',use:'每个未来小时从7／28／84天三个参照池分别计算统计，并加入可用性标记，共54维，与近期序列表示融合。',source:'本页历史取数与摘要计算示例',url:'#history'},
-    {term:'特征拼接',kind:'融合操作 · 并排输入',definition:'把两组数值特征连接成一个更长的向量，再交给网络学习它们与预测目标的关系，不是把数值相加。',use:'将64维近期表示与54维历史摘要拼成118维输入，映射后用于预测未来负荷。',source:'本页输入特征拼接与预测流程',url:'#model'},
-    {term:'消融实验',kind:'实验方法 · 去掉组件后比较',definition:'保持主要训练设置一致，去掉一个输入或组件，重新训练并比较误差，用于判断该部分带来的增量。',use:'本文从训练开始移除历史摘要数值及可用性标记，保留近期输入、样本和训练预算，比较有摘要与无摘要网络。',source:'本页历史摘要的匹配消融实验',url:'#evidence'}
+    {term:'历史摘要',kind:'原方案输入 · 历史统计特征',definition:'从过去同类时段提取均值、分位数、零值比例及可用记录数量等数值，压缩表达历史负荷分布；不是文字摘要。',use:'原方案在7／28／84天三个参照池分别计算统计与标记，共54维。当前方案改为逐条历史值及标记，原摘要作为比较对象保留。',source:'本页历史输入与原摘要的区别',url:'#history'},
+    {term:'特征拼接',kind:'融合操作 · 并排输入',definition:'把两组数值特征连接成一个更长的向量，再交给网络学习它们与预测目标的关系，不是把数值相加。',use:'当前将64维近期表示与54维历史候选值及标记拼成118维输入，映射后用于预测未来负荷。',source:'本页输入特征拼接与预测流程',url:'#model'},
+    {term:'消融实验',kind:'实验方法 · 去掉组件后比较',definition:'保持主要训练设置一致，去掉一个输入或组件，重新训练并比较误差，用于判断该部分带来的增量。',use:'当前比较仅近期、增加近7天、增加近远期三种输入；样本、结构与训练预算保持一致。原摘要阶段的有无摘要对照保留在历史记录中。',source:'本页输入对照结果',url:'#evidence'}
   ],
   windowExample: {
     origin: '2022-03-29T00:00:00.000Z', targetHour: 18,
@@ -468,7 +491,7 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
   setHTML('#mix-legend',data.lclGroups.map((g,i)=>`<div><i class="dot" style="background:${groupColors[i]}"></i><span>${g.label}</span><b>${(g.count/total*100).toFixed(2)}%</b></div>`).join(''));
   const limit=.0045;
   setHTML('#contribution-chart',data.lclGroups.map(g=>`<div class="contribution-row"><div class="contribution-label"><span>${g.label}</span><b class="${g.contribution>0?'text-red':'text-green'}">${g.contribution>0?'+':''}${fmt(g.contribution)}</b></div><div class="diverging-track" role="img" aria-label="${g.label}使总体MAE${g.contribution>0?'增加':'减少'}${fmt(Math.abs(g.contribution))}"><span class="diverging-fill ${g.contribution<0?'negative':''}" style="--width:${Math.abs(g.contribution)/limit*50}%"></span></div></div>`).join(''));
-  if(document.querySelector('#evidence')) renderScope(data.scopes[0].id);
+  if(document.querySelector('#comparison-panels')) renderScope(data.scopes[0].id);
   explainTerms(document.querySelector('main'));
   if(!window.PAPER_SITE && 'IntersectionObserver' in window){
     const sections=[...document.querySelectorAll('.chapter')];
@@ -532,7 +555,7 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
   const heading = methods.querySelector('.methods-hero');
   heading.querySelector('h2').textContent = '完整方法与早期实验记录';
   heading.querySelector('.hero-lead').textContent = '从点预测、会话分解到历史融合，按研究方向查看方法、数据、效果与取舍。';
-  heading.querySelector('.result-note').textContent = '绿色表示保留在研究路线中的组件；近期扩展实验见“新增尝试”页。';
+  heading.querySelector('.result-note').textContent = '此表为历次实验档案，绿色表示当时保留的组件。当前选择与新增验证见“近期尝试”页。';
   }
 
   const sectionIds = site?.sectionIds || [];
@@ -595,6 +618,20 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
     if (link) revealDestination(link.hash);
   });
   revealDestination();
+})();
+</script>
+<script>(() => {
+  const controls=document.querySelector('.current-scope-controls');
+  if(!controls)return;
+  const buttons=[...controls.querySelectorAll('[data-current-scope]')];
+  const panels=[...document.querySelectorAll('[data-current-panel]')];
+  function select(id){
+    for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.currentScope===id));
+    for(const panel of panels)panel.hidden=panel.dataset.currentPanel!==id;
+  }
+  for(const button of buttons)button.addEventListener('click',()=>select(button.dataset.currentScope));
+  controls.hidden=false;
+  select(buttons[0].dataset.currentScope);
 })();
 </script>
 </body></html>

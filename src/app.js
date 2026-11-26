@@ -139,7 +139,7 @@
   setHTML('#mix-legend',data.lclGroups.map((g,i)=>`<div><i class="dot" style="background:${groupColors[i]}"></i><span>${g.label}</span><b>${(g.count/total*100).toFixed(2)}%</b></div>`).join(''));
   const limit=.0045;
   setHTML('#contribution-chart',data.lclGroups.map(g=>`<div class="contribution-row"><div class="contribution-label"><span>${g.label}</span><b class="${g.contribution>0?'text-red':'text-green'}">${g.contribution>0?'+':''}${fmt(g.contribution)}</b></div><div class="diverging-track" role="img" aria-label="${g.label}使总体MAE${g.contribution>0?'增加':'减少'}${fmt(Math.abs(g.contribution))}"><span class="diverging-fill ${g.contribution<0?'negative':''}" style="--width:${Math.abs(g.contribution)/limit*50}%"></span></div></div>`).join(''));
-  if(document.querySelector('#evidence')) renderScope(data.scopes[0].id);
+  if(document.querySelector('#comparison-panels')) renderScope(data.scopes[0].id);
   explainTerms(document.querySelector('main'));
   if(!window.PAPER_SITE && 'IntersectionObserver' in window){
     const sections=[...document.querySelectorAll('.chapter')];

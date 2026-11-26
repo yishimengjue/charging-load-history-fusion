@@ -1,4 +1,5 @@
 import {readFileSync,writeFileSync} from 'node:fs';
+import {currentSections} from './src/current-site.mjs';
 
 const read=name=>readFileSync(new URL('src/'+name,import.meta.url),'utf8');
 const source=read('index.html');
@@ -14,12 +15,18 @@ for(const match of main.matchAll(/<\/?section\b[^>]*>/g)){
   }
 }
 if(depth!==0||sections.size!==15)throw new Error('Unexpected research section structure');
+const archivedExtensions=sections.get('latest-research').replace('id="latest-research"','id="extensions-2026-11-19"').replaceAll('当前','当时');
+const historicalMethods=sections.get('methods').replaceAll('当前','当时');
+const archiveAt=historicalMethods.lastIndexOf('</section>');
+sections.set('methods',historicalMethods.slice(0,archiveAt)+`<details class="reading-details"><summary>2026年11月19日扩展实验归档</summary><div class="detail-body">${archivedExtensions}</div></details>`+historicalMethods.slice(archiveAt));
+// Keep the historical experiment inventory; render current explanations from the checked snapshot.
+for(const [id,html] of currentSections())sections.set(id,html);
 const pages=[
   {file:'index.html',label:'研究总览',ids:['top','contributions','route','conclusion']},
   {file:'method.html',label:'方法与示例',ids:['task','history','model','workflow','worked-prediction'],
-    intro:'从输入到预测，按五个小节理解完整方法。',tabs:['预测任务','历史摘要','融合模型','训练验证','计算示例']},
+    intro:'从输入到预测，按五个小节理解完整方法。',tabs:['预测任务','历史记录','融合模型','训练验证','时间示例']},
   {file:'results.html',label:'实验结果',ids:['evidence','tradeoff'],intro:'先比较平均误差，再解释不同负荷状态下的收益。'},
-  {file:'exploration.html',label:'新增尝试',ids:['latest-research'],intro:'近期结构优化、状态输入与输出修正的结果和取舍。'},
+  {file:'exploration.html',label:'近期尝试',ids:['latest-research'],intro:'围绕历史输入的近期实验、结果和选择。'},
   {file:'methods.html',label:'完整方法表',ids:['methods'],intro:'按研究方向检索已经尝试的方法、数据与结果。'},
   {file:'resources.html',label:'资料与复现',ids:['downloads','reproduction'],intro:'论文文件、参考文献、数据包与复现实验入口。'}
 ];
@@ -31,9 +38,9 @@ for(const page of pages)for(const section of page.ids){
   for(const match of sections.get(section).matchAll(/\bid="([^"]+)"/g))anchors[match[1]]=page.file;
 }
 const termCard=source.match(/<aside id="term-card"[\s\S]*?<\/aside>/)[0];
-const scripts=['data.js','app.js','methods.js','reading.js'];
+const scripts=['data.js','app.js','methods.js','reading.js','current.js'];
 const script=code=>`<script>${code.replaceAll('</script','<\\/script')}</script>`;
-const css=read('style.css')+'\n'+read('theme.css');
+const css=read('style.css')+'\n'+read('theme.css')+'\n'+read('current.css');
 for(const [index,page] of pages.entries()){
   const navigation=navigationFor(page.file);
   const intro=page.intro?`<header class="page-heading"><span class="section-no">CHARGING LOAD / ${String(index+1).padStart(2,'0')}</span><h1>${page.label}</h1><p>${page.intro}</p></header>`:'';
@@ -49,7 +56,7 @@ for(const [index,page] of pages.entries()){
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="description" content="充电负荷历史融合研究：方法、结果与复现"><title>${page.label} · 充电负荷预测</title><style>${css}</style></head>
 <body data-page="${page.file}"><a class="skip-link" href="#main">跳到正文</a>
 <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">↗</span>充电负荷预测<span class="brand-sub"> / 研究图解</span></a><nav aria-label="阅读导航">${navigation}</nav></header>
-<main id="main">${intro}${tabs}${body}${pager}<footer><span>历史摘要与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>研究更新 2026.11.19</small></footer></main>${termCard}
+<main id="main">${intro}${tabs}${body}${pager}<footer><span>目标时段历史与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>研究更新 2026.11.26</small></footer></main>${termCard}
 ${script(`window.PAPER_SITE=${JSON.stringify({page:page.file,anchors,sectionIds:page.tabs?page.ids:[]})};`)}
 ${scripts.map(name=>script(read(name))).join('\n')}
 </body></html>`;
