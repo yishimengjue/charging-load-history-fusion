@@ -23,6 +23,7 @@ sections.set('methods',historicalMethods.slice(0,archiveAt)+`<details class="rea
 for(const [id,html] of currentSections())sections.set(id,html);
 const pages=[
   {file:'index.html',label:'研究总览',ids:['top','contributions','route','conclusion']},
+  {file:'abstract.html',label:'研究摘要',ids:['abstract']},
   {file:'method.html',label:'方法与示例',ids:['task','history','model','workflow','worked-prediction'],
     intro:'从输入到预测，按五个小节理解完整方法。',tabsLabel:'方法小节',tabs:['预测任务','历史记录','融合模型','训练验证','时间示例']},
   {file:'results.html',label:'实验结果',ids:['evidence','input-effects','daily-curves','temporal-results','tradeoff'],

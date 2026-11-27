@@ -63,6 +63,10 @@
 .current-lanes p {font-size:14px;margin:0}
 .current-lanes strong {color:var(--green);font-size:14px}
 .paper-figure {margin:24px 0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.research-abstract {max-width:960px;margin:auto;padding:36px 42px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.research-abstract h1 {font-size:clamp(25px,3vw,34px);line-height:1.45;letter-spacing:0;margin-top:12px}
+.research-abstract>p {max-width:none;margin-top:28px;font-size:17px;line-height:2.05;text-align:justify;overflow-wrap:anywhere}
+@media(max-width:700px){.research-abstract{padding:24px 20px}.research-abstract>p{font-size:16px;line-height:1.95}}
 .paper-figure-heading {padding:18px 22px 8px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .paper-scroll-hint {display:none;font-size:12px;color:var(--muted)}
 .paper-plot-window {overflow-x:auto;overscroll-behavior-x:contain;background:#fff}

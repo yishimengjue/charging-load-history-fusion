@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import {buildFigures} from './current-figures.mjs';
+import {researchAbstract} from './abstract.mjs';
 import {paperFigure, paperResultSections, historyFigureExplanation} from './paper-panels.mjs';
 const d=JSON.parse(readFileSync(new URL('../research/current-evidence.json',import.meta.url),'utf8'));
 const fmt=n=>n.toFixed(6);
@@ -17,6 +18,7 @@ const sample=(label,heading,body)=>`<div class="history-example"><span>${label}<
 export function currentSections(){
   buildFigures(d);
   const m=new Map();
+  m.set('abstract',section('abstract',`<article class="research-abstract"><header><span class="section-no">研究摘要</span><h1>目标时刻对齐的<br>充电负荷历史融合预测</h1></header><p>${researchAbstract}</p></article>`));
   m.set('top',section('top',`<div class="current-hero"><div><span class="eyebrow">研究图解 / 2026.11.26</span><h1>把历史同小时记录<br>接入充电负荷预测</h1><p class="hero-lead">连续序列描述<b>最近一周如何变化</b>，同小时记录提供<b>过去对应时段的负荷参照</b>。两路信息在同一个神经网络中融合，预测未来24个小时位置。</p><div class="current-actions">${action('method.html','方法与示例')}${action('results.html','数据与结果')}</div></div><aside class="current-highlight"><span>OP · 2022年1—3月</span><strong>7.55<span>%</span></strong><b>相对仅近期输入，MAE下降</b><p>4.938161 → 4.565178 kW</p><small>同结构、同训练预算的三种子平均误差</small></aside></div>`));
   m.set('contributions',section('contributions',head('01 / 研究贡献','从历史记录的组织方式入手降低误差')+cards([
     ['方法：按预测时刻组织历史','每个未来小时接收<b>18个同小时历史槽位</b>，与近期序列表示拼接。历史值、是否启用、是否观测分别表达。'],

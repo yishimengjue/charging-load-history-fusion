@@ -2,11 +2,12 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync} from 'node:fs';
 const root=new URL('../',import.meta.url);
-const files=['index.html','method.html','results.html','exploration.html','methods.html','resources.html'];
+const files=['index.html','abstract.html','method.html','results.html','exploration.html','methods.html','resources.html'];
 const read=file=>readFileSync(new URL(file,root),'utf8');
-test('six independently addressable pages contain only their assigned research sections',()=>{
+test('independently addressable pages contain only their assigned research sections',()=>{
   const sections={
     'index.html':['top','contributions','route','conclusion'],
+    'abstract.html':['abstract'],
     'method.html':['task','history','model','workflow','worked-prediction'],
     'results.html':['evidence','input-effects','daily-curves','temporal-results','tradeoff'],
     'exploration.html':['latest-research'],
@@ -21,6 +22,21 @@ test('six independently addressable pages contain only their assigned research s
     assert(html.includes('aria-current="page"'));
     assert(html.includes('name="color-scheme" content="light"'));
   }
+});
+test('single-paragraph abstract follows the overview in navigation and page turns',()=>{
+  assert(existsSync(new URL('abstract.html',root)), 'build the separate abstract page');
+  const html=read('abstract.html');
+  const abstract=html.split('id="abstract"')[1].split('</section>')[0];
+  assert.equal((abstract.match(/<p\b/g)||[]).length,1);
+  for(const value of ['168小时','24小时','6.17%','7.55%','1.21%','2.09%'])assert(abstract.includes(value),value);
+  for(const file of [...files,'literature.html']){
+    const nav=read(file).split('aria-label="阅读导航"')[1].split('</nav>')[0];
+    assert(nav.indexOf('href="index.html"')<nav.indexOf('href="abstract.html"'),file);
+    assert(nav.indexOf('href="abstract.html"')<nav.indexOf('href="method.html"'),file);
+  }
+  assert(read('index.html').split('aria-label="页面顺序"')[1].includes('href="abstract.html"'));
+  const pager=html.split('aria-label="页面顺序"')[1];
+  assert(pager.includes('href="index.html"') && pager.includes('href="method.html"'));
 });
 test('Chinese publication figures appear in their corresponding reading modules',()=>{
   const placements=[

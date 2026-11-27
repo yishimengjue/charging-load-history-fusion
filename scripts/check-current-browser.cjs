@@ -9,11 +9,16 @@ const fs=require('node:fs');
   for(const width of [1440,390]){
     const page=await browser.newPage({viewport:{width,height:1000}});
     page.on('pageerror',e=>errors.push(e.message));
-    for(const file of ['index.html','method.html','results.html','exploration.html','methods.html','resources.html','literature.html']){
+    for(const file of ['index.html','abstract.html','method.html','results.html','exploration.html','methods.html','resources.html','literature.html']){
       await page.goto(base+file);await page.waitForLoadState('networkidle');
       assert(await page.locator('h1,h2').count()>0,file);
       const size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
       assert(size.scroll<=size.client+1,`${file} at ${width} overflows: ${JSON.stringify(size)}`);
+      if(file==='abstract.html'){
+        assert.equal(await page.locator('#abstract>article>p').count(),1);
+        assert(await page.locator('.topbar a[aria-current="page"]').evaluate(el=>el.getAttribute('href')==='abstract.html'));
+        assert.deepEqual(await page.locator('.page-turns a').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),['index.html','method.html']);
+      }
       // Hidden details contain lazy images; request decoding before checking their assets.
       for(const img of await page.locator('img').all())assert(await img.evaluate(async el=>{el.loading='eager';await el.decode();return el.complete&&el.naturalWidth>0;}),`${file} image`);
       for(const svg of await page.locator('[data-paper-figure]').all()){
