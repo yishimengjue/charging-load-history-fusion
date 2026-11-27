@@ -69,11 +69,14 @@ export function currentSections(){
   const history = m.get('history');
   m.set('history', history.slice(0, history.lastIndexOf('</section>')) +
     historyFigureExplanation() +
-    paperFigure('Fig01_recent_history_organization', '图1　从近期序列中整理同小时记录',
-      '以OP编号7在2022年3月23日零点的真实输入为例。上图蓝点与下方7个数值一一对应，展示近期168小时记录如何按18点预测目标重新组织。') + '</section>');
+    paperFigure('Fig05_history_before_after', '预测效果：使用前与使用后并列对照',
+      '左右使用相同时间轴和功率刻度。上排展示7天历史与随后一天的预测，浅蓝区域是预测日，竖虚线是起报时刻；右侧蓝点标出7个同小时历史值。下排放大预测日，红色线段连接18点的真实值与预测值。') +
+    `<p class="current-note"><b>3月23日18点：</b>真实负荷为<b>1.38 kW</b>。使用前预测11.30 kW，绝对误差<b>9.92 kW</b>；使用后预测5.98 kW，绝对误差<b>4.60 kW</b>，减少<b>5.32 kW</b>。这是OP编号7、随机种子42在该时刻的对照。</p>` +
+    detail('展开7个同小时记录的取值明细', paperFigure('Fig01_recent_history_organization', '图1　从近期序列中整理同小时记录',
+      '以OP编号7在2022年3月23日零点的真实输入为例。上图蓝点与下方7个数值一一对应，展示近期168小时记录如何按18点预测目标重新组织。')) + '</section>');
   for (const [id, html] of paperResultSections()) m.set(id, html);
   m.set('tradeoff', m.get('tradeoff').replace('</header>', '</header>' + scopeButtons));
   m.set('downloads', m.get('downloads').replace('</header>', '</header>' +
-    `<div class="current-actions">${action('figures/paper/paper_figures.pdf', '下载四张中文图 PDF')}${action('figures/paper/README.md', '中文图注与绘图说明')}</div>`));
+    `<div class="current-actions">${action('figures/paper/paper_figures.pdf', '下载中文图件合集 PDF')}${action('figures/paper/README.md', '中文图注与绘图说明')}</div>`));
   return m;
 }

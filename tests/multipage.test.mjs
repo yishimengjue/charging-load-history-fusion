@@ -25,6 +25,7 @@ test('six independently addressable pages contain only their assigned research s
 test('Chinese publication figures appear in their corresponding reading modules',()=>{
   const placements=[
     ['method.html','history','Fig01_recent_history_organization'],
+    ['method.html','history','Fig05_history_before_after'],
     ['results.html','input-effects','Fig02_history_input_ablation'],
     ['results.html','daily-curves','Fig03_observed_and_predicted_daily_load'],
     ['results.html','temporal-results','Fig04_daily_and_horizon_errors']
@@ -47,6 +48,7 @@ test('figure explanations expose the selection example and all three comparisons
   const history=read('method.html').split('id="history"')[1]?.split('</section>')[0];
   assert(history.includes('没有增加新的观测数据'));
   assert(history.includes('3月23日18点'));
+  for(const value of ['使用前','使用后','9.92','4.60','5.32'])assert(history.includes(value),value);
   const input=read('results.html').split('id="input-effects"')[1]?.split('</section>')[0];
   const visible=input.split('<details')[0];
   for(const label of ['仅近期序列','近7天同小时记录','近远期18条记录','改动前MAE','改动后MAE','1.47%'])assert(visible.includes(label),label);

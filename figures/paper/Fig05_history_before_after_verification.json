@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "origin_utc": "2022-03-23T00:00:00.000000000",
+  "entity": "7",
+  "seed": 42,
+  "history_hours": 168,
+  "forecast_hours": 24,
+  "stats": [
+    {
+      "model": "recent",
+      "observed_18_kw": 1.38,
+      "predicted_18_kw": 11.300904273986816,
+      "absolute_error_18_kw": 9.920904273986817,
+      "daily_mae_kw": 3.6730248510440195
+    },
+    {
+      "model": "near",
+      "observed_18_kw": 1.38,
+      "predicted_18_kw": 5.984121799468994,
+      "absolute_error_18_kw": 4.604121799468994,
+      "daily_mae_kw": 3.00461453195413
+    }
+  ],
+  "sources_sha256": {
+    "Fig01_continuous_history.csv": "a9fd8df32e992aae603d6abcb464e5b58dff5b108195553076738f339128060a",
+    "Fig01_selected_records.csv": "dfb26ff7cdec2bb090139448a5d599302b157e2c89cb653ef9ac405ac7c827ae",
+    "Fig03_source_data.csv": "2c3fe963ec53f3a892cd0bc88616c54701869fabe67d52dc4276601a3cf24bfc"
+  }
+}
