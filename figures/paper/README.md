@@ -21,7 +21,7 @@
 
 ## 文件与复核
 
-每图提供600 dpi PNG、矢量PDF及保留文本的SVG；`paper_figures.pdf`为四图合集。图题、坐标轴、图例和说明均使用中文，模型名、数据代号与计量单位保留通用写法。中文字体采用系统黑体的TrueType轮廓，PDF嵌入字体。
+每图提供600 dpi PNG、矢量PDF及保留文本的SVG；`paper_figures.pdf`为四图合集。网页直接嵌入SVG，图中文字以UTF-8保存，可选中复制。图题、坐标轴、图例和说明均使用中文，模型名、数据代号与计量单位保留通用写法。字体明确采用Heiti SC简体中文成员，PDF嵌入字体；网页同时配置简体中文备用字体。
 
 配套CSV保存绘图数值。公开汇总为`research/current-evidence.json`；逐点来源位于本地研究目录`reproduced-history-attribution-replication-v1/analysis/`与`reproduced-history-attribution-v1/prepared/2022-03_query.npz`。本次发布图件和绘图数值，不另行上传整套预测文件。绘图脚本核对来源哈希、预测指标与七个历史值；独立检查脚本复算逐小时、逐日、逐步误差以及加权总体误差。
 

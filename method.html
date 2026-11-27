@@ -273,7 +273,22 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
 .paper-figure-heading {padding:18px 22px 8px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .paper-scroll-hint {display:none;font-size:12px;color:var(--muted)}
 .paper-plot-window {overflow-x:auto;overscroll-behavior-x:contain;background:#fff}
-.paper-plot-window img {display:block;width:100%;min-width:900px;height:auto}
+.paper-plot-window svg {display:block;width:100%;min-width:900px;height:auto}
+.paper-plot-window svg text {user-select:text;cursor:text}
+.paper-explainer {margin:24px 0;padding:22px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.paper-explainer h3 {margin-bottom:12px}
+.paper-explainer p {margin-top:12px;max-width:none;font-size:15px}
+.paper-steps {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:0;list-style:none;counter-reset:paper-step;margin:20px 0}
+.paper-steps li {counter-increment:paper-step;padding:16px;background:var(--violet-bg);border-radius:8px;font-size:14px}
+.paper-steps li::before {content:"0" counter(paper-step);display:block;font-weight:700;color:var(--blue);margin-bottom:8px}
+.paper-steps b,.paper-steps span,.paper-comparisons span {display:block}
+.paper-steps span {margin-top:8px}
+.paper-comparisons p {border-left:4px solid;padding:10px 16px;background:#fafafa}
+.paper-comparisons span {margin-top:4px}
+.paper-near {border-color:#0072b2!important}.paper-near b {color:#00649c}
+.paper-far {border-color:#d55e00!important}.paper-far b {color:#a74700}
+.paper-total {border-color:#009e73!important}.paper-total b {color:#007251}
+@media(max-width:800px){.paper-steps{grid-template-columns:1fr}.paper-explainer{padding:18px}}
 .paper-figure figcaption {padding:16px 22px;border-top:1px solid var(--line);font-size:14px}
 .paper-figure figcaption p {max-width:none}
 .paper-figure figcaption nav {display:flex;flex-wrap:wrap;gap:18px;margin-top:10px;font-weight:600}
@@ -302,10 +317,535 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
 <body data-page="method.html"><a class="skip-link" href="#main">跳到正文</a>
 <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">↗</span>充电负荷预测<span class="brand-sub"> / 研究图解</span></a><nav aria-label="阅读导航"><a href="index.html">研究总览</a><a href="method.html" class="active" aria-current="page">方法与示例</a><a href="results.html">实验结果</a><a href="exploration.html">近期尝试</a><a href="methods.html">完整方法表</a><a href="resources.html">资料与复现</a><a href="literature.html">文献综述</a></nav></header>
 <main id="main"><header class="page-heading"><span class="section-no">充电负荷研究 / 02</span><h1>方法与示例</h1><p>从输入到预测，按五个小节理解完整方法。</p></header><nav class="local-tabs" aria-label="方法小节" data-section-switcher><a href="#task">01 预测任务</a><a href="#history">02 历史记录</a><a href="#model">03 融合模型</a><a href="#workflow">04 训练验证</a><a href="#worked-prediction">05 时间示例</a></nav><section id="task" class="chapter current-chapter"><header class="section-heading"><span class="section-no">01 / 预测任务</span><h2>利用已知历史预测未来24个小时位置</h2></header><div class="current-cards"><article><h3>输入</h3><p>同一计量序列的过去168小时、同小时历史记录、观测标记与已知日历。</p></article><article><h3>输出</h3><p>未来24个小时位置各一个负荷值。模型在<b>月初训练</b>，随后<b>逐日起报</b>。</p></article><article><h3>评价</h3><p>用MAE衡量预测值与观测值的平均绝对差。越低越好；跨月按观测目标数汇总。</p></article></div><div class="table-wrap"><table class="current-table"><caption>评价的是充电负荷；LCL不是家庭总用电。</caption><thead><tr><th scope="col">数据</th><th scope="col">计量对象与目标</th><th scope="col">评价时间</th><th scope="col">评分目标 / 已起报目标</th></tr></thead><tbody><tr><th scope="row">OP</th><td>9条计量序列；小时边界前300秒内最后一条功率记录。<br><b>kW</b></td><td>2022年1—3月</td><td>18,469 / 19,440</td></tr><tr><th scope="row">OP</th><td>同一批9条计量序列；另一季节的连续25天。<br><b>kW</b></td><td>2022年7月1—25日</td><td>4,775 / 5,208</td></tr><tr><th scope="row">LCL</th><td>居民电动汽车充电试验；原48个对象，各月38／37／37个对象进入评分。<br><b>来源原始单位</b></td><td>2014年2—4月</td><td>72,434 / 76,128</td></tr><tr><th scope="row">SOFIE</th><td>8台充电设备；整点累计电量差换算为小时平均交付功率。<br><b>kW</b></td><td>2026年4—6月</td><td>13,930 / 16,824</td></tr></tbody></table></div><details class="reading-details"><summary>时间戳与连续评价方式</summary><div class="detail-body"><p>OP、LCL的近期序列结束于起报时刻t，目标标签为t＋1至t＋24小时。SOFIE的输入为[t−168小时,t)，第h个目标为[t＋h−1,t＋h)的平均交付功率。</p><p>每次起报固定预测24步，预测窗口内不读取真实负荷更新本次预测。训练只使用月初已经结束的目标窗口。未知目标不补零，也不参与评分。</p><p>当前评价覆盖所列连续月份，而非全年。SOFIE交付功率包含光伏、储能与控制条件下的实际运行结果。</p></div></details></section>
-<section id="history" class="chapter current-chapter"><header class="section-heading"><span class="section-no">02 / 历史输入</span><h2>为每个未来小时提供同小时负荷参照</h2><p>当前保留逐条历史记录，不是统计摘要。</p></header><div class="current-duo"><div class="history-example"><span>连续路径</span><h3>过去168小时</h3><p>按照时间顺序输入，保留启停、持续充电与相邻时段变化。</p></div><div class="history-example"><span>参照路径</span><h3>每个目标步18条候选</h3><p>取前1—7天同小时，再取前14、21、…、84天同小时；后者与目标星期相同。</p></div></div><div class="current-cards"><article><h3>仅近期</h3><p>候选槽位全部关闭，仅使用连续168小时。</p></article><article><h3>近期＋近7天</h3><p>启用前1—7天同小时值；这些值<b>已在168小时输入内</b>。比较信息重组的作用。</p></article><article><h3>近期＋近远期</h3><p>再启用前2—12周同小时值，提供<b>168小时之外</b>的历史。</p></article></div><div class="table-wrap"><table class="current-table"><caption>18槽 × 3项 = 54维；零负荷与缺失记录采用不同编码。</caption><thead><tr><th scope="col">历史槽位状态</th><th scope="col">负荷输入</th><th scope="col">启用标记</th><th scope="col">观测标记</th></tr></thead><tbody><tr><th scope="row">未启用</th><td>0</td><td>0</td><td>0</td></tr><tr><th scope="row">启用但缺记录</th><td>0</td><td>1</td><td>0</td></tr><tr><th scope="row">有记录且负荷为零</th><td>0</td><td>1</td><td>1</td></tr><tr><th scope="row">有记录且负荷为正</th><td>缩放负荷</td><td>1</td><td>1</td></tr></tbody></table></div><details class="reading-details"><summary>历史候选与原摘要的区别</summary><div class="detail-body"><p>原摘要在7／28／84天历史池计算27项统计及27项可用性标记，用少量数值概括负荷分布。当前候选保留18条历史值及各自标记，交给预测器学习。</p><p>对齐实验与错开12小时实验采用共同观测规则：两个对应槽均有记录时才保留。后续近7天和近远期复验沿用该规则。原摘要采用原历史资格筛选，因此摘要与逐条历史比较的是两种输入流程。</p></div></details><figure class="paper-figure">
+<section id="history" class="chapter current-chapter"><header class="section-heading"><span class="section-no">02 / 历史输入</span><h2>为每个未来小时提供同小时负荷参照</h2><p>当前保留逐条历史记录，不是统计摘要。</p></header><div class="current-duo"><div class="history-example"><span>连续路径</span><h3>过去168小时</h3><p>按照时间顺序输入，保留启停、持续充电与相邻时段变化。</p></div><div class="history-example"><span>参照路径</span><h3>每个目标步18条候选</h3><p>取前1—7天同小时，再取前14、21、…、84天同小时；后者与目标星期相同。</p></div></div><div class="current-cards"><article><h3>仅近期</h3><p>候选槽位全部关闭，仅使用连续168小时。</p></article><article><h3>近期＋近7天</h3><p>启用前1—7天同小时值；这些值<b>已在168小时输入内</b>。比较信息重组的作用。</p></article><article><h3>近期＋近远期</h3><p>再启用前2—12周同小时值，提供<b>168小时之外</b>的历史。</p></article></div><div class="table-wrap"><table class="current-table"><caption>18槽 × 3项 = 54维；零负荷与缺失记录采用不同编码。</caption><thead><tr><th scope="col">历史槽位状态</th><th scope="col">负荷输入</th><th scope="col">启用标记</th><th scope="col">观测标记</th></tr></thead><tbody><tr><th scope="row">未启用</th><td>0</td><td>0</td><td>0</td></tr><tr><th scope="row">启用但缺记录</th><td>0</td><td>1</td><td>0</td></tr><tr><th scope="row">有记录且负荷为零</th><td>0</td><td>1</td><td>1</td></tr><tr><th scope="row">有记录且负荷为正</th><td>缩放负荷</td><td>1</td><td>1</td></tr></tbody></table></div><details class="reading-details"><summary>历史候选与原摘要的区别</summary><div class="detail-body"><p>原摘要在7／28／84天历史池计算27项统计及27项可用性标记，用少量数值概括负荷分布。当前候选保留18条历史值及各自标记，交给预测器学习。</p><p>对齐实验与错开12小时实验采用共同观测规则：两个对应槽均有记录时才保留。后续近7天和近远期复验沿用该规则。原摘要采用原历史资格筛选，因此摘要与逐条历史比较的是两种输入流程。</p></div></details><div class="paper-explainer">
+    <h3>把过去一周的数据，按将要预测的小时重新整理</h3>
+    <p>例：在<b>3月23日零点</b>预测<b>3月23日18点</b>的负荷，就取过去7天每天18点的记录。图中所有时间均为协调世界时。</p>
+    <ol class="paper-steps">
+      <li><b>看完整变化</b><span>黑线是过去7天、共168小时的负荷，保留充电变化的先后顺序。</span></li>
+      <li><b>取同小时记录</b><span>7个蓝点是3月16日至22日每天18点的负荷，下方数值与蓝点一一对应。</span></li>
+      <li><b>一起输入模型</b><span>模型同时接收完整序列和7个同小时值，预测3月23日18点的负荷。</span></li>
+    </ol>
+    <p><b>这一步没有增加新的观测数据</b>，而是让模型直接读取相关时段的历史值。预测其他小时，就取那个小时的历史记录。</p>
+    <p>下图说明数据怎么整理；<a href="results.html#input-effects">输入消融</a>检验这种整理是否降低预测误差。</p>
+  </div><figure class="paper-figure">
     <div class="paper-figure-heading"><h3>图1　从近期序列中整理同小时记录</h3><span class="paper-scroll-hint">横向滑动查看完整图表</span></div>
     <div class="paper-plot-window" tabindex="0" role="region" aria-label="图1　从近期序列中整理同小时记录">
-      <img src="figures/paper/Fig01_recent_history_organization.png" alt="以OP编号7在2022年3月23日零点的真实输入为例。上图蓝点与下方7个数值一一对应，展示近期168小时记录如何按18点预测目标重新组织。" loading="lazy">
+      <svg data-paper-figure="Fig01_recent_history_organization" role="img" aria-label="图1　从近期序列中整理同小时记录" lang="zh-CN" xmlns:xlink="http://www.w3.org/1999/xlink" width="518.4pt" height="277.2pt" viewBox="0 0 518.4 277.2" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-27T16:41:16.250953</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">[data-paper-figure="Fig01_recent_history_organization"] *{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="Fig01_recent_history_organization-figure_1">
+  <g id="Fig01_recent_history_organization-patch_1">
+   <path d="M 0 277.2
+L 518.4 277.2
+L 518.4 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="Fig01_recent_history_organization-axes_1">
+   <g id="Fig01_recent_history_organization-patch_2">
+    <path d="M 46.656 143.429208
+L 508.032 143.429208
+L 508.032 36.036
+L 46.656 36.036
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="Fig01_recent_history_organization-matplotlib.axis_1">
+    <g id="Fig01_recent_history_organization-xtick_1">
+     <g id="Fig01_recent_history_organization-line2d_1">
+      <defs>
+       <path id="Fig01_recent_history_organization-m3977689e56" d="M 0 0
+L 0 3
+" style="stroke: #000000; stroke-width: 0.6"/>
+      </defs>
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="46.656" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_1">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="46.656" y="155.519208" transform="rotate(-0 46.656 155.519208)">-168</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-xtick_2">
+     <g id="Fig01_recent_history_organization-line2d_2">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="112.566857" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_2">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="112.566857" y="155.519208" transform="rotate(-0 112.566857 155.519208)">-144</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-xtick_3">
+     <g id="Fig01_recent_history_organization-line2d_3">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="178.477714" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_3">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="178.477714" y="155.519208" transform="rotate(-0 178.477714 155.519208)">-120</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-xtick_4">
+     <g id="Fig01_recent_history_organization-line2d_4">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="244.388571" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_4">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="244.388571" y="155.519208" transform="rotate(-0 244.388571 155.519208)">-96</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-xtick_5">
+     <g id="Fig01_recent_history_organization-line2d_5">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="310.299429" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_5">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="310.299429" y="155.519208" transform="rotate(-0 310.299429 155.519208)">-72</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-xtick_6">
+     <g id="Fig01_recent_history_organization-line2d_6">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="376.210286" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_6">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="376.210286" y="155.519208" transform="rotate(-0 376.210286 155.519208)">-48</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-xtick_7">
+     <g id="Fig01_recent_history_organization-line2d_7">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="442.121143" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_7">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="442.121143" y="155.519208" transform="rotate(-0 442.121143 155.519208)">-24</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-xtick_8">
+     <g id="Fig01_recent_history_organization-line2d_8">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-m3977689e56" x="508.032" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_8">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="508.032" y="155.519208" transform="rotate(-0 508.032 155.519208)">0</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-text_9">
+     <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="277.344" y="166.449208" transform="rotate(-0 277.344 166.449208)">相对起报时刻的时间（小时）</text>
+    </g>
+   </g>
+   <g id="Fig01_recent_history_organization-matplotlib.axis_2">
+    <g id="Fig01_recent_history_organization-ytick_1">
+     <g id="Fig01_recent_history_organization-line2d_9">
+      <defs>
+       <path id="Fig01_recent_history_organization-macb196e68c" d="M 0 0
+L -3 0
+" style="stroke: #000000; stroke-width: 0.6"/>
+      </defs>
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-macb196e68c" x="46.656" y="143.429208" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_10">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="40.156" y="146.224208" transform="rotate(-0 40.156 146.224208)">0</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-ytick_2">
+     <g id="Fig01_recent_history_organization-line2d_10">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-macb196e68c" x="46.656" y="127.256019" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_11">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="40.156" y="130.051019" transform="rotate(-0 40.156 130.051019)">10</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-ytick_3">
+     <g id="Fig01_recent_history_organization-line2d_11">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-macb196e68c" x="46.656" y="111.08283" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_12">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="40.156" y="113.87783" transform="rotate(-0 40.156 113.87783)">20</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-ytick_4">
+     <g id="Fig01_recent_history_organization-line2d_12">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-macb196e68c" x="46.656" y="94.909641" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_13">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="40.156" y="97.704641" transform="rotate(-0 40.156 97.704641)">30</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-ytick_5">
+     <g id="Fig01_recent_history_organization-line2d_13">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-macb196e68c" x="46.656" y="78.736453" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_14">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="40.156" y="81.531453" transform="rotate(-0 40.156 81.531453)">40</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-ytick_6">
+     <g id="Fig01_recent_history_organization-line2d_14">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-macb196e68c" x="46.656" y="62.563264" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_15">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="40.156" y="65.358264" transform="rotate(-0 40.156 65.358264)">50</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-ytick_7">
+     <g id="Fig01_recent_history_organization-line2d_15">
+      <g>
+       <use xlink:href="#Fig01_recent_history_organization-macb196e68c" x="46.656" y="46.390075" style="stroke: #000000; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="Fig01_recent_history_organization-text_16">
+      <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="40.156" y="49.185075" transform="rotate(-0 40.156 49.185075)">60</text>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-text_17">
+     <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="27.973187" y="89.732604" transform="rotate(-90 27.973187 89.732604)">功率（kW）</text>
+    </g>
+   </g>
+   <g id="Fig01_recent_history_organization-line2d_16">
+    <path d="M 49.402286 139.56705
+L 54.894857 139.607483
+L 57.641143 142.635104
+L 71.372571 142.635104
+L 74.118857 131.613076
+L 76.865143 132.31014
+L 79.611429 141.187604
+L 85.104 141.346101
+L 87.850286 140.812386
+L 90.596571 142.686858
+L 93.342857 142.686858
+L 96.089143 134.280035
+L 98.835429 123.02673
+L 101.581714 82.336605
+L 104.328 75.069991
+L 107.074286 102.367099
+L 109.820571 93.458906
+L 112.566857 105.068021
+L 115.313143 130.537559
+L 120.805714 130.59093
+L 123.552 136.625147
+L 131.790857 136.791731
+L 134.537143 140.485687
+L 137.283429 142.686858
+L 140.029714 142.686858
+L 142.776 138.022511
+L 145.522286 141.359039
+L 148.268571 143.429208
+M 153.761143 132.488045
+L 156.507429 121.70538
+L 159.253714 133.681627
+L 162 134.841244
+L 164.746286 104.401686
+L 167.492571 63.231217
+L 170.238857 77.263075
+L 172.985143 58.610537
+L 175.731429 92.524096
+L 178.477714 132.906931
+L 181.224 137.857544
+L 183.970286 137.995016
+L 186.716571 141.692207
+L 205.940571 141.692207
+L 208.686857 143.429208
+L 216.925714 143.429208
+L 219.672 140.399969
+L 222.418286 143.429208
+L 225.164571 141.318606
+L 227.910857 126.358407
+L 230.657143 130.131612
+L 233.403429 54.963483
+L 236.149714 71.985764
+L 238.896 82.50804
+L 241.642286 114.527719
+L 244.388571 125.889384
+L 247.134857 141.202159
+L 266.358857 141.231271
+L 269.105143 143.429208
+L 271.851429 143.429208
+L 274.597714 137.428955
+L 277.344 143.429208
+L 280.090286 141.016168
+L 282.836571 121.061688
+L 285.582857 107.639558
+L 288.329143 120.896721
+L 291.075429 128.902449
+L 293.821714 124.458057
+L 296.568 121.920484
+L 299.314286 111.312489
+L 302.060571 121.521006
+L 304.806857 123.854797
+L 307.553143 124.771817
+L 310.299429 132.158112
+L 313.045714 132.11121
+L 315.792 138.22791
+L 326.777143 138.363765
+L 329.523429 138.257022
+L 332.269714 142.067425
+L 335.016 142.067425
+L 337.762286 136.49091
+L 340.508571 136.48444
+L 343.254857 134.197551
+L 346.001143 129.78874
+L 348.747429 133.416386
+L 351.493714 111.779895
+L 354.24 122.892493
+L 356.986286 139.261377
+L 359.732571 134.784638
+L 362.478857 130.788243
+L 365.225143 117.105726
+L 367.971429 141.499746
+L 395.434286 141.499746
+L 398.180571 142.067425
+L 400.926857 136.667197
+L 403.673143 143.429208
+L 406.419429 132.512305
+L 409.165714 132.096654
+L 411.912 132.090185
+L 414.658286 118.981816
+L 417.404571 125.426831
+L 420.150857 143.429208
+L 422.897143 143.429208
+L 425.643429 138.962173
+L 428.389714 128.512676
+L 431.136 73.997708
+L 433.882286 41.149962
+L 436.628571 87.067262
+L 439.374857 81.176987
+L 442.121143 133.536068
+L 444.867429 129.017279
+L 447.613714 141.208629
+L 455.852571 141.231271
+L 458.598857 143.429208
+L 461.345143 137.328681
+L 466.837714 137.393374
+L 469.584 137.445128
+L 472.330286 143.429208
+L 480.569143 143.429208
+L 483.315429 137.865631
+L 491.554286 137.923854
+L 494.300571 121.111824
+L 497.046857 60.713051
+L 499.793143 48.51038
+L 502.539429 100.486157
+L 505.285714 108.593776
+L 508.032 126.117426
+L 508.032 126.117426
+" clip-path="url(#Fig01_recent_history_organization-pfea5a07fc2)" style="fill: none; stroke: #353535; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_3">
+    <path d="M 46.656 143.429208
+L 46.656 36.036
+" style="fill: none; stroke: #000000; stroke-width: 0.6; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_4">
+    <path d="M 46.656 143.429208
+L 508.032 143.429208
+" style="fill: none; stroke: #000000; stroke-width: 0.6; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="Fig01_recent_history_organization-PathCollection_1">
+    <defs>
+     <path id="Fig01_recent_history_organization-m6b667707e0" d="M 0 2.44949
+C 0.649612 2.44949 1.272706 2.191396 1.732051 1.732051
+C 2.191396 1.272706 2.44949 0.649612 2.44949 0
+C 2.44949 -0.649612 2.191396 -1.272706 1.732051 -1.732051
+C 1.272706 -2.191396 0.649612 -2.44949 0 -2.44949
+C -0.649612 -2.44949 -1.272706 -2.191396 -1.732051 -1.732051
+C -2.191396 -1.272706 -2.44949 -0.649612 -2.44949 0
+C -2.44949 0.649612 -2.191396 1.272706 -1.732051 1.732051
+C -1.272706 2.191396 -0.649612 2.44949 0 2.44949
+z
+" style="stroke: #0072b2; stroke-width: 1.1"/>
+    </defs>
+    <g clip-path="url(#Fig01_recent_history_organization-pfea5a07fc2)">
+     <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="96.089143" y="134.280035" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+     <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="162" y="134.841244" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+     <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="227.910857" y="126.358407" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+     <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="293.821714" y="124.458057" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+     <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="359.732571" y="134.784638" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+     <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="425.643429" y="138.962173" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+     <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="491.554286" y="137.923854" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+    </g>
+   </g>
+   <g id="Fig01_recent_history_organization-text_18">
+    <text style="font-size: 8px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: start" x="30.096" y="29.055442" transform="rotate(-0 30.096 29.055442)">a</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_19">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: start" x="46.656" y="27.036" transform="rotate(-0 46.656 27.036)">连续168小时近期序列</text>
+   </g>
+   <g id="Fig01_recent_history_organization-legend_1">
+    <g id="Fig01_recent_history_organization-PathCollection_2">
+     <g>
+      <use xlink:href="#Fig01_recent_history_organization-m6b667707e0" x="59.006" y="42.547954" style="fill: #ffffff; stroke: #0072b2; stroke-width: 1.1"/>
+     </g>
+    </g>
+    <g id="Fig01_recent_history_organization-text_20">
+     <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: start" x="70.706" y="44.254204" transform="rotate(-0 70.706 44.254204)">与预测目标相同小时的记录</text>
+    </g>
+   </g>
+  </g>
+  <g id="Fig01_recent_history_organization-axes_2">
+   <g id="Fig01_recent_history_organization-patch_5">
+    <path d="M 53.906194 231.223155
+L 105.316663 231.223155
+L 105.316663 209.744513
+L 53.906194 209.744513
+z
+" clip-path="url(#Fig01_recent_history_organization-p86d9f7b16d)" style="fill: #e8f3f9; stroke: #0072b2; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_6">
+    <path d="M 119.817051 231.223155
+L 171.22752 231.223155
+L 171.22752 209.744513
+L 119.817051 209.744513
+z
+" clip-path="url(#Fig01_recent_history_organization-p86d9f7b16d)" style="fill: #e8f3f9; stroke: #0072b2; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_7">
+    <path d="M 185.727909 231.223155
+L 237.138377 231.223155
+L 237.138377 209.744513
+L 185.727909 209.744513
+z
+" clip-path="url(#Fig01_recent_history_organization-p86d9f7b16d)" style="fill: #e8f3f9; stroke: #0072b2; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_8">
+    <path d="M 251.638766 231.223155
+L 303.049234 231.223155
+L 303.049234 209.744513
+L 251.638766 209.744513
+z
+" clip-path="url(#Fig01_recent_history_organization-p86d9f7b16d)" style="fill: #e8f3f9; stroke: #0072b2; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_9">
+    <path d="M 317.549623 231.223155
+L 368.960091 231.223155
+L 368.960091 209.744513
+L 317.549623 209.744513
+z
+" clip-path="url(#Fig01_recent_history_organization-p86d9f7b16d)" style="fill: #e8f3f9; stroke: #0072b2; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_10">
+    <path d="M 383.46048 231.223155
+L 434.870949 231.223155
+L 434.870949 209.744513
+L 383.46048 209.744513
+z
+" clip-path="url(#Fig01_recent_history_organization-p86d9f7b16d)" style="fill: #e8f3f9; stroke: #0072b2; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="Fig01_recent_history_organization-patch_11">
+    <path d="M 449.371337 231.223155
+L 500.781806 231.223155
+L 500.781806 209.744513
+L 449.371337 209.744513
+z
+" clip-path="url(#Fig01_recent_history_organization-p86d9f7b16d)" style="fill: #e8f3f9; stroke: #0072b2; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="Fig01_recent_history_organization-text_21">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="79.611429" y="222.466868" transform="rotate(-0 79.611429 222.466868)">5.66</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_22">
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(67.709319 239.881043)">3月16日</text>
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(72.760022 246.576043)">18时</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_23">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="145.522286" y="222.466868" transform="rotate(-0 145.522286 222.466868)">5.31</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_24">
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(133.620176 239.881043)">3月17日</text>
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(138.670879 246.576043)">18时</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_25">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="211.433143" y="222.466868" transform="rotate(-0 211.433143 222.466868)">10.55</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_26">
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(199.531033 239.881043)">3月18日</text>
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(204.581737 246.576043)">18时</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_27">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="277.344" y="222.466868" transform="rotate(-0 277.344 222.466868)">11.73</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_28">
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(265.441891 239.881043)">3月19日</text>
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(270.492594 246.576043)">18时</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_29">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="343.254857" y="222.466868" transform="rotate(-0 343.254857 222.466868)">5.34</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_30">
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(331.352748 239.881043)">3月20日</text>
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(336.403451 246.576043)">18时</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_31">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="409.165714" y="222.466868" transform="rotate(-0 409.165714 222.466868)">2.76</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_32">
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(397.263605 239.881043)">3月21日</text>
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(402.314308 246.576043)">18时</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_33">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: middle" x="475.076571" y="222.466868" transform="rotate(-0 475.076571 222.466868)">3.40</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_34">
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(463.174462 239.881043)">3月22日</text>
+    <text style="font-weight: 300; font-size: 6.5px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif" transform="translate(468.225165 246.576043)">18时</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_35">
+    <text style="font-size: 8px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: start" x="28.20096" y="189.87677" transform="rotate(-0 28.20096 189.87677)">b</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_36">
+    <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: start" x="46.656" y="189.87677" transform="rotate(-0 46.656 189.87677)">按目标小时整理的近期记录（kW）</text>
+   </g>
+   <g id="Fig01_recent_history_organization-text_37">
+    <text style="font-weight: 300; font-size: 6px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: end" x="508.032" y="189.87677" transform="rotate(-0 508.032 189.87677)">蓝底表示符合配对可用性规则</text>
+   </g>
+  </g>
+  <g id="Fig01_recent_history_organization-text_38">
+   <text style="font-weight: 300; font-size: 7px; font-family: 'Heiti SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif; text-anchor: start" x="46.656" y="14.336" transform="rotate(-0 46.656 14.336)">OP编号7｜2022年3月23日零点起报｜预测18小时后｜协调世界时</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="Fig01_recent_history_organization-pfea5a07fc2">
+   <rect x="46.656" y="36.036" width="461.376" height="107.393208"/>
+  </clipPath>
+  <clipPath id="Fig01_recent_history_organization-p86d9f7b16d">
+   <rect x="46.656" y="195.783396" width="461.376" height="53.696604"/>
+  </clipPath>
+ </defs>
+</svg>
+
     </div>
     <figcaption><p>以OP编号7在2022年3月23日零点的真实输入为例。上图蓝点与下方7个数值一一对应，展示近期168小时记录如何按18点预测目标重新组织。</p><nav aria-label="图件下载">
       <a href="figures/paper/Fig01_recent_history_organization.png" target="_blank" rel="noopener">查看大图</a>
@@ -321,7 +861,7 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
   <p id="term-definition"></p><h3>本文用途</h3><p id="term-use"></p>
   <div class="term-source"><span>来源</span><a id="term-source-link"></a></div>
 </aside>
-<script>window.PAPER_SITE={"page":"method.html","anchors":{"top":"index.html","contributions":"index.html","route":"index.html","conclusion":"index.html","task":"method.html","history":"method.html","model":"method.html","workflow":"method.html","worked-prediction":"method.html","evidence":"results.html","input-effects":"results.html","daily-curves":"results.html","temporal-results":"results.html","tradeoff":"results.html","latest-research":"exploration.html","methods":"methods.html","method-search":"methods.html","status-filter":"methods.html","filter-count":"methods.html","method-empty":"methods.html","direct":"methods.html","sessions":"methods.html","sharing":"methods.html","sequence":"methods.html","fusion":"methods.html","weights":"methods.html","outputs":"methods.html","validation":"methods.html","price":"methods.html","extensions-2026-11-19":"methods.html","pooling-extension":"methods.html","state-extension":"methods.html","duration-extension":"methods.html","residual-extension":"methods.html","downloads":"resources.html","reproduction":"resources.html"},"sectionIds":["task","history","model","workflow","worked-prediction"]};</script>
+<script>window.PAPER_SITE={"page":"method.html","anchors":{"top":"index.html","contributions":"index.html","route":"index.html","conclusion":"index.html","task":"method.html","history":"method.html","Fig01_recent_history_organization-figure_1":"method.html","Fig01_recent_history_organization-patch_1":"method.html","Fig01_recent_history_organization-axes_1":"method.html","Fig01_recent_history_organization-patch_2":"method.html","Fig01_recent_history_organization-matplotlib.axis_1":"method.html","Fig01_recent_history_organization-xtick_1":"method.html","Fig01_recent_history_organization-line2d_1":"method.html","Fig01_recent_history_organization-m3977689e56":"method.html","Fig01_recent_history_organization-text_1":"method.html","Fig01_recent_history_organization-xtick_2":"method.html","Fig01_recent_history_organization-line2d_2":"method.html","Fig01_recent_history_organization-text_2":"method.html","Fig01_recent_history_organization-xtick_3":"method.html","Fig01_recent_history_organization-line2d_3":"method.html","Fig01_recent_history_organization-text_3":"method.html","Fig01_recent_history_organization-xtick_4":"method.html","Fig01_recent_history_organization-line2d_4":"method.html","Fig01_recent_history_organization-text_4":"method.html","Fig01_recent_history_organization-xtick_5":"method.html","Fig01_recent_history_organization-line2d_5":"method.html","Fig01_recent_history_organization-text_5":"method.html","Fig01_recent_history_organization-xtick_6":"method.html","Fig01_recent_history_organization-line2d_6":"method.html","Fig01_recent_history_organization-text_6":"method.html","Fig01_recent_history_organization-xtick_7":"method.html","Fig01_recent_history_organization-line2d_7":"method.html","Fig01_recent_history_organization-text_7":"method.html","Fig01_recent_history_organization-xtick_8":"method.html","Fig01_recent_history_organization-line2d_8":"method.html","Fig01_recent_history_organization-text_8":"method.html","Fig01_recent_history_organization-text_9":"method.html","Fig01_recent_history_organization-matplotlib.axis_2":"method.html","Fig01_recent_history_organization-ytick_1":"method.html","Fig01_recent_history_organization-line2d_9":"method.html","Fig01_recent_history_organization-macb196e68c":"method.html","Fig01_recent_history_organization-text_10":"method.html","Fig01_recent_history_organization-ytick_2":"method.html","Fig01_recent_history_organization-line2d_10":"method.html","Fig01_recent_history_organization-text_11":"method.html","Fig01_recent_history_organization-ytick_3":"method.html","Fig01_recent_history_organization-line2d_11":"method.html","Fig01_recent_history_organization-text_12":"method.html","Fig01_recent_history_organization-ytick_4":"method.html","Fig01_recent_history_organization-line2d_12":"method.html","Fig01_recent_history_organization-text_13":"method.html","Fig01_recent_history_organization-ytick_5":"method.html","Fig01_recent_history_organization-line2d_13":"method.html","Fig01_recent_history_organization-text_14":"method.html","Fig01_recent_history_organization-ytick_6":"method.html","Fig01_recent_history_organization-line2d_14":"method.html","Fig01_recent_history_organization-text_15":"method.html","Fig01_recent_history_organization-ytick_7":"method.html","Fig01_recent_history_organization-line2d_15":"method.html","Fig01_recent_history_organization-text_16":"method.html","Fig01_recent_history_organization-text_17":"method.html","Fig01_recent_history_organization-line2d_16":"method.html","Fig01_recent_history_organization-patch_3":"method.html","Fig01_recent_history_organization-patch_4":"method.html","Fig01_recent_history_organization-PathCollection_1":"method.html","Fig01_recent_history_organization-m6b667707e0":"method.html","Fig01_recent_history_organization-text_18":"method.html","Fig01_recent_history_organization-text_19":"method.html","Fig01_recent_history_organization-legend_1":"method.html","Fig01_recent_history_organization-PathCollection_2":"method.html","Fig01_recent_history_organization-text_20":"method.html","Fig01_recent_history_organization-axes_2":"method.html","Fig01_recent_history_organization-patch_5":"method.html","Fig01_recent_history_organization-patch_6":"method.html","Fig01_recent_history_organization-patch_7":"method.html","Fig01_recent_history_organization-patch_8":"method.html","Fig01_recent_history_organization-patch_9":"method.html","Fig01_recent_history_organization-patch_10":"method.html","Fig01_recent_history_organization-patch_11":"method.html","Fig01_recent_history_organization-text_21":"method.html","Fig01_recent_history_organization-text_22":"method.html","Fig01_recent_history_organization-text_23":"method.html","Fig01_recent_history_organization-text_24":"method.html","Fig01_recent_history_organization-text_25":"method.html","Fig01_recent_history_organization-text_26":"method.html","Fig01_recent_history_organization-text_27":"method.html","Fig01_recent_history_organization-text_28":"method.html","Fig01_recent_history_organization-text_29":"method.html","Fig01_recent_history_organization-text_30":"method.html","Fig01_recent_history_organization-text_31":"method.html","Fig01_recent_history_organization-text_32":"method.html","Fig01_recent_history_organization-text_33":"method.html","Fig01_recent_history_organization-text_34":"method.html","Fig01_recent_history_organization-text_35":"method.html","Fig01_recent_history_organization-text_36":"method.html","Fig01_recent_history_organization-text_37":"method.html","Fig01_recent_history_organization-text_38":"method.html","Fig01_recent_history_organization-pfea5a07fc2":"method.html","Fig01_recent_history_organization-p86d9f7b16d":"method.html","model":"method.html","workflow":"method.html","worked-prediction":"method.html","evidence":"results.html","input-effects":"results.html","Fig02_history_input_ablation-figure_1":"results.html","Fig02_history_input_ablation-patch_1":"results.html","Fig02_history_input_ablation-axes_1":"results.html","Fig02_history_input_ablation-patch_2":"results.html","Fig02_history_input_ablation-matplotlib.axis_1":"results.html","Fig02_history_input_ablation-xtick_1":"results.html","Fig02_history_input_ablation-line2d_1":"results.html","Fig02_history_input_ablation-mc287af580f":"results.html","Fig02_history_input_ablation-text_1":"results.html","Fig02_history_input_ablation-xtick_2":"results.html","Fig02_history_input_ablation-line2d_2":"results.html","Fig02_history_input_ablation-text_2":"results.html","Fig02_history_input_ablation-xtick_3":"results.html","Fig02_history_input_ablation-line2d_3":"results.html","Fig02_history_input_ablation-text_3":"results.html","Fig02_history_input_ablation-xtick_4":"results.html","Fig02_history_input_ablation-line2d_4":"results.html","Fig02_history_input_ablation-text_4":"results.html","Fig02_history_input_ablation-text_5":"results.html","Fig02_history_input_ablation-matplotlib.axis_2":"results.html","Fig02_history_input_ablation-ytick_1":"results.html","Fig02_history_input_ablation-line2d_5":"results.html","Fig02_history_input_ablation-text_6":"results.html","Fig02_history_input_ablation-ytick_2":"results.html","Fig02_history_input_ablation-line2d_6":"results.html","Fig02_history_input_ablation-text_7":"results.html","Fig02_history_input_ablation-ytick_3":"results.html","Fig02_history_input_ablation-line2d_7":"results.html","Fig02_history_input_ablation-text_8":"results.html","Fig02_history_input_ablation-line2d_8":"results.html","Fig02_history_input_ablation-line2d_9":"results.html","Fig02_history_input_ablation-line2d_10":"results.html","Fig02_history_input_ablation-line2d_11":"results.html","Fig02_history_input_ablation-line2d_12":"results.html","Fig02_history_input_ablation-line2d_13":"results.html","Fig02_history_input_ablation-line2d_14":"results.html","Fig02_history_input_ablation-line2d_15":"results.html","Fig02_history_input_ablation-line2d_16":"results.html","Fig02_history_input_ablation-line2d_17":"results.html","Fig02_history_input_ablation-patch_3":"results.html","Fig02_history_input_ablation-PathCollection_1":"results.html","Fig02_history_input_ablation-mec6717335a":"results.html","Fig02_history_input_ablation-PathCollection_2":"results.html","Fig02_history_input_ablation-ma1ab62a64c":"results.html","Fig02_history_input_ablation-PathCollection_3":"results.html","Fig02_history_input_ablation-m48e17c9b7d":"results.html","Fig02_history_input_ablation-text_9":"results.html","Fig02_history_input_ablation-text_10":"results.html","Fig02_history_input_ablation-axes_2":"results.html","Fig02_history_input_ablation-patch_4":"results.html","Fig02_history_input_ablation-matplotlib.axis_3":"results.html","Fig02_history_input_ablation-xtick_5":"results.html","Fig02_history_input_ablation-line2d_18":"results.html","Fig02_history_input_ablation-text_11":"results.html","Fig02_history_input_ablation-xtick_6":"results.html","Fig02_history_input_ablation-line2d_19":"results.html","Fig02_history_input_ablation-text_12":"results.html","Fig02_history_input_ablation-xtick_7":"results.html","Fig02_history_input_ablation-line2d_20":"results.html","Fig02_history_input_ablation-text_13":"results.html","Fig02_history_input_ablation-xtick_8":"results.html","Fig02_history_input_ablation-line2d_21":"results.html","Fig02_history_input_ablation-text_14":"results.html","Fig02_history_input_ablation-text_15":"results.html","Fig02_history_input_ablation-matplotlib.axis_4":"results.html","Fig02_history_input_ablation-ytick_4":"results.html","Fig02_history_input_ablation-line2d_22":"results.html","Fig02_history_input_ablation-text_16":"results.html","Fig02_history_input_ablation-ytick_5":"results.html","Fig02_history_input_ablation-line2d_23":"results.html","Fig02_history_input_ablation-text_17":"results.html","Fig02_history_input_ablation-ytick_6":"results.html","Fig02_history_input_ablation-line2d_24":"results.html","Fig02_history_input_ablation-text_18":"results.html","Fig02_history_input_ablation-line2d_25":"results.html","Fig02_history_input_ablation-line2d_26":"results.html","Fig02_history_input_ablation-line2d_27":"results.html","Fig02_history_input_ablation-line2d_28":"results.html","Fig02_history_input_ablation-line2d_29":"results.html","Fig02_history_input_ablation-line2d_30":"results.html","Fig02_history_input_ablation-line2d_31":"results.html","Fig02_history_input_ablation-line2d_32":"results.html","Fig02_history_input_ablation-line2d_33":"results.html","Fig02_history_input_ablation-line2d_34":"results.html","Fig02_history_input_ablation-patch_5":"results.html","Fig02_history_input_ablation-PathCollection_4":"results.html","Fig02_history_input_ablation-PathCollection_5":"results.html","Fig02_history_input_ablation-PathCollection_6":"results.html","Fig02_history_input_ablation-text_19":"results.html","Fig02_history_input_ablation-text_20":"results.html","Fig02_history_input_ablation-axes_3":"results.html","Fig02_history_input_ablation-patch_6":"results.html","Fig02_history_input_ablation-matplotlib.axis_5":"results.html","Fig02_history_input_ablation-xtick_9":"results.html","Fig02_history_input_ablation-line2d_35":"results.html","Fig02_history_input_ablation-text_21":"results.html","Fig02_history_input_ablation-xtick_10":"results.html","Fig02_history_input_ablation-line2d_36":"results.html","Fig02_history_input_ablation-text_22":"results.html","Fig02_history_input_ablation-xtick_11":"results.html","Fig02_history_input_ablation-line2d_37":"results.html","Fig02_history_input_ablation-text_23":"results.html","Fig02_history_input_ablation-text_24":"results.html","Fig02_history_input_ablation-matplotlib.axis_6":"results.html","Fig02_history_input_ablation-ytick_7":"results.html","Fig02_history_input_ablation-line2d_38":"results.html","Fig02_history_input_ablation-text_25":"results.html","Fig02_history_input_ablation-ytick_8":"results.html","Fig02_history_input_ablation-line2d_39":"results.html","Fig02_history_input_ablation-text_26":"results.html","Fig02_history_input_ablation-ytick_9":"results.html","Fig02_history_input_ablation-line2d_40":"results.html","Fig02_history_input_ablation-text_27":"results.html","Fig02_history_input_ablation-line2d_41":"results.html","Fig02_history_input_ablation-line2d_42":"results.html","Fig02_history_input_ablation-line2d_43":"results.html","Fig02_history_input_ablation-line2d_44":"results.html","Fig02_history_input_ablation-line2d_45":"results.html","Fig02_history_input_ablation-line2d_46":"results.html","Fig02_history_input_ablation-line2d_47":"results.html","Fig02_history_input_ablation-line2d_48":"results.html","Fig02_history_input_ablation-line2d_49":"results.html","Fig02_history_input_ablation-line2d_50":"results.html","Fig02_history_input_ablation-patch_7":"results.html","Fig02_history_input_ablation-PathCollection_7":"results.html","Fig02_history_input_ablation-PathCollection_8":"results.html","Fig02_history_input_ablation-PathCollection_9":"results.html","Fig02_history_input_ablation-text_28":"results.html","Fig02_history_input_ablation-text_29":"results.html","Fig02_history_input_ablation-axes_4":"results.html","Fig02_history_input_ablation-patch_8":"results.html","Fig02_history_input_ablation-matplotlib.axis_7":"results.html","Fig02_history_input_ablation-xtick_12":"results.html","Fig02_history_input_ablation-line2d_51":"results.html","Fig02_history_input_ablation-text_30":"results.html","Fig02_history_input_ablation-xtick_13":"results.html","Fig02_history_input_ablation-line2d_52":"results.html","Fig02_history_input_ablation-text_31":"results.html","Fig02_history_input_ablation-xtick_14":"results.html","Fig02_history_input_ablation-line2d_53":"results.html","Fig02_history_input_ablation-text_32":"results.html","Fig02_history_input_ablation-text_33":"results.html","Fig02_history_input_ablation-matplotlib.axis_8":"results.html","Fig02_history_input_ablation-ytick_10":"results.html","Fig02_history_input_ablation-line2d_54":"results.html","Fig02_history_input_ablation-text_34":"results.html","Fig02_history_input_ablation-ytick_11":"results.html","Fig02_history_input_ablation-line2d_55":"results.html","Fig02_history_input_ablation-text_35":"results.html","Fig02_history_input_ablation-ytick_12":"results.html","Fig02_history_input_ablation-line2d_56":"results.html","Fig02_history_input_ablation-text_36":"results.html","Fig02_history_input_ablation-line2d_57":"results.html","Fig02_history_input_ablation-line2d_58":"results.html","Fig02_history_input_ablation-line2d_59":"results.html","Fig02_history_input_ablation-line2d_60":"results.html","Fig02_history_input_ablation-line2d_61":"results.html","Fig02_history_input_ablation-line2d_62":"results.html","Fig02_history_input_ablation-line2d_63":"results.html","Fig02_history_input_ablation-line2d_64":"results.html","Fig02_history_input_ablation-line2d_65":"results.html","Fig02_history_input_ablation-line2d_66":"results.html","Fig02_history_input_ablation-patch_9":"results.html","Fig02_history_input_ablation-PathCollection_10":"results.html","Fig02_history_input_ablation-PathCollection_11":"results.html","Fig02_history_input_ablation-PathCollection_12":"results.html","Fig02_history_input_ablation-text_37":"results.html","Fig02_history_input_ablation-text_38":"results.html","Fig02_history_input_ablation-text_39":"results.html","Fig02_history_input_ablation-pca32f81ad9":"results.html","Fig02_history_input_ablation-p6d37ae25ab":"results.html","Fig02_history_input_ablation-pc1f2aa59d1":"results.html","Fig02_history_input_ablation-pbcf64cb8c4":"results.html","daily-curves":"results.html","Fig03_observed_and_predicted_daily_load-figure_1":"results.html","Fig03_observed_and_predicted_daily_load-patch_1":"results.html","Fig03_observed_and_predicted_daily_load-axes_1":"results.html","Fig03_observed_and_predicted_daily_load-patch_2":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_1":"results.html","Fig03_observed_and_predicted_daily_load-xtick_1":"results.html","Fig03_observed_and_predicted_daily_load-line2d_1":"results.html","Fig03_observed_and_predicted_daily_load-md22ec1de7b":"results.html","Fig03_observed_and_predicted_daily_load-xtick_2":"results.html","Fig03_observed_and_predicted_daily_load-line2d_2":"results.html","Fig03_observed_and_predicted_daily_load-xtick_3":"results.html","Fig03_observed_and_predicted_daily_load-line2d_3":"results.html","Fig03_observed_and_predicted_daily_load-xtick_4":"results.html","Fig03_observed_and_predicted_daily_load-line2d_4":"results.html","Fig03_observed_and_predicted_daily_load-xtick_5":"results.html","Fig03_observed_and_predicted_daily_load-line2d_5":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_2":"results.html","Fig03_observed_and_predicted_daily_load-ytick_1":"results.html","Fig03_observed_and_predicted_daily_load-line2d_6":"results.html","Fig03_observed_and_predicted_daily_load-m8115c7779a":"results.html","Fig03_observed_and_predicted_daily_load-text_1":"results.html","Fig03_observed_and_predicted_daily_load-ytick_2":"results.html","Fig03_observed_and_predicted_daily_load-line2d_7":"results.html","Fig03_observed_and_predicted_daily_load-text_2":"results.html","Fig03_observed_and_predicted_daily_load-ytick_3":"results.html","Fig03_observed_and_predicted_daily_load-line2d_8":"results.html","Fig03_observed_and_predicted_daily_load-text_3":"results.html","Fig03_observed_and_predicted_daily_load-ytick_4":"results.html","Fig03_observed_and_predicted_daily_load-line2d_9":"results.html","Fig03_observed_and_predicted_daily_load-text_4":"results.html","Fig03_observed_and_predicted_daily_load-ytick_5":"results.html","Fig03_observed_and_predicted_daily_load-line2d_10":"results.html","Fig03_observed_and_predicted_daily_load-text_5":"results.html","Fig03_observed_and_predicted_daily_load-ytick_6":"results.html","Fig03_observed_and_predicted_daily_load-line2d_11":"results.html","Fig03_observed_and_predicted_daily_load-text_6":"results.html","Fig03_observed_and_predicted_daily_load-ytick_7":"results.html","Fig03_observed_and_predicted_daily_load-line2d_12":"results.html","Fig03_observed_and_predicted_daily_load-text_7":"results.html","Fig03_observed_and_predicted_daily_load-ytick_8":"results.html","Fig03_observed_and_predicted_daily_load-line2d_13":"results.html","Fig03_observed_and_predicted_daily_load-text_8":"results.html","Fig03_observed_and_predicted_daily_load-text_9":"results.html","Fig03_observed_and_predicted_daily_load-line2d_14":"results.html","Fig03_observed_and_predicted_daily_load-m092656f255":"results.html","Fig03_observed_and_predicted_daily_load-line2d_15":"results.html","Fig03_observed_and_predicted_daily_load-line2d_16":"results.html","Fig03_observed_and_predicted_daily_load-patch_3":"results.html","Fig03_observed_and_predicted_daily_load-patch_4":"results.html","Fig03_observed_and_predicted_daily_load-text_10":"results.html","Fig03_observed_and_predicted_daily_load-text_11":"results.html","Fig03_observed_and_predicted_daily_load-axes_2":"results.html","Fig03_observed_and_predicted_daily_load-patch_5":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_3":"results.html","Fig03_observed_and_predicted_daily_load-xtick_6":"results.html","Fig03_observed_and_predicted_daily_load-line2d_17":"results.html","Fig03_observed_and_predicted_daily_load-text_12":"results.html","Fig03_observed_and_predicted_daily_load-xtick_7":"results.html","Fig03_observed_and_predicted_daily_load-line2d_18":"results.html","Fig03_observed_and_predicted_daily_load-text_13":"results.html","Fig03_observed_and_predicted_daily_load-xtick_8":"results.html","Fig03_observed_and_predicted_daily_load-line2d_19":"results.html","Fig03_observed_and_predicted_daily_load-text_14":"results.html","Fig03_observed_and_predicted_daily_load-xtick_9":"results.html","Fig03_observed_and_predicted_daily_load-line2d_20":"results.html","Fig03_observed_and_predicted_daily_load-text_15":"results.html","Fig03_observed_and_predicted_daily_load-xtick_10":"results.html","Fig03_observed_and_predicted_daily_load-line2d_21":"results.html","Fig03_observed_and_predicted_daily_load-text_16":"results.html","Fig03_observed_and_predicted_daily_load-text_17":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_4":"results.html","Fig03_observed_and_predicted_daily_load-ytick_9":"results.html","Fig03_observed_and_predicted_daily_load-line2d_22":"results.html","Fig03_observed_and_predicted_daily_load-text_18":"results.html","Fig03_observed_and_predicted_daily_load-ytick_10":"results.html","Fig03_observed_and_predicted_daily_load-line2d_23":"results.html","Fig03_observed_and_predicted_daily_load-text_19":"results.html","Fig03_observed_and_predicted_daily_load-ytick_11":"results.html","Fig03_observed_and_predicted_daily_load-line2d_24":"results.html","Fig03_observed_and_predicted_daily_load-text_20":"results.html","Fig03_observed_and_predicted_daily_load-text_21":"results.html","Fig03_observed_and_predicted_daily_load-line2d_25":"results.html","Fig03_observed_and_predicted_daily_load-LineCollection_1":"results.html","Fig03_observed_and_predicted_daily_load-line2d_26":"results.html","Fig03_observed_and_predicted_daily_load-m3668f4a862":"results.html","Fig03_observed_and_predicted_daily_load-patch_6":"results.html","Fig03_observed_and_predicted_daily_load-patch_7":"results.html","Fig03_observed_and_predicted_daily_load-axes_3":"results.html","Fig03_observed_and_predicted_daily_load-patch_8":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_5":"results.html","Fig03_observed_and_predicted_daily_load-xtick_11":"results.html","Fig03_observed_and_predicted_daily_load-line2d_27":"results.html","Fig03_observed_and_predicted_daily_load-xtick_12":"results.html","Fig03_observed_and_predicted_daily_load-line2d_28":"results.html","Fig03_observed_and_predicted_daily_load-xtick_13":"results.html","Fig03_observed_and_predicted_daily_load-line2d_29":"results.html","Fig03_observed_and_predicted_daily_load-xtick_14":"results.html","Fig03_observed_and_predicted_daily_load-line2d_30":"results.html","Fig03_observed_and_predicted_daily_load-xtick_15":"results.html","Fig03_observed_and_predicted_daily_load-line2d_31":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_6":"results.html","Fig03_observed_and_predicted_daily_load-ytick_12":"results.html","Fig03_observed_and_predicted_daily_load-line2d_32":"results.html","Fig03_observed_and_predicted_daily_load-ytick_13":"results.html","Fig03_observed_and_predicted_daily_load-line2d_33":"results.html","Fig03_observed_and_predicted_daily_load-ytick_14":"results.html","Fig03_observed_and_predicted_daily_load-line2d_34":"results.html","Fig03_observed_and_predicted_daily_load-ytick_15":"results.html","Fig03_observed_and_predicted_daily_load-line2d_35":"results.html","Fig03_observed_and_predicted_daily_load-ytick_16":"results.html","Fig03_observed_and_predicted_daily_load-line2d_36":"results.html","Fig03_observed_and_predicted_daily_load-ytick_17":"results.html","Fig03_observed_and_predicted_daily_load-line2d_37":"results.html","Fig03_observed_and_predicted_daily_load-ytick_18":"results.html","Fig03_observed_and_predicted_daily_load-line2d_38":"results.html","Fig03_observed_and_predicted_daily_load-ytick_19":"results.html","Fig03_observed_and_predicted_daily_load-line2d_39":"results.html","Fig03_observed_and_predicted_daily_load-line2d_40":"results.html","Fig03_observed_and_predicted_daily_load-line2d_41":"results.html","Fig03_observed_and_predicted_daily_load-line2d_42":"results.html","Fig03_observed_and_predicted_daily_load-patch_9":"results.html","Fig03_observed_and_predicted_daily_load-patch_10":"results.html","Fig03_observed_and_predicted_daily_load-text_22":"results.html","Fig03_observed_and_predicted_daily_load-text_23":"results.html","Fig03_observed_and_predicted_daily_load-axes_4":"results.html","Fig03_observed_and_predicted_daily_load-patch_11":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_7":"results.html","Fig03_observed_and_predicted_daily_load-xtick_16":"results.html","Fig03_observed_and_predicted_daily_load-line2d_43":"results.html","Fig03_observed_and_predicted_daily_load-text_24":"results.html","Fig03_observed_and_predicted_daily_load-xtick_17":"results.html","Fig03_observed_and_predicted_daily_load-line2d_44":"results.html","Fig03_observed_and_predicted_daily_load-text_25":"results.html","Fig03_observed_and_predicted_daily_load-xtick_18":"results.html","Fig03_observed_and_predicted_daily_load-line2d_45":"results.html","Fig03_observed_and_predicted_daily_load-text_26":"results.html","Fig03_observed_and_predicted_daily_load-xtick_19":"results.html","Fig03_observed_and_predicted_daily_load-line2d_46":"results.html","Fig03_observed_and_predicted_daily_load-text_27":"results.html","Fig03_observed_and_predicted_daily_load-xtick_20":"results.html","Fig03_observed_and_predicted_daily_load-line2d_47":"results.html","Fig03_observed_and_predicted_daily_load-text_28":"results.html","Fig03_observed_and_predicted_daily_load-text_29":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_8":"results.html","Fig03_observed_and_predicted_daily_load-ytick_20":"results.html","Fig03_observed_and_predicted_daily_load-line2d_48":"results.html","Fig03_observed_and_predicted_daily_load-ytick_21":"results.html","Fig03_observed_and_predicted_daily_load-line2d_49":"results.html","Fig03_observed_and_predicted_daily_load-ytick_22":"results.html","Fig03_observed_and_predicted_daily_load-line2d_50":"results.html","Fig03_observed_and_predicted_daily_load-line2d_51":"results.html","Fig03_observed_and_predicted_daily_load-LineCollection_2":"results.html","Fig03_observed_and_predicted_daily_load-line2d_52":"results.html","Fig03_observed_and_predicted_daily_load-patch_12":"results.html","Fig03_observed_and_predicted_daily_load-patch_13":"results.html","Fig03_observed_and_predicted_daily_load-axes_5":"results.html","Fig03_observed_and_predicted_daily_load-patch_14":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_9":"results.html","Fig03_observed_and_predicted_daily_load-xtick_21":"results.html","Fig03_observed_and_predicted_daily_load-line2d_53":"results.html","Fig03_observed_and_predicted_daily_load-xtick_22":"results.html","Fig03_observed_and_predicted_daily_load-line2d_54":"results.html","Fig03_observed_and_predicted_daily_load-xtick_23":"results.html","Fig03_observed_and_predicted_daily_load-line2d_55":"results.html","Fig03_observed_and_predicted_daily_load-xtick_24":"results.html","Fig03_observed_and_predicted_daily_load-line2d_56":"results.html","Fig03_observed_and_predicted_daily_load-xtick_25":"results.html","Fig03_observed_and_predicted_daily_load-line2d_57":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_10":"results.html","Fig03_observed_and_predicted_daily_load-ytick_23":"results.html","Fig03_observed_and_predicted_daily_load-line2d_58":"results.html","Fig03_observed_and_predicted_daily_load-ytick_24":"results.html","Fig03_observed_and_predicted_daily_load-line2d_59":"results.html","Fig03_observed_and_predicted_daily_load-ytick_25":"results.html","Fig03_observed_and_predicted_daily_load-line2d_60":"results.html","Fig03_observed_and_predicted_daily_load-ytick_26":"results.html","Fig03_observed_and_predicted_daily_load-line2d_61":"results.html","Fig03_observed_and_predicted_daily_load-ytick_27":"results.html","Fig03_observed_and_predicted_daily_load-line2d_62":"results.html","Fig03_observed_and_predicted_daily_load-ytick_28":"results.html","Fig03_observed_and_predicted_daily_load-line2d_63":"results.html","Fig03_observed_and_predicted_daily_load-ytick_29":"results.html","Fig03_observed_and_predicted_daily_load-line2d_64":"results.html","Fig03_observed_and_predicted_daily_load-ytick_30":"results.html","Fig03_observed_and_predicted_daily_load-line2d_65":"results.html","Fig03_observed_and_predicted_daily_load-line2d_66":"results.html","Fig03_observed_and_predicted_daily_load-line2d_67":"results.html","Fig03_observed_and_predicted_daily_load-line2d_68":"results.html","Fig03_observed_and_predicted_daily_load-patch_15":"results.html","Fig03_observed_and_predicted_daily_load-patch_16":"results.html","Fig03_observed_and_predicted_daily_load-text_30":"results.html","Fig03_observed_and_predicted_daily_load-text_31":"results.html","Fig03_observed_and_predicted_daily_load-axes_6":"results.html","Fig03_observed_and_predicted_daily_load-patch_17":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_11":"results.html","Fig03_observed_and_predicted_daily_load-xtick_26":"results.html","Fig03_observed_and_predicted_daily_load-line2d_69":"results.html","Fig03_observed_and_predicted_daily_load-text_32":"results.html","Fig03_observed_and_predicted_daily_load-xtick_27":"results.html","Fig03_observed_and_predicted_daily_load-line2d_70":"results.html","Fig03_observed_and_predicted_daily_load-text_33":"results.html","Fig03_observed_and_predicted_daily_load-xtick_28":"results.html","Fig03_observed_and_predicted_daily_load-line2d_71":"results.html","Fig03_observed_and_predicted_daily_load-text_34":"results.html","Fig03_observed_and_predicted_daily_load-xtick_29":"results.html","Fig03_observed_and_predicted_daily_load-line2d_72":"results.html","Fig03_observed_and_predicted_daily_load-text_35":"results.html","Fig03_observed_and_predicted_daily_load-xtick_30":"results.html","Fig03_observed_and_predicted_daily_load-line2d_73":"results.html","Fig03_observed_and_predicted_daily_load-text_36":"results.html","Fig03_observed_and_predicted_daily_load-text_37":"results.html","Fig03_observed_and_predicted_daily_load-matplotlib.axis_12":"results.html","Fig03_observed_and_predicted_daily_load-ytick_31":"results.html","Fig03_observed_and_predicted_daily_load-line2d_74":"results.html","Fig03_observed_and_predicted_daily_load-ytick_32":"results.html","Fig03_observed_and_predicted_daily_load-line2d_75":"results.html","Fig03_observed_and_predicted_daily_load-ytick_33":"results.html","Fig03_observed_and_predicted_daily_load-line2d_76":"results.html","Fig03_observed_and_predicted_daily_load-line2d_77":"results.html","Fig03_observed_and_predicted_daily_load-LineCollection_3":"results.html","Fig03_observed_and_predicted_daily_load-line2d_78":"results.html","Fig03_observed_and_predicted_daily_load-patch_18":"results.html","Fig03_observed_and_predicted_daily_load-patch_19":"results.html","Fig03_observed_and_predicted_daily_load-text_38":"results.html","Fig03_observed_and_predicted_daily_load-legend_1":"results.html","Fig03_observed_and_predicted_daily_load-line2d_79":"results.html","Fig03_observed_and_predicted_daily_load-m1053aa4d6d":"results.html","Fig03_observed_and_predicted_daily_load-text_39":"results.html","Fig03_observed_and_predicted_daily_load-line2d_80":"results.html","Fig03_observed_and_predicted_daily_load-text_40":"results.html","Fig03_observed_and_predicted_daily_load-line2d_81":"results.html","Fig03_observed_and_predicted_daily_load-text_41":"results.html","Fig03_observed_and_predicted_daily_load-p1133af2d93":"results.html","Fig03_observed_and_predicted_daily_load-p39cab21c75":"results.html","Fig03_observed_and_predicted_daily_load-p390fea1388":"results.html","Fig03_observed_and_predicted_daily_load-p47c1d89a92":"results.html","Fig03_observed_and_predicted_daily_load-pe11e18e32e":"results.html","Fig03_observed_and_predicted_daily_load-peed2f30f38":"results.html","temporal-results":"results.html","Fig04_daily_and_horizon_errors-figure_1":"results.html","Fig04_daily_and_horizon_errors-patch_1":"results.html","Fig04_daily_and_horizon_errors-axes_1":"results.html","Fig04_daily_and_horizon_errors-patch_2":"results.html","Fig04_daily_and_horizon_errors-PathCollection_1":"results.html","Fig04_daily_and_horizon_errors-m38c3a6ccaf":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_1":"results.html","Fig04_daily_and_horizon_errors-xtick_1":"results.html","Fig04_daily_and_horizon_errors-line2d_1":"results.html","Fig04_daily_and_horizon_errors-m9adaa779c3":"results.html","Fig04_daily_and_horizon_errors-text_1":"results.html","Fig04_daily_and_horizon_errors-xtick_2":"results.html","Fig04_daily_and_horizon_errors-line2d_2":"results.html","Fig04_daily_and_horizon_errors-text_2":"results.html","Fig04_daily_and_horizon_errors-xtick_3":"results.html","Fig04_daily_and_horizon_errors-line2d_3":"results.html","Fig04_daily_and_horizon_errors-text_3":"results.html","Fig04_daily_and_horizon_errors-xtick_4":"results.html","Fig04_daily_and_horizon_errors-line2d_4":"results.html","Fig04_daily_and_horizon_errors-text_4":"results.html","Fig04_daily_and_horizon_errors-text_5":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_2":"results.html","Fig04_daily_and_horizon_errors-ytick_1":"results.html","Fig04_daily_and_horizon_errors-line2d_5":"results.html","Fig04_daily_and_horizon_errors-m9c5462197e":"results.html","Fig04_daily_and_horizon_errors-text_6":"results.html","Fig04_daily_and_horizon_errors-ytick_2":"results.html","Fig04_daily_and_horizon_errors-line2d_6":"results.html","Fig04_daily_and_horizon_errors-text_7":"results.html","Fig04_daily_and_horizon_errors-ytick_3":"results.html","Fig04_daily_and_horizon_errors-line2d_7":"results.html","Fig04_daily_and_horizon_errors-text_8":"results.html","Fig04_daily_and_horizon_errors-ytick_4":"results.html","Fig04_daily_and_horizon_errors-line2d_8":"results.html","Fig04_daily_and_horizon_errors-text_9":"results.html","Fig04_daily_and_horizon_errors-ytick_5":"results.html","Fig04_daily_and_horizon_errors-line2d_9":"results.html","Fig04_daily_and_horizon_errors-text_10":"results.html","Fig04_daily_and_horizon_errors-text_11":"results.html","Fig04_daily_and_horizon_errors-line2d_10":"results.html","Fig04_daily_and_horizon_errors-LineCollection_1":"results.html","Fig04_daily_and_horizon_errors-patch_3":"results.html","Fig04_daily_and_horizon_errors-patch_4":"results.html","Fig04_daily_and_horizon_errors-text_12":"results.html","Fig04_daily_and_horizon_errors-text_13":"results.html","Fig04_daily_and_horizon_errors-axes_2":"results.html","Fig04_daily_and_horizon_errors-patch_5":"results.html","Fig04_daily_and_horizon_errors-PathCollection_2":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_3":"results.html","Fig04_daily_and_horizon_errors-xtick_5":"results.html","Fig04_daily_and_horizon_errors-line2d_11":"results.html","Fig04_daily_and_horizon_errors-text_14":"results.html","Fig04_daily_and_horizon_errors-xtick_6":"results.html","Fig04_daily_and_horizon_errors-line2d_12":"results.html","Fig04_daily_and_horizon_errors-text_15":"results.html","Fig04_daily_and_horizon_errors-text_16":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_4":"results.html","Fig04_daily_and_horizon_errors-ytick_6":"results.html","Fig04_daily_and_horizon_errors-line2d_13":"results.html","Fig04_daily_and_horizon_errors-text_17":"results.html","Fig04_daily_and_horizon_errors-ytick_7":"results.html","Fig04_daily_and_horizon_errors-line2d_14":"results.html","Fig04_daily_and_horizon_errors-text_18":"results.html","Fig04_daily_and_horizon_errors-ytick_8":"results.html","Fig04_daily_and_horizon_errors-line2d_15":"results.html","Fig04_daily_and_horizon_errors-text_19":"results.html","Fig04_daily_and_horizon_errors-ytick_9":"results.html","Fig04_daily_and_horizon_errors-line2d_16":"results.html","Fig04_daily_and_horizon_errors-text_20":"results.html","Fig04_daily_and_horizon_errors-ytick_10":"results.html","Fig04_daily_and_horizon_errors-line2d_17":"results.html","Fig04_daily_and_horizon_errors-text_21":"results.html","Fig04_daily_and_horizon_errors-line2d_18":"results.html","Fig04_daily_and_horizon_errors-LineCollection_2":"results.html","Fig04_daily_and_horizon_errors-patch_6":"results.html","Fig04_daily_and_horizon_errors-patch_7":"results.html","Fig04_daily_and_horizon_errors-text_22":"results.html","Fig04_daily_and_horizon_errors-text_23":"results.html","Fig04_daily_and_horizon_errors-axes_3":"results.html","Fig04_daily_and_horizon_errors-patch_8":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_5":"results.html","Fig04_daily_and_horizon_errors-xtick_7":"results.html","Fig04_daily_and_horizon_errors-line2d_19":"results.html","Fig04_daily_and_horizon_errors-text_24":"results.html","Fig04_daily_and_horizon_errors-xtick_8":"results.html","Fig04_daily_and_horizon_errors-line2d_20":"results.html","Fig04_daily_and_horizon_errors-text_25":"results.html","Fig04_daily_and_horizon_errors-xtick_9":"results.html","Fig04_daily_and_horizon_errors-line2d_21":"results.html","Fig04_daily_and_horizon_errors-text_26":"results.html","Fig04_daily_and_horizon_errors-xtick_10":"results.html","Fig04_daily_and_horizon_errors-line2d_22":"results.html","Fig04_daily_and_horizon_errors-text_27":"results.html","Fig04_daily_and_horizon_errors-xtick_11":"results.html","Fig04_daily_and_horizon_errors-line2d_23":"results.html","Fig04_daily_and_horizon_errors-text_28":"results.html","Fig04_daily_and_horizon_errors-text_29":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_6":"results.html","Fig04_daily_and_horizon_errors-ytick_11":"results.html","Fig04_daily_and_horizon_errors-line2d_24":"results.html","Fig04_daily_and_horizon_errors-text_30":"results.html","Fig04_daily_and_horizon_errors-ytick_12":"results.html","Fig04_daily_and_horizon_errors-line2d_25":"results.html","Fig04_daily_and_horizon_errors-text_31":"results.html","Fig04_daily_and_horizon_errors-ytick_13":"results.html","Fig04_daily_and_horizon_errors-line2d_26":"results.html","Fig04_daily_and_horizon_errors-text_32":"results.html","Fig04_daily_and_horizon_errors-ytick_14":"results.html","Fig04_daily_and_horizon_errors-line2d_27":"results.html","Fig04_daily_and_horizon_errors-text_33":"results.html","Fig04_daily_and_horizon_errors-ytick_15":"results.html","Fig04_daily_and_horizon_errors-line2d_28":"results.html","Fig04_daily_and_horizon_errors-text_34":"results.html","Fig04_daily_and_horizon_errors-text_35":"results.html","Fig04_daily_and_horizon_errors-line2d_29":"results.html","Fig04_daily_and_horizon_errors-line2d_30":"results.html","Fig04_daily_and_horizon_errors-line2d_31":"results.html","Fig04_daily_and_horizon_errors-patch_9":"results.html","Fig04_daily_and_horizon_errors-patch_10":"results.html","Fig04_daily_and_horizon_errors-text_36":"results.html","Fig04_daily_and_horizon_errors-text_37":"results.html","Fig04_daily_and_horizon_errors-axes_4":"results.html","Fig04_daily_and_horizon_errors-patch_11":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_7":"results.html","Fig04_daily_and_horizon_errors-xtick_12":"results.html","Fig04_daily_and_horizon_errors-line2d_32":"results.html","Fig04_daily_and_horizon_errors-text_38":"results.html","Fig04_daily_and_horizon_errors-xtick_13":"results.html","Fig04_daily_and_horizon_errors-line2d_33":"results.html","Fig04_daily_and_horizon_errors-text_39":"results.html","Fig04_daily_and_horizon_errors-xtick_14":"results.html","Fig04_daily_and_horizon_errors-line2d_34":"results.html","Fig04_daily_and_horizon_errors-text_40":"results.html","Fig04_daily_and_horizon_errors-xtick_15":"results.html","Fig04_daily_and_horizon_errors-line2d_35":"results.html","Fig04_daily_and_horizon_errors-text_41":"results.html","Fig04_daily_and_horizon_errors-xtick_16":"results.html","Fig04_daily_and_horizon_errors-line2d_36":"results.html","Fig04_daily_and_horizon_errors-text_42":"results.html","Fig04_daily_and_horizon_errors-text_43":"results.html","Fig04_daily_and_horizon_errors-matplotlib.axis_8":"results.html","Fig04_daily_and_horizon_errors-ytick_16":"results.html","Fig04_daily_and_horizon_errors-line2d_37":"results.html","Fig04_daily_and_horizon_errors-text_44":"results.html","Fig04_daily_and_horizon_errors-ytick_17":"results.html","Fig04_daily_and_horizon_errors-line2d_38":"results.html","Fig04_daily_and_horizon_errors-text_45":"results.html","Fig04_daily_and_horizon_errors-ytick_18":"results.html","Fig04_daily_and_horizon_errors-line2d_39":"results.html","Fig04_daily_and_horizon_errors-text_46":"results.html","Fig04_daily_and_horizon_errors-ytick_19":"results.html","Fig04_daily_and_horizon_errors-line2d_40":"results.html","Fig04_daily_and_horizon_errors-text_47":"results.html","Fig04_daily_and_horizon_errors-ytick_20":"results.html","Fig04_daily_and_horizon_errors-line2d_41":"results.html","Fig04_daily_and_horizon_errors-text_48":"results.html","Fig04_daily_and_horizon_errors-line2d_42":"results.html","Fig04_daily_and_horizon_errors-line2d_43":"results.html","Fig04_daily_and_horizon_errors-line2d_44":"results.html","Fig04_daily_and_horizon_errors-patch_12":"results.html","Fig04_daily_and_horizon_errors-patch_13":"results.html","Fig04_daily_and_horizon_errors-text_49":"results.html","Fig04_daily_and_horizon_errors-text_50":"results.html","Fig04_daily_and_horizon_errors-legend_1":"results.html","Fig04_daily_and_horizon_errors-line2d_45":"results.html","Fig04_daily_and_horizon_errors-text_51":"results.html","Fig04_daily_and_horizon_errors-line2d_46":"results.html","Fig04_daily_and_horizon_errors-text_52":"results.html","Fig04_daily_and_horizon_errors-line2d_47":"results.html","Fig04_daily_and_horizon_errors-text_53":"results.html","Fig04_daily_and_horizon_errors-pd46a7b5087":"results.html","Fig04_daily_and_horizon_errors-p7b36612342":"results.html","Fig04_daily_and_horizon_errors-pf47955f659":"results.html","Fig04_daily_and_horizon_errors-p80c9472f29":"results.html","tradeoff":"results.html","latest-research":"exploration.html","methods":"methods.html","method-search":"methods.html","status-filter":"methods.html","filter-count":"methods.html","method-empty":"methods.html","direct":"methods.html","sessions":"methods.html","sharing":"methods.html","sequence":"methods.html","fusion":"methods.html","weights":"methods.html","outputs":"methods.html","validation":"methods.html","price":"methods.html","extensions-2026-11-19":"methods.html","pooling-extension":"methods.html","state-extension":"methods.html","duration-extension":"methods.html","residual-extension":"methods.html","downloads":"resources.html","reproduction":"resources.html"},"sectionIds":["task","history","model","workflow","worked-prediction"]};</script>
 <script>window.PAPER_DATA = {
   updated: '2026-11-19',
   glossary: [

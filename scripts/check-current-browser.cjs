@@ -16,11 +16,22 @@ const fs=require('node:fs');
       assert(size.scroll<=size.client+1,`${file} at ${width} overflows: ${JSON.stringify(size)}`);
       // Hidden details contain lazy images; request decoding before checking their assets.
       for(const img of await page.locator('img').all())assert(await img.evaluate(async el=>{el.loading='eager';await el.decode();return el.complete&&el.naturalWidth>0;}),`${file} image`);
+      for(const svg of await page.locator('[data-paper-figure]').all()){
+        assert(await svg.locator('text').count()>0,'figure keeps real text');
+        assert(await svg.locator('text').first().evaluate(el=>getComputedStyle(el).fontFamily.includes('Heiti SC')),'Simplified Chinese font');
+        assert.equal(await svg.locator('button').count(),0,'glossary must not alter SVG text');
+      }
       if(file==='method.html'){
         for(const id of ['task','history','model','workflow','worked-prediction']){
           await page.locator(`[data-section-switcher] a[href="#${id}"]`).click();
           assert(await page.locator('#'+id).isVisible(),id);
           assert.equal(await page.locator('main>section:visible').count(),1);
+          if(id==='history'){
+            const text=page.locator('[data-paper-figure] text').filter({hasText:'功率'}).first();
+            assert(await text.evaluate(el=>{const range=document.createRange();range.selectNodeContents(el);const s=window.getSelection();s.removeAllRanges();s.addRange(range);const value=s.toString();s.removeAllRanges();return value.includes('功率');}),'Chinese figure text is selectable');
+            await page.locator('.paper-explainer').scrollIntoViewIfNeeded();
+            await page.screenshot({path:`/private/tmp/current-site-qa/${width}-history.png`,fullPage:true,animations:'disabled'});
+          }
         }
         await page.locator('[data-section-switcher] a[href="#model"]').click();
         await page.locator('[data-term="TimeXer"]').first().click();

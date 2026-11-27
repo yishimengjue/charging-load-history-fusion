@@ -36,8 +36,20 @@ test('Chinese publication figures appear in their corresponding reading modules'
     const svg=read(`figures/paper/${name}.svg`);
     assert(/[\u4e00-\u9fff]/.test(svg));
     assert(!/Recent sequence|Forecast horizon|Observed|MAE reduction/.test(svg));
+    assert(svg.includes('Heiti SC') && !svg.includes('Heiti TC'), 'use Simplified Chinese glyphs');
+    assert(section.includes(`data-paper-figure="${name}"`), 'render selectable inline SVG');
+    assert(section.includes('<text'), 'keep figure labels as actual text');
+    assert(!section.includes(`<img src="figures/paper/${name}.png"`), 'PNG is download only');
   }
   assert(read('results.html').includes('aria-label="结果小节"'));
+});
+test('figure explanations expose the selection example and all three comparisons',()=>{
+  const history=read('method.html').split('id="history"')[1]?.split('</section>')[0];
+  assert(history.includes('没有增加新的观测数据'));
+  assert(history.includes('3月23日18点'));
+  const input=read('results.html').split('id="input-effects"')[1]?.split('</section>')[0];
+  const visible=input.split('<details')[0];
+  for(const label of ['仅近期序列','近7天同小时记录','近远期18条记录','改动前MAE','改动后MAE','1.47%'])assert(visible.includes(label),label);
 });
 test('cross-page links resolve to actual files and section anchors',()=>{
   for(const file of files){
