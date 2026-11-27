@@ -269,6 +269,15 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
 .current-lanes article>span {background:var(--violet-bg);color:var(--blue);font-weight:700;padding:8px;border-radius:6px;text-align:center}
 .current-lanes p {font-size:14px;margin:0}
 .current-lanes strong {color:var(--green);font-size:14px}
+.paper-figure {margin:24px 0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.paper-figure-heading {padding:18px 22px 8px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.paper-scroll-hint {display:none;font-size:12px;color:var(--muted)}
+.paper-plot-window {overflow-x:auto;overscroll-behavior-x:contain;background:#fff}
+.paper-plot-window img {display:block;width:100%;min-width:900px;height:auto}
+.paper-figure figcaption {padding:16px 22px;border-top:1px solid var(--line);font-size:14px}
+.paper-figure figcaption p {max-width:none}
+.paper-figure figcaption nav {display:flex;flex-wrap:wrap;gap:18px;margin-top:10px;font-weight:600}
+@media(max-width:950px){.paper-scroll-hint {display:block}.paper-figure-heading{align-items:start;flex-direction:column}}
 @media(max-width:800px){
   .current-hero {grid-template-columns:1fr;gap:22px}
   .current-highlight {padding:22px}
@@ -295,13 +304,13 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
 <main id="main"><section id="top" class="chapter current-chapter"><div class="current-hero"><div><span class="eyebrow">研究图解 / 2026.11.26</span><h1>把历史同小时记录<br>接入充电负荷预测</h1><p class="hero-lead">连续序列描述<b>最近一周如何变化</b>，同小时记录提供<b>过去对应时段的负荷参照</b>。两路信息在同一个神经网络中融合，预测未来24个小时位置。</p><div class="current-actions"><a class="current-link" href="method.html">方法与示例 →</a><a class="current-link" href="results.html">数据与结果 →</a></div></div><aside class="current-highlight"><span>OP · 2022年1—3月</span><strong>7.55<span>%</span></strong><b>相对仅近期输入，MAE下降</b><p>4.938161 → 4.565178 kW</p><small>同结构、同训练预算的三种子平均误差</small></aside></div></section>
 <section id="contributions" class="chapter current-chapter"><header class="section-heading"><span class="section-no">01 / 研究贡献</span><h2>从历史记录的组织方式入手降低误差</h2></header><div class="current-cards"><article><h3>方法：按预测时刻组织历史</h3><p>每个未来小时接收<b>18个同小时历史槽位</b>，与近期序列表示拼接。历史值、是否启用、是否观测分别表达。</p></article><article><h3>证据：拆开两种信息作用</h3><p>近7天组重组已有168小时信息；近远期组再加入第2—12周记录。用同结构对照区分<b>信息重组</b>与<b>更早历史</b>的作用。</p></article><article><h3>结果：定位误差来自哪里</h3><p>按零负荷、普通正负荷和高负荷拆分收益。四个范围均出现<b>正负荷误差减少、零负荷误差增加</b>，净效果因数据而异。</p></article></div><p class="current-note">方法贡献落在<b>目标时段历史的输入组织与验证</b>。TimeXer是借用的编码架构；预测组合另作完整方案比较。</p><div class="table-wrap"><table class="current-table"><caption>当前输入改动的结果；每行在同一数据范围内比较。</caption><thead><tr><th scope="col">评价范围</th><th scope="col">仅近期 MAE</th><th scope="col">近远期 MAE</th><th scope="col">误差变化</th><th scope="col">单位</th></tr></thead><tbody><tr><th scope="row">OP · 2022年1—3月</th><td>4.938161</td><td>4.565178</td><td><b class="text-green">下降 7.55%</b></td><td>kW</td></tr><tr><th scope="row">OP · 2022年7月1—25日</th><td>3.597243</td><td>3.525426</td><td><b class="text-green">下降 2.00%</b></td><td>kW</td></tr><tr><th scope="row">LCL · 2014年2—4月</th><td>0.146403</td><td>0.144900</td><td><b class="text-green">下降 1.03%</b></td><td>来源原始单位</td></tr><tr><th scope="row">SOFIE · 2026年4—6月</th><td>0.312088</td><td>0.318600</td><td><b class="text-red">增加 2.09%</b></td><td>kW</td></tr></tbody></table></div><p class="current-note">OP七月点估计下降2.00%，差值区间跨零；LCL仅增加近7天记录的误差更低。详见实验结果。</p></section>
 <section id="route" class="chapter current-chapter"><header class="section-heading"><span class="section-no">02 / 路线演进</span><h2>从直接预测走向目标时段历史融合</h2></header><ol class="current-route"><li><span>01</span><div><b>直接预测与会话分解</b><p>建立点预测；尝试分解会话后重建负荷。</p></div></li><li><span>02</span><div><b>历史统计与序列模型</b><p>加入同类时段摘要，比较树、TimeXer及输出平均。</p></div></li><li class="selected"><span>03</span><div><b>逐条历史与目标时刻对齐</b><p>当前主线：保留历史值，区分近7天与更早记录。</p></div></li><li><span>04</span><div><b>跨数据验证与误差分解</b><p>用LCL、SOFIE和朴素预测检验输入收益。</p></div></li></ol><details class="reading-details"><summary>展开完整路线图</summary><div class="detail-body"><figure class="current-figure"><img src="figures/route.svg" alt="五阶段路线：直接预测、历史统计、序列组合、逐条历史、跨数据比较。" loading="lazy"><figcaption>不同阶段不是可叠加的收益。 <a href="figures/route.svg" download>下载 SVG</a></figcaption></figure></div></details><a class="current-link" href="exploration.html">近期尝试与取舍 →</a><a class="current-link" href="methods.html">历年方法与结果表 →</a></section>
-<section id="conclusion" class="chapter current-chapter"><header class="section-heading"><span class="section-no">03 / 当前结论</span><h2>保留历史融合，按数据选择输入与输出</h2></header><div class="current-summary"><p><b>OP：</b>近远期网络优于同候选中位数；已有树与摘要神经组合仍有更低MAE。</p><p><b>LCL：</b>近7天重组已带来收益，继续增加远期记录没有降低误差。</p><p><b>SOFIE：</b>零负荷占87.31%，空闲时段增加的误差超过充电时段收益。</p></div></section><nav class="page-turns" aria-label="页面顺序"><span></span><a href="method.html"><small>下一页</small><b>方法与示例 →</b></a></nav><footer><span>目标时段历史与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>研究更新 2026.11.26</small></footer></main><aside id="term-card" class="term-card" role="dialog" aria-modal="false" aria-labelledby="term-title" hidden>
+<section id="conclusion" class="chapter current-chapter"><header class="section-heading"><span class="section-no">03 / 当前结论</span><h2>保留历史融合，按数据选择输入与输出</h2></header><div class="current-summary"><p><b>OP：</b>近远期网络优于同候选中位数；已有树与摘要神经组合仍有更低MAE。</p><p><b>LCL：</b>近7天重组已带来收益，继续增加远期记录没有降低误差。</p><p><b>SOFIE：</b>零负荷占87.31%，空闲时段增加的误差超过充电时段收益。</p></div></section><nav class="page-turns" aria-label="页面顺序"><span></span><a href="method.html"><small>下一页</small><b>方法与示例 →</b></a></nav><footer><span>目标时段历史与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>页面更新 2026.11.27</small></footer></main><aside id="term-card" class="term-card" role="dialog" aria-modal="false" aria-labelledby="term-title" hidden>
   <button type="button" class="term-close" aria-label="关闭术语简介">×</button>
   <span id="term-kind" class="micro-label"></span><h2 id="term-title"></h2>
   <p id="term-definition"></p><h3>本文用途</h3><p id="term-use"></p>
   <div class="term-source"><span>来源</span><a id="term-source-link"></a></div>
 </aside>
-<script>window.PAPER_SITE={"page":"index.html","anchors":{"top":"index.html","contributions":"index.html","route":"index.html","conclusion":"index.html","task":"method.html","history":"method.html","model":"method.html","workflow":"method.html","worked-prediction":"method.html","evidence":"results.html","tradeoff":"results.html","latest-research":"exploration.html","methods":"methods.html","method-search":"methods.html","status-filter":"methods.html","filter-count":"methods.html","method-empty":"methods.html","direct":"methods.html","sessions":"methods.html","sharing":"methods.html","sequence":"methods.html","fusion":"methods.html","weights":"methods.html","outputs":"methods.html","validation":"methods.html","price":"methods.html","extensions-2026-11-19":"methods.html","pooling-extension":"methods.html","state-extension":"methods.html","duration-extension":"methods.html","residual-extension":"methods.html","downloads":"resources.html","reproduction":"resources.html"},"sectionIds":[]};</script>
+<script>window.PAPER_SITE={"page":"index.html","anchors":{"top":"index.html","contributions":"index.html","route":"index.html","conclusion":"index.html","task":"method.html","history":"method.html","model":"method.html","workflow":"method.html","worked-prediction":"method.html","evidence":"results.html","input-effects":"results.html","daily-curves":"results.html","temporal-results":"results.html","tradeoff":"results.html","latest-research":"exploration.html","methods":"methods.html","method-search":"methods.html","status-filter":"methods.html","filter-count":"methods.html","method-empty":"methods.html","direct":"methods.html","sessions":"methods.html","sharing":"methods.html","sequence":"methods.html","fusion":"methods.html","weights":"methods.html","outputs":"methods.html","validation":"methods.html","price":"methods.html","extensions-2026-11-19":"methods.html","pooling-extension":"methods.html","state-extension":"methods.html","duration-extension":"methods.html","residual-extension":"methods.html","downloads":"resources.html","reproduction":"resources.html"},"sectionIds":[]};</script>
 <script>window.PAPER_DATA = {
   updated: '2026-11-19',
   glossary: [
@@ -621,16 +630,16 @@ footer {border-color:var(--line);padding:24px 0 35px;margin-top:0}
 })();
 </script>
 <script>(() => {
-  const controls=document.querySelector('.current-scope-controls');
-  if(!controls)return;
-  const buttons=[...controls.querySelectorAll('[data-current-scope]')];
+  const controls=[...document.querySelectorAll('.current-scope-controls')];
+  if(!controls.length)return;
+  const buttons=[...document.querySelectorAll('[data-current-scope]')];
   const panels=[...document.querySelectorAll('[data-current-panel]')];
   function select(id){
     for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.currentScope===id));
     for(const panel of panels)panel.hidden=panel.dataset.currentPanel!==id;
   }
   for(const button of buttons)button.addEventListener('click',()=>select(button.dataset.currentScope));
-  controls.hidden=false;
+  for(const group of controls)group.hidden=false;
   select(buttons[0].dataset.currentScope);
 })();
 </script>

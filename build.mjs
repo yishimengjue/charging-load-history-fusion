@@ -24,8 +24,9 @@ for(const [id,html] of currentSections())sections.set(id,html);
 const pages=[
   {file:'index.html',label:'研究总览',ids:['top','contributions','route','conclusion']},
   {file:'method.html',label:'方法与示例',ids:['task','history','model','workflow','worked-prediction'],
-    intro:'从输入到预测，按五个小节理解完整方法。',tabs:['预测任务','历史记录','融合模型','训练验证','时间示例']},
-  {file:'results.html',label:'实验结果',ids:['evidence','tradeoff'],intro:'先比较平均误差，再解释不同负荷状态下的收益。'},
+    intro:'从输入到预测，按五个小节理解完整方法。',tabsLabel:'方法小节',tabs:['预测任务','历史记录','融合模型','训练验证','时间示例']},
+  {file:'results.html',label:'实验结果',ids:['evidence','input-effects','daily-curves','temporal-results','tradeoff'],
+    intro:'从总体误差到真实曲线，按小节查看改动与收益。',tabsLabel:'结果小节',tabs:['总体结果','输入消融','日负荷曲线','连续评价','误差来源']},
   {file:'exploration.html',label:'近期尝试',ids:['latest-research'],intro:'围绕历史输入的近期实验、结果和选择。'},
   {file:'methods.html',label:'完整方法表',ids:['methods'],intro:'按研究方向检索已经尝试的方法、数据与结果。'},
   {file:'resources.html',label:'资料与复现',ids:['downloads','reproduction'],intro:'论文文件、参考文献、数据包与复现实验入口。'}
@@ -43,8 +44,8 @@ const script=code=>`<script>${code.replaceAll('</script','<\\/script')}</script>
 const css=read('style.css')+'\n'+read('theme.css')+'\n'+read('current.css');
 for(const [index,page] of pages.entries()){
   const navigation=navigationFor(page.file);
-  const intro=page.intro?`<header class="page-heading"><span class="section-no">CHARGING LOAD / ${String(index+1).padStart(2,'0')}</span><h1>${page.label}</h1><p>${page.intro}</p></header>`:'';
-  const tabs=page.tabs?`<nav class="local-tabs" aria-label="方法小节" data-section-switcher>${page.ids.map((id,i)=>`<a href="#${id}">${String(i+1).padStart(2,'0')} ${page.tabs[i]}</a>`).join('')}</nav>`:'';
+  const intro=page.intro?`<header class="page-heading"><span class="section-no">充电负荷研究 / ${String(index+1).padStart(2,'0')}</span><h1>${page.label}</h1><p>${page.intro}</p></header>`:'';
+  const tabs=page.tabs?`<nav class="local-tabs" aria-label="${page.tabsLabel}" data-section-switcher>${page.ids.map((id,i)=>`<a href="#${id}">${String(i+1).padStart(2,'0')} ${page.tabs[i]}</a>`).join('')}</nav>`:'';
   const previous=pages[index-1],next=pages[index+1];
   const pager=`<nav class="page-turns" aria-label="页面顺序">${previous?`<a href="${previous.file}"><small>上一页</small><b>← ${previous.label}</b></a>`:'<span></span>'}${next?`<a href="${next.file}"><small>下一页</small><b>${next.label} →</b></a>`:'<a href="index.html"><small>返回</small><b>研究总览 →</b></a>'}</nav>`;
   let body=page.ids.map(id=>sections.get(id)).join('\n');
@@ -56,7 +57,7 @@ for(const [index,page] of pages.entries()){
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="description" content="充电负荷历史融合研究：方法、结果与复现"><title>${page.label} · 充电负荷预测</title><style>${css}</style></head>
 <body data-page="${page.file}"><a class="skip-link" href="#main">跳到正文</a>
 <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">↗</span>充电负荷预测<span class="brand-sub"> / 研究图解</span></a><nav aria-label="阅读导航">${navigation}</nav></header>
-<main id="main">${intro}${tabs}${body}${pager}<footer><span>目标时段历史与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>研究更新 2026.11.26</small></footer></main>${termCard}
+<main id="main">${intro}${tabs}${body}${pager}<footer><span>目标时段历史与近期序列融合的充电负荷预测</span><a href="index.html">研究总览</a><small>页面更新 2026.11.27</small></footer></main>${termCard}
 ${script(`window.PAPER_SITE=${JSON.stringify({page:page.file,anchors,sectionIds:page.tabs?page.ids:[]})};`)}
 ${scripts.map(name=>script(read(name))).join('\n')}
 </body></html>`;

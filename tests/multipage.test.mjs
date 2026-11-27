@@ -8,7 +8,7 @@ test('six independently addressable pages contain only their assigned research s
   const sections={
     'index.html':['top','contributions','route','conclusion'],
     'method.html':['task','history','model','workflow','worked-prediction'],
-    'results.html':['evidence','tradeoff'],
+    'results.html':['evidence','input-effects','daily-curves','temporal-results','tradeoff'],
     'exploration.html':['latest-research'],
     'methods.html':['methods'],
     'resources.html':['downloads','reproduction']
@@ -21,6 +21,23 @@ test('six independently addressable pages contain only their assigned research s
     assert(html.includes('aria-current="page"'));
     assert(html.includes('name="color-scheme" content="light"'));
   }
+});
+test('Chinese publication figures appear in their corresponding reading modules',()=>{
+  const placements=[
+    ['method.html','history','Fig01_recent_history_organization'],
+    ['results.html','input-effects','Fig02_history_input_ablation'],
+    ['results.html','daily-curves','Fig03_observed_and_predicted_daily_load'],
+    ['results.html','temporal-results','Fig04_daily_and_horizon_errors']
+  ];
+  for(const [page,id,name] of placements){
+    const section=read(page).split(`id="${id}"`)[1]?.split('</section>')[0];
+    assert(section?.includes(`figures/paper/${name}.png`),`${page} / ${id}`);
+    for(const extension of ['png','pdf','svg'])assert(existsSync(new URL(`figures/paper/${name}.${extension}`,root)));
+    const svg=read(`figures/paper/${name}.svg`);
+    assert(/[\u4e00-\u9fff]/.test(svg));
+    assert(!/Recent sequence|Forecast horizon|Observed|MAE reduction/.test(svg));
+  }
+  assert(read('results.html').includes('aria-label="结果小节"'));
 });
 test('cross-page links resolve to actual files and section anchors',()=>{
   for(const file of files){

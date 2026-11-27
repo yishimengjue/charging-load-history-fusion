@@ -30,11 +30,21 @@ const fs=require('node:fs');
         assert.equal(await page.evaluate(()=>document.activeElement.dataset.term),'TimeXer');
       }
       if(file==='results.html'){
-        for(const id of ['op-winter','op-july','lcl','sofie']){
-          await page.locator(`[data-current-scope="${id}"]`).click();
-          assert.equal(await page.locator('[data-current-panel]:visible').count(),2);
-          assert.equal(await page.locator(`[data-current-panel="${id}"]:visible`).count(),2);
+        for(const section of ['evidence','input-effects','daily-curves','temporal-results','tradeoff']){
+          await page.locator(`[data-section-switcher] a[href="#${section}"]`).click();
+          assert(await page.locator('#'+section).isVisible(),section);
+          assert.equal(await page.locator('main>section:visible').count(),1);
+          await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>{window.scrollTo({top:0,behavior:'instant'});requestAnimationFrame(resolve);})));
+          await page.screenshot({path:`/private/tmp/current-site-qa/${width}-${section}.png`,fullPage:true,animations:'disabled'});
         }
+        for(const id of ['op-winter','op-july','lcl','sofie']){
+          await page.locator(`[data-current-scope="${id}"]:visible`).click();
+          assert.equal(await page.locator('[data-current-panel]:visible').count(),1);
+          assert.equal(await page.locator(`[data-current-panel="${id}"]:visible`).count(),1);
+          assert.equal(await page.locator(`[data-current-scope="${id}"][aria-pressed="true"]`).count(),2);
+        }
+        await page.locator('[data-section-switcher] a[href="#evidence"]').click();
+        assert.equal(await page.locator('[data-current-panel="sofie"]:visible').count(),1);
       }
       if(file==='methods.html'){
         await page.locator('#group-filter').selectOption('all');
@@ -47,7 +57,7 @@ const fs=require('node:fs');
         await page.locator('#ref-4 summary').click();
         assert(!(await page.locator('#ref-4').evaluate(el=>el.open)));
       }
-      await page.evaluate(()=>window.scrollTo(0,0));
+      await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
       await page.screenshot({path:`/private/tmp/current-site-qa/${width}-${file}.png`,fullPage:true,animations:'disabled'});
       report.push({width,file,overflow:false});
     }

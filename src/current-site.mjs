@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import {buildFigures} from './current-figures.mjs';
+import {paperFigure, paperResultSections} from './paper-panels.mjs';
 const d=JSON.parse(readFileSync(new URL('../research/current-evidence.json',import.meta.url),'utf8'));
 const fmt=n=>n.toFixed(6);
 const pct=(a,b)=>((a-b)/a*100).toFixed(2);
@@ -65,5 +66,13 @@ export function currentSections(){
     ['研究与文献',`${action('research/CURRENT_RESULTS.md','当前研究说明')}${action('literature.html','文献综述')}综述、方法与结果统一围绕近期序列和目标时段逐条历史的融合。`]
   ])+table(['数据范围','预测比较图','误差贡献图'],d.scopes.map(s=>[s.label,`<a href="figures/mae-${s.id}.svg" download>下载 SVG</a>`,`<a href="figures/errors-${s.id}.svg" download>下载 SVG</a>`]),'图表由同一份公开汇总数据生成。')));
   m.set('reproduction',section('reproduction',head('02 / 复现入口','区分当前汇总与既有数据发布包')+`<p>本次更新发布<b>网页、图表与汇总结果</b>。既有 <b>repro-v0.1</b> 发布包对应原摘要融合流程，不等同于本次近远期输入的完整复现包。</p>`+`<div class="current-actions">${action('REPRODUCE.md','既有复现说明')}${action('DATA_LICENSES.md','数据许可')}${action('https://github.com/yishimengjue/charging-load-history-fusion/releases/tag/repro-v0.1','既有发布包')}</div>`+detail('原论文与实验档案','<p><a href="research/METHODS_AND_RESULTS_v0.5.md">原方法与结果文档 v0.5</a> · <a href="publication.json">历史档案索引</a> · <a href="reproduction-manifest.json">既有数据包清单</a>。</p><p>旧稿、旧表和当前图表各自保留日期与比较范围，避免跨版本混用结论。</p>')));
+  const history = m.get('history');
+  m.set('history', history.slice(0, history.lastIndexOf('</section>')) +
+    paperFigure('Fig01_recent_history_organization', '图1　从近期序列中整理同小时记录',
+      '以OP编号7在2022年3月23日零点的真实输入为例。上图蓝点与下方7个数值一一对应，展示近期168小时记录如何按18点预测目标重新组织。') + '</section>');
+  for (const [id, html] of paperResultSections()) m.set(id, html);
+  m.set('tradeoff', m.get('tradeoff').replace('</header>', '</header>' + scopeButtons));
+  m.set('downloads', m.get('downloads').replace('</header>', '</header>' +
+    `<div class="current-actions">${action('figures/paper/paper_figures.pdf', '下载四张中文图 PDF')}${action('figures/paper/README.md', '中文图注与绘图说明')}</div>`));
   return m;
 }

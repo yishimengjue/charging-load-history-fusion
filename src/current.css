@@ -62,6 +62,15 @@
 .current-lanes article>span {background:var(--violet-bg);color:var(--blue);font-weight:700;padding:8px;border-radius:6px;text-align:center}
 .current-lanes p {font-size:14px;margin:0}
 .current-lanes strong {color:var(--green);font-size:14px}
+.paper-figure {margin:24px 0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.paper-figure-heading {padding:18px 22px 8px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.paper-scroll-hint {display:none;font-size:12px;color:var(--muted)}
+.paper-plot-window {overflow-x:auto;overscroll-behavior-x:contain;background:#fff}
+.paper-plot-window img {display:block;width:100%;min-width:900px;height:auto}
+.paper-figure figcaption {padding:16px 22px;border-top:1px solid var(--line);font-size:14px}
+.paper-figure figcaption p {max-width:none}
+.paper-figure figcaption nav {display:flex;flex-wrap:wrap;gap:18px;margin-top:10px;font-weight:600}
+@media(max-width:950px){.paper-scroll-hint {display:block}.paper-figure-heading{align-items:start;flex-direction:column}}
 @media(max-width:800px){
   .current-hero {grid-template-columns:1fr;gap:22px}
   .current-highlight {padding:22px}
