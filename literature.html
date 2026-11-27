@@ -14,12 +14,13 @@ main{max-width:1200px;margin:auto;padding:0 28px}.hero{padding:46px 0 28px;displ
 .focus-note .focus-link{font-size:13px;margin:12px 0 0;font-weight:600}.review-reading-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.review-reading-links a{background:var(--violet-bg);padding:8px 12px;border-radius:6px;font-size:13px;font-weight:600}
 @media(max-width:650px){.review-paragraph{font-size:15px;line-height:1.9}.review-section .section-heading h2{font-size:21px}}
 @media print{.review-prose{padding:0;border:0}.review-paragraph{font-size:11px}.review-section{break-inside:auto}}
+.page-turns{display:flex;justify-content:space-between;gap:16px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}.page-turns a{display:grid;gap:6px;padding:18px 22px;border:1px solid var(--line);border-radius:10px;background:var(--paper);font-size:14px}.page-turns small{font-size:12px;color:var(--muted)}.page-turns a:last-child{text-align:right}@media print{.page-turns{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 @media print{.topbar,.section-nav,.skip-link{display:none}body{background:white;color:black;font-size:11px}main{max-width:none;padding:0}.hero{padding-top:0}.chapter{break-inside:avoid;padding-top:24px}.hero h1{font-size:29px}.reference-list{grid-template-columns:1fr}.reference-body{display:block!important}.reference{break-inside:avoid}a{color:inherit}footer{margin-top:16px}.table-scroll{overflow:visible}}
 </style></head>
 <body>
 <a class="skip-link" href="#main">跳到内容</a>
-<header class="topbar"><a class="brand" href="index.html"><span aria-hidden="true">↗</span>充电负荷预测</a><nav class="site-nav" aria-label="阅读导航"><a href="index.html">研究总览</a><a href="abstract.html">研究摘要</a><a href="method.html">方法与示例</a><a href="results.html">实验结果</a><a href="exploration.html">近期尝试</a><a href="methods.html">完整方法表</a><a href="resources.html">资料与复现</a><a href="literature.html" class="active" aria-current="page">文献综述</a></nav></header>
+<header class="topbar"><a class="brand" href="index.html"><span aria-hidden="true">↗</span>充电负荷预测</a><nav class="site-nav" aria-label="阅读导航"><a href="index.html">研究总览</a><a href="abstract.html">研究摘要</a><a href="literature.html" class="active" aria-current="page">文献综述</a><a href="method.html">方法与示例</a><a href="results.html">实验结果</a><a href="methods.html">完整方法表</a><a href="exploration.html">近期尝试</a><a href="resources.html">资料与复现</a></nav></header>
 <main id="main">
   <header class="hero">
     <div><p class="eyebrow">文献综述 / 2026.11.26</p><h1>充电负荷预测中的<br><span>历史表示与信息融合</span></h1><p class="hero-lead">从周期参照与序列建模，定位目标时段历史的输入作用。</p></div>
@@ -73,6 +74,7 @@ main{max-width:1200px;margin:auto;padding:0 28px}.hero{padding:46px 0 28px;displ
       <details class="reference" id="ref-12" data-publication="published"><summary><span class="ref-no">12</span><span class="ref-heading"><span>Wang等 · 2023 <span class="badge">综述</span></span><span class="ref-brief">从简单组合到学习式预测组合</span></span></summary><div class="reference-body"><cite>Forecast combinations: An over 50-year review.</cite><p>Wang X, Hyndman R J, Li F, Kang Y. International Journal of Forecasting, 39(4): 1518–1547.</p><p>覆盖无需估参的规则、时变权重、非线性组合等。本轮核读作者页面摘要。</p><a href="https://robjhyndman.com/publications/combinations/">作者页面 ↗</a> · <a href="https://doi.org/10.1016/j.ijforecast.2022.11.005">期刊页面</a></div></details>
     </div>
   </section>
+  <nav class="page-turns" aria-label="页面顺序"><a href="abstract.html"><small>上一页</small><b>← 研究摘要</b></a><a href="method.html"><small>下一页</small><b>方法与示例 →</b></a></nav>
   <footer><span>文献核查 2026.11.23 · 正文更新 2026.11.26</span><a href="index.html">返回研究总览 →</a></footer>
 </main>
 <script>

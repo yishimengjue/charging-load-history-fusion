@@ -36,7 +36,19 @@ test('single-paragraph abstract follows the overview in navigation and page turn
   }
   assert(read('index.html').split('aria-label="页面顺序"')[1].includes('href="abstract.html"'));
   const pager=html.split('aria-label="页面顺序"')[1];
-  assert(pager.includes('href="index.html"') && pager.includes('href="method.html"'));
+  assert(pager.includes('href="index.html"') && pager.includes('href="literature.html"'));
+});
+test('all navigation and previous-next links follow the requested reading order',()=>{
+  const order=['index.html','abstract.html','literature.html','method.html','results.html','methods.html','exploration.html','resources.html'];
+  for(const [i,file] of order.entries()){
+    const html=read(file);
+    const nav=html.split('aria-label="阅读导航"')[1].split('</nav>')[0];
+    assert.deepEqual([...nav.matchAll(/href="([^"]+)"/g)].map(m=>m[1]),order,file);
+    const pager=html.split('aria-label="页面顺序"')[1]?.split('</nav>')[0];
+    assert(pager,`${file} has page turns`);
+    const expected=[...(i>0?[order[i-1]]:[]),order[i+1]||'index.html'];
+    assert.deepEqual([...pager.matchAll(/href="([^"]+)"/g)].map(m=>m[1]),expected,file);
+  }
 });
 test('Chinese publication figures appear in their corresponding reading modules',()=>{
   const placements=[

@@ -9,15 +9,18 @@ const fs=require('node:fs');
   for(const width of [1440,390]){
     const page=await browser.newPage({viewport:{width,height:1000}});
     page.on('pageerror',e=>errors.push(e.message));
-    for(const file of ['index.html','abstract.html','method.html','results.html','exploration.html','methods.html','resources.html','literature.html']){
+    const order=['index.html','abstract.html','literature.html','method.html','results.html','methods.html','exploration.html','resources.html'];
+    for(const [i,file] of order.entries()){
       await page.goto(base+file);await page.waitForLoadState('networkidle');
       assert(await page.locator('h1,h2').count()>0,file);
       const size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
       assert(size.scroll<=size.client+1,`${file} at ${width} overflows: ${JSON.stringify(size)}`);
+      assert.deepEqual(await page.locator('[aria-label="阅读导航"] a').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),order);
+      assert.deepEqual(await page.locator('.page-turns a').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),[...(i>0?[order[i-1]]:[]),order[i+1]||'index.html']);
       if(file==='abstract.html'){
         assert.equal(await page.locator('#abstract>article>p').count(),1);
         assert(await page.locator('.topbar a[aria-current="page"]').evaluate(el=>el.getAttribute('href')==='abstract.html'));
-        assert.deepEqual(await page.locator('.page-turns a').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),['index.html','method.html']);
+        assert.deepEqual(await page.locator('.page-turns a').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),['index.html','literature.html']);
       }
       // Hidden details contain lazy images; request decoding before checking their assets.
       for(const img of await page.locator('img').all())assert(await img.evaluate(async el=>{el.loading='eager';await el.decode();return el.complete&&el.naturalWidth>0;}),`${file} image`);

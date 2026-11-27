@@ -28,12 +28,17 @@ const pages=[
     intro:'从输入到预测，按五个小节理解完整方法。',tabsLabel:'方法小节',tabs:['预测任务','历史记录','融合模型','训练验证','时间示例']},
   {file:'results.html',label:'实验结果',ids:['evidence','input-effects','daily-curves','temporal-results','tradeoff'],
     intro:'从总体误差到真实曲线，按小节查看改动与收益。',tabsLabel:'结果小节',tabs:['总体结果','输入消融','日负荷曲线','连续评价','误差来源']},
-  {file:'exploration.html',label:'近期尝试',ids:['latest-research'],intro:'围绕历史输入的近期实验、结果和选择。'},
   {file:'methods.html',label:'完整方法表',ids:['methods'],intro:'按研究方向检索已经尝试的方法、数据与结果。'},
+  {file:'exploration.html',label:'近期尝试',ids:['latest-research'],intro:'围绕历史输入的近期实验、结果和选择。'},
   {file:'resources.html',label:'资料与复现',ids:['downloads','reproduction'],intro:'论文文件、参考文献、数据包与复现实验入口。'}
 ];
-const navigationPages=[...pages,{file:'literature.html',label:'文献综述'}];
+const navigationPages=[...pages.slice(0,2),{file:'literature.html',label:'文献综述'},...pages.slice(2)];
 const navigationFor=file=>navigationPages.map(p=>`<a href="${p.file}"${p.file===file?' class="active" aria-current="page"':''}>${p.label}</a>`).join('');
+const pagerFor=file=>{
+  const index=navigationPages.findIndex(p=>p.file===file);
+  const previous=navigationPages[index-1],next=navigationPages[index+1];
+  return `<nav class="page-turns" aria-label="页面顺序">${previous?`<a href="${previous.file}"><small>上一页</small><b>← ${previous.label}</b></a>`:'<span></span>'}${next?`<a href="${next.file}"><small>下一页</small><b>${next.label} →</b></a>`:'<a href="index.html"><small>返回</small><b>研究总览 →</b></a>'}</nav>`;
+};
 const anchors={};
 for(const page of pages)for(const section of page.ids){
   if(!sections.has(section))throw new Error(`Missing section ${section}`);
@@ -43,12 +48,12 @@ const termCard=source.match(/<aside id="term-card"[\s\S]*?<\/aside>/)[0];
 const scripts=['data.js','app.js','methods.js','reading.js','current.js'];
 const script=code=>`<script>${code.replaceAll('</script','<\\/script')}</script>`;
 const css=read('style.css')+'\n'+read('theme.css')+'\n'+read('current.css');
-for(const [index,page] of pages.entries()){
+for(const page of pages){
+  const index=navigationPages.findIndex(p=>p.file===page.file);
   const navigation=navigationFor(page.file);
   const intro=page.intro?`<header class="page-heading"><span class="section-no">充电负荷研究 / ${String(index+1).padStart(2,'0')}</span><h1>${page.label}</h1><p>${page.intro}</p></header>`:'';
   const tabs=page.tabs?`<nav class="local-tabs" aria-label="${page.tabsLabel}" data-section-switcher>${page.ids.map((id,i)=>`<a href="#${id}">${String(i+1).padStart(2,'0')} ${page.tabs[i]}</a>`).join('')}</nav>`:'';
-  const previous=pages[index-1],next=pages[index+1];
-  const pager=`<nav class="page-turns" aria-label="页面顺序">${previous?`<a href="${previous.file}"><small>上一页</small><b>← ${previous.label}</b></a>`:'<span></span>'}${next?`<a href="${next.file}"><small>下一页</small><b>${next.label} →</b></a>`:'<a href="index.html"><small>返回</small><b>研究总览 →</b></a>'}</nav>`;
+  const pager=pagerFor(page.file);
   let body=page.ids.map(id=>sections.get(id)).join('\n');
   if(page.file==='methods.html'){
     const groups=[['direct','点预测与标签'],['sessions','会话分解'],['sharing','共享训练'],['sequence','序列模型'],['fusion','历史融合'],['weights','组合权重'],['outputs','输出与损失'],['validation','验证与消融'],['price','价格支线']];
@@ -68,5 +73,6 @@ ${scripts.map(name=>script(read(name))).join('\n')}
 }
 writeFileSync(new URL('literature.html',import.meta.url),read('literature.html')
   .replace('<!--SITE_NAV-->',navigationFor('literature.html'))
+  .replace('<!--PAGE_TURNS-->',pagerFor('literature.html'))
   .replace('/*LITERATURE_STYLE*/',read('literature.css')));
 console.log(`Built ${pages.length} research pages and the literature onepage`);
